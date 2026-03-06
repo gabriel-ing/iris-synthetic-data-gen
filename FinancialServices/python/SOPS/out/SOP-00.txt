@@ -1,0 +1,110 @@
+Data Dictionary and Allowed Values (Single Source of Truth)
+
+Use this as the canonical reference when interpreting card data and validating values in IRIS SQL. This SOP is read-only; do not write or update any records from this workflow. If you find a data quality issue, add an audit note and escalate to Data Ops.
+
+How to join the data you need
+- Customers to Cards: join ModestExpectationsCaptial.Customers.CustomerId to ModestExpectationsCaptial.Cards.CustomerId. Use this to understand customer segment, risk, and region context.
+- Cards to Transactions: join ModestExpectationsCaptial.Cards.CardId to ModestExpectationsCaptial.Transactions.CardId. This is the primary path from the card to any authorization, approval, decline, refund, or reversal.
+- Transactions to Merchants: prefer ModestExpectationsCaptial.Merchants.MerchantId to ModestExpectationsCaptial.Transactions.MerchantId. Do not rely on Transactions.MerchantName for joins; names can vary (e.g., “AMZ*Prime” vs “Amazon”). If MerchantId is null or mismatched, note it and escalate rather than attempting a name-only join in production metrics.
+- Transactions to Disputes: join ModestExpectationsCaptial.Disputes.TransactionId to ModestExpectationsCaptial.Transactions.TransactionId to see dispute status and outcomes.
+
+Key time fields and how to interpret them
+- Transactions.AuthAt is the moment an authorization decision was made. This is the “auth time” and always precedes or equals any posting.
+- Transactions.PostedAt is when the transaction was posted to the ledger (what customers think of as “cleared”). PostedAt must be on or after AuthAt when present.
+- If a transaction is REVERSED, expect AuthAt to be present and PostedAt to be null. If a transaction is REFUNDED, expect both AuthAt and PostedAt to be present.
+
+Approved vs declined vs refunded vs reversed
+- Transactions.Status can be APPROVED, DECLINED, REFUNDED, or REVERSED. These are the only allowed values. If you see anything else, log an audit note and escalate.
+- Use this rule of thumb:
+  - If Status = APPROVED, the authorization succeeded. PostedAt may not yet be set if it’s same-day.
+  - If Status = DECLINED, the authorization failed. PostedAt must be null, and DeclineReason must be set.
+  - If Status = REVERSED, the authorization was voided before posting (sometimes called a void or authorization reversal). Treat as no ledger impact; PostedAt should be null.
+  - If Status = REFUNDED, the merchant returned funds after the transaction posted (sometimes called a return). Treat as net-zero impact to spend after the refund date; PostedAt should be set.
+- What does REVERSED mean vs REFUNDED?
+  - REVERSED: the auth was canceled before settlement. Think “void.” The customer may see a temporary hold drop off. No posting should exist; PostedAt should be null. Count in authorization metrics, not in posted spend.
+  - REFUNDED: the transaction posted and was later returned. Think “return” or “credit.” The Status changes to REFUNDED on the original TransactionId. Keep Amount as-is for traceability; do not expect a negative Amount. Netting logic should exclude REFUNDED transactions from settled spend totals.
+
+Declines and decline reasons
+- Transactions.DeclineReason is only set when Status = DECLINED. Allowed values are INSUFFICIENT_FUNDS (often searched as “NSF”), SUSPECTED_FRAUD (“risk decline”), LIMIT_EXCEEDED (“over limit”), and INVALID_CVV (“bad cvv”). If Status = DECLINED and DeclineReason is null, that’s a data error.
+- If Status ≠ DECLINED but DeclineReason is set, treat it as a data error; add an audit note and escalate.
+
+Channel, entry mode, and presence
+- Transactions.Channel can only be ECOM (e-commerce, online, card-not-present) or POS (point-of-sale, in-store). If you see “online” or “in-store” in the wild, map mentally to ECOM or POS.
+- Transactions.EntryMode can only be MANUAL (keyed), CHIP (EMV insert), or TAP (contactless, NFC). There is no SWIPE value; legacy magstripe should fall under CHIP if EMV-capable or remain unsupported—if you see “SWIPE,” escalate as invalid.
+- Transactions.CardPresent is a boolean describing whether the card (or device token) was present at a physical terminal. Use these if/then checks:
+  - If Channel = ECOM, then CardPresent must be false and EntryMode should be MANUAL.
+  - If EntryMode = CHIP or TAP, then Channel must be POS and CardPresent must be true.
+  - If EntryMode = MANUAL and Channel = POS (keyed at terminal), CardPresent must be false.
+  - If CardPresent = true while Channel = ECOM, add an audit note and escalate.
+
+Merchants and categories
+- Merchants.Category values are GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, or DINING. These are simplified verticals (what some people call MCC groups).
+- Merchants.RiskTier values are LOW, MED, or HIGH. If you see unrecognized text like “MEDIUM,” it’s invalid; MED is the only allowed middle tier.
+- ModestExpectationsCaptial.Merchants.PopularityWeight is a numeric helper for ranking common merchants in UI and reports; do not use it for risk decisions.
+
+Cards and customers
+- Cards.Status values are ACTIVE, BLOCKED, or CLOSED. If Status = CLOSED, ModestExpectationsCaptial.Cards.ClosedAt must be set. If Status = BLOCKED, ClosedAt must be null.
+- If a card is BLOCKED or CLOSED, you should not see any Transactions.Status = APPROVED with AuthAt after ClosedAt (or after the block time if that exists in another log). If you do, note it and escalate.
+- Customers.Segment and the Segment*Multiplier fields (SegmentTxnMultiplier, SegmentAmountMultiplier, SegmentEcomMultiplier, SegmentDeclineMultiplier, SegmentDisputeMultiplier) are precomputed weights used in analytics and some alert thresholds. They do not change transaction semantics. Do not “fix” multiplier values from this SOP.
+
+Disputes: reason, state, and outcome
+- Disputes.ReasonCode can only be DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, or CANCELLED. If an agent says “item not received,” map that to NOT_RECEIVED; if a customer says “charged twice,” map that to DUPLICATE.
+- Disputes.State tracks progress and can only be OPEN, UNDER_REVIEW, or RESOLVED.
+- Disputes.Outcome is only populated when State = RESOLVED. Allowed values are CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, or CHARGEBACK.
+  - CUSTOMER_WON means funds were returned to the customer.
+  - MERCHANT_WON means liability remained with the customer.
+  - WITHDRAWN means the customer retracted the claim.
+  - CHARGEBACK reflects that a formal chargeback was filed and stood; do not confuse this with a refund or reversal. “Chargeback” here is an outcome, not the act of disputing.
+
+Validation rules you should always run
+- If Transactions.Status = DECLINED, then Transactions.PostedAt must be null and DeclineReason must be one of the allowed values.
+- If Transactions.Status = REVERSED, then Transactions.PostedAt must be null. If PostedAt is set, escalate.
+- If Transactions.Status = REFUNDED, then Transactions.PostedAt must be set. If PostedAt is null, escalate.
+- If Disputes.State = RESOLVED, then Disputes.ResolvedAt must be set and Disputes.Outcome must have an allowed value.
+- AuthAt must never be after PostedAt when both exist.
+- For joins, Transactions.MerchantId should exist in Merchants.MerchantId. If missing, do not backfill by name; add an audit note and escalate.
+
+Practical query pointers
+- To get a card’s latest auth vs post status, select from ModestExpectationsCaptial.Transactions by CardId ordered by AuthAt desc. Compare Status and PostedAt to distinguish APPROVED pending post, REVERSED, or REFUNDED.
+- To verify dispute progress, join Disputes on TransactionId and filter where State in (‘OPEN’, ‘UNDER_REVIEW’, ‘RESOLVED’) to see path and, if resolved, the Outcome.
+
+Realistic scenarios
+
+Scenario 1: Refund vs reversal confusion
+A customer asks whether their “void” at a fuel station went through or if they’ll still be charged. You pull Transactions by CardId and see an auth earlier today with Status = REVERSED, AuthAt populated, and PostedAt null. You explain this was an authorization reversal (a void), not a refund; it won’t post. If it had been Status = REFUNDED with PostedAt set, you would have clarified that the original purchase posted and then was refunded later.
+
+Scenario 2: Dispute status and outcome
+An agent wants to know if a “chargeback” finished on a travel purchase. You join Disputes to the transaction and find State = RESOLVED with Outcome = CUSTOMER_WON. You confirm the dispute is closed and the customer won, and note that “chargeback” here is the outcome code, not a refund. If the State had been UNDER_REVIEW, you would have told the agent it’s still in process without a final Outcome.
+
+Common pitfalls to avoid
+- Treating REFUNDED as a separate negative transaction. In our model, the original row’s Status changes to REFUNDED; Amount remains the original positive value.
+- Joining merchants by name (“McDonalds #123”) instead of MerchantId, which leads to duplicate or missing joins.
+- Assuming CardPresent true for all POS activity; keyed-at-terminal (EntryMode = MANUAL with Channel = POS) must have CardPresent = false.
+- Counting REVERSED transactions as posted spend. Reversals never have PostedAt and should be excluded from settled totals.
+- Using “MEDIUM” for risk tier; the allowed value is MED.
+- Confusing a dispute (what customers call a “chargeback” or “claim”) with a refund. A refund does not create a Disputes row.
+
+What to write in the audit note
+Keep audit notes brief and factual. State what you validated, which fields and values you observed, and what rule you applied. Mention any mismatches and next steps or escalation.
+
+Example audit note:
+“Validated txn 884211 on CardId 442. Status = REVERSED; AuthAt 2026-03-02T10:14Z; PostedAt null. Matches reversal rule (no posting). CardPresent = true, Channel = POS, EntryMode = TAP consistent. No dispute present. No action taken; informed agent reversal will drop from pending.”
+
+Retrieval hooks you might search for (and how they map here)
+- “Chargeback” or “dispute” → Disputes.State and Disputes.Outcome (CHARGEBACK is an Outcome; others are CUSTOMER_WON, MERCHANT_WON, WITHDRAWN).
+- “Void” or “reversal” → Transactions.Status = REVERSED.
+- “Refund” or “return” → Transactions.Status = REFUNDED.
+- “Tap,” “contactless,” or “NFC” → Transactions.EntryMode = TAP; Channel = POS; CardPresent = true.
+- “Chip,” “EMV insert” → Transactions.EntryMode = CHIP; Channel = POS; CardPresent = true.
+- “Keyed,” “manual entry,” “card-not-present” → Transactions.EntryMode = MANUAL; Channel = ECOM (or POS keyed); CardPresent = false.
+- “Over limit” or “limit exceeded,” “NSF,” “bad cvv,” “risk decline” → DeclineReason LIMIT_EXCEEDED, INSUFFICIENT_FUNDS, INVALID_CVV, SUSPECTED_FRAUD.
+- “Freeze,” “block,” “hotlist” → Cards.Status = BLOCKED. “Closed” or “canceled” → Cards.Status = CLOSED (use CLOSED, not “CANCELLED”).
+
+Governance and allowed actions
+- This SOP authorizes read-only validation and interpretation. No direct writes are allowed. Do not change Cards.Status, Merchants.RiskTier, Transactions.Status, or any Disputes fields from this workflow.
+- If/when you find invalid or out-of-range values (e.g., unexpected Status text, PostedAt on a REVERSED transaction, RESOLVED dispute without an Outcome), document it with an audit note and escalate to Data Ops for correction.
+
+If you remember only three rules
+- REVERSED means voided before posting (AuthAt yes, PostedAt no). REFUNDED means posted then returned (AuthAt yes, PostedAt yes).
+- Always join by IDs (CustomerId, CardId, MerchantId, TransactionId). Avoid name-based joins.
+- Keep Channel, EntryMode, and CardPresent consistent: ECOM + MANUAL + not present; POS + CHIP/TAP + present; keyed-at-POS is POS + MANUAL + not present.

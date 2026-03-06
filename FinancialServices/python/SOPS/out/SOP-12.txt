@@ -1,0 +1,120 @@
+Agent Action Policy, Safety Controls, and Audit Logging
+
+This guidance governs when and how an agent may write to IRIS for card and dispute operations. Work in two phases: plan (gather evidence, decide, preview) and execute (apply the smallest safe change, verify, log). Keep the language in audit notes plain and consistent. If something feels like a “close call,” stop and escalate before writing.
+
+Two‑phase workflow every time
+1) Plan the change.
+- Validate the target row(s) exist and you’ve got the right CustomerId/CardId/MerchantId/TransactionId.
+- Pull relevant history from ModestExpectationsCaptial.Transactions for the CardId or MerchantId, including Status (APPROVED, DECLINED, REFUNDED, REVERSED), Channel (ECOM or POS), EntryMode (MANUAL, CHIP, TAP), DeclineReason (INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, INVALID_CVV), CardPresent, and any IsFraud flags.
+- For disputes, confirm the TransactionId is posted (i.e., has PostedAt) and that there is no active Disputes.State of OPEN or UNDER_REVIEW already.
+- Sanity‑check Merchants.RiskTier (LOW, MED, HIGH) and category context (GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, DINING) if you’re considering a risk change.
+- Draft your intended writes with explicit before/after values: Cards.Status (ACTIVE, BLOCKED, CLOSED) and Cards.ClosedAt; Disputes insert with ReasonCode (DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, CANCELLED) and State (OPEN, UNDER_REVIEW, RESOLVED); Disputes.Outcome (CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK) and Disputes.ResolvedAt; Merchants.RiskTier.
+- Write the audit note draft before you execute.
+
+2) Execute the change.
+- Execute only the agreed fields in one transaction: write:Cards.Status, write:Cards.ClosedAt, write:Disputes(insert), write:Disputes.State, write:Disputes.Outcome, write:Disputes.ResolvedAt, write:Merchants.RiskTier.
+- Immediately re‑query the changed row(s) to confirm the new value.
+- Post the final audit note with the exact values changed and the verification query result.
+
+Decision rules and allowed actions
+
+Blocking a card (freeze/lock)
+- You may set Cards.Status to BLOCKED when you have one of these:
+  - Two or more APPROVED ECOM transactions in the last 24 hours marked IsFraud = 1 for the same CardId; or
+  - Three or more rapid‑fire DECLINED attempts with DeclineReason = SUSPECTED_FRAUD or INVALID_CVV across mixed EntryMode (e.g., MANUAL and TAP/contactless) in the last 2 hours; or
+  - A customer report of unauthorized use corroborated by mismatched Channel (customer is traveling POS only, activity is ECOM).
+- If any of the above is true, set Cards.Status = BLOCKED. Do not set CLOSED at this stage. No other card fields should be changed.
+- Record the evidence in the audit note (TransactionId list, timestamps, DeclineReason values, and the IRIS SELECT you ran).
+
+Closing a card
+- Golden answer: Do not set Cards.Status = CLOSED automatically under normal circumstances.
+- You may set Cards.Status = CLOSED and Cards.ClosedAt = current timestamp only if all are true:
+  - The card is already BLOCKED and has been for at least 30 days; and
+  - There have been zero APPROVED or REFUNDED transactions on this CardId in the last 30 days; and
+  - The same CustomerId has a different card with Cards.Status = ACTIVE and OpenedAt > the blocked card’s OpenedAt (i.e., a replacement exists).
+- Otherwise, escalate to a supervisor for approval before closing. Never close a card solely due to DECLINED activity, LIMIT_EXCEEDED, or INSUFFICIENT_FUNDS.
+
+Opening and resolving disputes (dispute/chargeback/claim)
+- You may insert into ModestExpectationsCaptial.Disputes when a posted transaction is contested and no active dispute exists for that TransactionId.
+- Allowed ReasonCode values are DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, or CANCELLED. Start with State = OPEN.
+- When you begin analysis, you may set Disputes.State = UNDER_REVIEW.
+- To resolve, you must set Disputes.Outcome to one of CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, or CHARGEBACK, set Disputes.ResolvedAt = current timestamp, and set Disputes.State = RESOLVED in the same transaction.
+- If you select Outcome = CHARGEBACK, confirm the transaction is not already REVERSED or fully REFUNDED. If it is, choose WITHDRAWN or CUSTOMER_WON as appropriate and note why (refund vs reversal/void).
+- Do not edit Transactions.Status, Amount, or IsFraud as part of dispute handling.
+
+Merchant risk tier changes (risk score/tiering/blocklisting)
+- You may update Merchants.RiskTier to LOW, MED, or HIGH when transaction evidence supports a change:
+  - Raise to HIGH if the merchant has three or more Disputes with ReasonCode = FRAUD or DUPLICATE in the last 7 days and at least one Outcome = CHARGEBACK.
+  - Lower to LOW only if there have been zero Disputes opened in the last 30 days and the recent volume is stable (Transactions count within ±20% of the 30‑day average) and no Outcomes = CHARGEBACK in the same period.
+- If the merchant is in Category = GROCERY or FUEL and most activity is POS with EntryMode = CHIP/TAP, favor MED rather than HIGH unless Outcomes include CHARGEBACK. Add nuance, not overreaction.
+- Do not mass‑update multiple merchants in one transaction. One MerchantId per change.
+
+Additional constraints and “don’ts”
+- Do not set Cards.ClosedAt unless also setting Cards.Status = CLOSED (same transaction).
+- Do not set Disputes.ResolvedAt unless also setting Disputes.State = RESOLVED and Disputes.Outcome to a final value.
+- Do not backdate Disputes.ResolvedAt earlier than Disputes.OpenedAt.
+- Do not change Customers.Status, Transactions fields, or any non‑allowed columns as part of this SOP.
+- If you’re unsure whether a contactless “tap” was card‑present, check Transactions.CardPresent and EntryMode = TAP; do not infer from MerchantName alone.
+
+Confidence and thresholds before writing
+- Minimum signal to block: confidence ≥ 0.8 that activity is unauthorized. Practically, that means corroboration by either IsFraud = 1 on APPROVED events or a pattern of SUSPECTED_FRAUD/INVALID_CVV declines across Channels (ECOM and POS) or EntryModes (MANUAL and TAP).
+- Minimum signal to close: confidence ≥ 0.95 that the card is replaced and dormant as defined above.
+- Minimum signal to set Merchants.RiskTier = HIGH: at least one recent CHARGEBACK outcome plus a multi‑day pattern, not a single day spike.
+
+Rollback guidance
+- If you blocked a card in error, and no irreversible outcomes were created, set Cards.Status back to ACTIVE. Do not touch ClosedAt.
+- If you closed a card prematurely, set Cards.Status back to BLOCKED or ACTIVE per supervisor guidance and set Cards.ClosedAt = NULL in the same transaction. Document the reason in the audit note.
+- If you set the wrong Merchants.RiskTier, change it back to the prior value and capture the correction in the audit note with the supporting query.
+- If you resolved a dispute with the wrong Outcome, update Disputes.Outcome to the correct final value and ensure Disputes.State remains RESOLVED. Do not unset ResolvedAt; instead, add a new audit note explaining the correction timestamp.
+
+What to write in the audit note
+Every write must have a contemporaneous audit note. Use short, factual sentences:
+- Trigger: what prompted the action (fraud spree, customer call, system alert).
+- Evidence: query summaries, key field values (Transactions.Status, DeclineReason, EntryMode, Channel; Disputes.State/Outcome; Cards.Status).
+- Decision: the if/then rule you applied.
+- Action: exact table.field changes with before → after values and timestamps (e.g., Cards.Status: ACTIVE → BLOCKED; Disputes.ResolvedAt: null → 2026‑03‑03T14:05Z).
+- Impact and next steps: customer comms, monitoring, follow‑ups.
+
+Example audit note (free text)
+“2026‑03‑03 14:05Z, Agent JS. Trigger: Fraud alert and customer confirmed unauthorized ECOM charges. Evidence: CardId 8842 had 3 APPROVED ECOM transactions (IsFraud=1) at Merchant ‘QuickApps’ between 12:10–12:32Z; 5 additional DECLINED attempts with DeclineReason=SUSPECTED_FRAUD via EntryMode=MANUAL and TAP. Decision: If ≥2 APPROVED IsFraud + mixed EntryMode fraud, then BLOCK card. Action: ModestExpectationsCaptial.Cards.Status ACTIVE → BLOCKED at 14:03Z. Created Dispute for TransactionId 991177 (ReasonCode=FRAUD, State=OPEN). Verification: post‑write SELECT shows Cards.Status=BLOCKED. Impact: customer notified; monitor for new attempts for 48h.”
+
+Common pitfalls
+- Mixing up REFUNDED vs REVERSED (void). If a transaction is REVERSED, do not pursue CHARGEBACK; choose WITHDRAWN with rationale. If REFUNDED, only pursue a dispute if refund < DisputedAmount and note the delta.
+- Forgetting to set Disputes.ResolvedAt when you set Outcome and State=RESOLVED.
+- Closing a card without a replacement ACTIVE card for the same CustomerId.
+- Lowering Merchants.RiskTier immediately after a volume drop without checking Outcomes in the last 30 days.
+- Using “contactless” as proof of fraud without checking CardPresent and EntryMode = TAP.
+
+Step‑by‑step examples
+
+Scenario 1: Block a card and open a fraud dispute
+You see a burst of unauthorized e‑commerce purchases (user said “online charges,” i.e., ECOM) at a DIGITAL merchant, plus declines with SUSPECTED_FRAUD. You SELECT from Transactions for CardId 8842 and confirm three APPROVED ECOM transactions marked IsFraud=1 and five DECLINED attempts across MANUAL and TAP. If/then rule triggers: set Cards.Status = BLOCKED. You INSERT into Disputes with TransactionId of the largest unauthorized charge, ReasonCode = FRAUD, State = OPEN, DisputedAmount = Amount. You write the audit note, verify the card now shows BLOCKED, and schedule a replacement card (outside IRIS) while monitoring for more POS attempts.
+
+Scenario 2: Raise a merchant’s risk tier after chargebacks
+Over the past week, MerchantId 552 shows five new disputes on POS chip transactions (CHIP), three resolved with Outcome = CHARGEBACK, one WITHDRAWN, one pending UNDER_REVIEW. SELECT confirms the merchant is Category = RETAIL with current Merchants.RiskTier = MED and Country = US. If/then rule: if ≥1 CHARGEBACK and ≥3 disputes in 7 days, raise to HIGH. You update Merchants.RiskTier MED → HIGH, verify the write, and note that many transactions were approved then reversed after tap/contactless retries. You document the change in the audit note and flag for the risk team to consider acquirer monitoring.
+
+Searching and alternate phrasing you might hear
+- “Freeze” or “lock” the card means set Cards.Status to BLOCKED. Some callers say “cancel” when they mean BLOCKED; “cancel/close” should map to CLOSED only with the closure rules above.
+- “Contactless,” “tap,” or “NFC” maps to EntryMode = TAP; in‑store or “card‑present” maps to POS with CHIP/TAP.
+- “Online,” “web,” “e‑commerce,” or “ECOM” all map to Transactions.Channel = ECOM.
+- “Dispute,” “chargeback,” “claim,” or “case” all map to Disputes records with ReasonCode and State/Outcome.
+- “Void” is typically REVERSED; “refund” maps to REFUNDED.
+- “PAN token,” “token,” or “CardToken” refers to Cards.CardToken.
+
+Quick field reminders while you work
+- Cards.Status must be one of ACTIVE, BLOCKED, CLOSED. If CLOSED, set Cards.ClosedAt at the same time.
+- Disputes.State moves OPEN → UNDER_REVIEW → RESOLVED; when RESOLVED, set Disputes.Outcome and Disputes.ResolvedAt.
+- Merchants.RiskTier can be LOW, MED, or HIGH; change one merchant at a time with clear evidence.
+
+Verification after any write
+- Re‑query the exact row you updated (by primary key) and read back the changed field(s).
+- For card changes, scan last 24h Transactions for the CardId to ensure no new APPROVED activity slipped through post‑block.
+- For disputes, verify no second active dispute exists for the same TransactionId.
+- For merchant risk changes, confirm the new RiskTier reads back as expected and note any immediate shift in declines due to SUSPECTED_FRAUD (monitoring only; no edits to Transactions).
+
+Escalate when in doubt
+- Any closure that doesn’t meet the three closure conditions.
+- Any merchant downgrade to LOW within 30 days of any CHARGEBACK.
+- Any case where the audit note would rely on “assumed” behavior without direct field evidence.
+
+By following this plan‑then‑execute approach, using the exact allowed values, and writing crisp audit notes, we keep changes safe, reversible, and easy to review.

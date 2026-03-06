@@ -1,0 +1,112 @@
+Decline Reason Handling and Customer Remediation
+
+Use this guidance when investigating card payment declines that show in ModestExpectationsCaptial.Transactions with Transactions.Status = DECLINED and one of these Transactions.DeclineReason values: INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, INVALID_CVV. The objective is to decide whether to recommend next steps to the customer or merchant, and when to block the card. You can update ModestExpectationsCaptial.Cards.Status, but only within the rules below. Do not change any other data.
+
+Where to start in IRIS
+- Pull the declined records from ModestExpectationsCaptial.Transactions for the CardId in question. Check TransactionId, AuthAt, Amount, Currency, Channel (ECOM or POS), EntryMode (MANUAL, CHIP, TAP), MerchantId, MerchantName, and DeclineReason. Confirm Status is DECLINED (not APPROVED, REFUNDED, or REVERSED).
+- Join to ModestExpectationsCaptial.Cards using CardId to see Cards.Status (ACTIVE, BLOCKED, CLOSED) and Cards.CreditLimit.
+- Join to ModestExpectationsCaptial.Customers via Cards.CustomerId to check Customers.RiskScore and (if helpful) Segment or Region signals.
+- Join to ModestExpectationsCaptial.Merchants on MerchantId to see Merchants.RiskTier (LOW, MED, HIGH), Category (GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, DINING), and Country.
+
+General decision pattern
+- If the decline is clearly due to funds or limits (INSUFFICIENT_FUNDS or LIMIT_EXCEEDED) and the behavior is normal for the customer, do not block the card. Provide practical customer steps.
+- If the decline suggests account takeover, bot testing, or stolen credentials (SUSPECTED_FRAUD, or a cross‑merchant burst of INVALID_CVV), block the card after you confirm the evidence in Transactions and supporting fields.
+- If the pattern looks like a merchant integration issue (a spike in INVALID_CVV at a single MerchantId across many CardIds, especially POS with CHIP/TAP), recommend merchant steps and do not block cards.
+
+Allowed vs not allowed actions
+- You may write ModestExpectationsCaptial.Cards.Status = BLOCKED when the evidence criteria below are met.
+- You may not set ModestExpectationsCaptial.Cards.Status = CLOSED. Closing requires an issuer ops escalation.
+- You may recommend:customer_steps and recommend:merchant_steps in your notes and outreach.
+- Do not alter Transactions rows, Customers.RiskScore, Merchants.RiskTier, or Cards.CreditLimit. Do not retry or “force post” transactions.
+
+Handling by DeclineReason
+
+INSUFFICIENT_FUNDS
+What it usually means: The account could not cover the Amount. This is a soft decline in most cases, not a fraud signal.
+What to check:
+- Confirm Transactions.DeclineReason = INSUFFICIENT_FUNDS and Transactions.Channel (ECOM vs POS). Look at the last 3–7 days for the same CardId.
+- Compare the Amounts to Cards.CreditLimit to make sure the amounts are generally within the credit line.
+What to do:
+- If Cards.Status is ACTIVE and there are fewer than 5 such declines in 24 hours to the same MerchantId, do not block. Recommend:customer_steps such as funding the account, reducing the attempted amount, or retrying after pending holds clear.
+- If the customer has multiple INSUFFICIENT_FUNDS across unrelated MerchantId values but a low Customers.RiskScore (for example, under 50), still do not block. Suggest budgeting tools and waiting for REVERSED holds.
+- Only escalate if you also see SUSPECTED_FRAUD declines or obviously inconsistent behavior (e.g., tap/contactless attempts in a different Region within minutes). Otherwise, no card action.
+
+LIMIT_EXCEEDED
+What it usually means: The attempted Amount exceeded Cards.CreditLimit or the internal per‑transaction limit. By itself, LIMIT_EXCEEDED is not a fraud signal.
+What to check:
+- Confirm DeclineReason = LIMIT_EXCEEDED. Compare Transactions.Amount against Cards.CreditLimit and look for multiple attempts in a short window.
+- Review Customers.RiskScore and Merchants.RiskTier. Look at Channel and EntryMode; MANUAL and ECOM are more prone to testing attacks than CHIP or TAP.
+When it becomes risk‑relevant:
+- If you see 3 or more LIMIT_EXCEEDED declines for the same CardId within 10 minutes at 3 or more distinct MerchantId values, especially Channel = ECOM or EntryMode = MANUAL, treat as potential card testing.
+- If Customers.RiskScore is high (use 70+ as a practical threshold) or Merchants.RiskTier = HIGH for most of those attempts, act conservatively.
+What to do:
+- Normal case (single merchant, occasional attempts, expected spend growth): do not block. Recommend:customer_steps like reducing order size, splitting the purchase, or requesting a limit review through the standard channel. Note that we do not change limits in this workflow.
+- Testing pattern (rapid, cross‑merchant LIMIT_EXCEEDED as above, or mixed with SUSPECTED_FRAUD on adjacent attempts): set Cards.Status to BLOCKED. Add an audit note with the evidence and recommend a reissue. Do not set CLOSED.
+
+INVALID_CVV
+What it usually means: The CVV/CVC did not validate. It occurs on card‑not‑present (CNP) e‑commerce and manual‑keyed transactions; it should not appear on CHIP or TAP at POS.
+Detecting spikes and deciding:
+- Card‑level typo: 1–2 INVALID_CVV at the same MerchantName on ECOM likely indicates mis‑entry by the cardholder. Recommend:customer_steps only.
+- Card‑level bot testing: If a single CardId has 5 or more INVALID_CVV declines within 15 minutes across 3+ MerchantId values (ECOM or MANUAL), block the card. This pattern is consistent with credential stuffing or enumeration.
+- Merchant‑level integration issue: If you see a sudden increase of INVALID_CVV across many different CardId values but the same MerchantId (or same gateway MerchantName), especially with EntryMode = CHIP or TAP at POS, do not block cards. Recommend:merchant_steps—ask the merchant to validate their CVV capture and gateway routing and to confirm no format change. Note that CHIP/TAP shouldn’t be sending CVV; if they are, it’s likely a terminal config problem.
+What to do:
+- For card‑level typos: advise the customer to confirm the 3‑ or 4‑digit code, check for expired saved cards in their wallet, and try a small ECOM amount to confirm fix. Do not block.
+- For bot‑testing patterns: set Cards.Status = BLOCKED, then send recommend:customer_steps to verify recent activity and issue a replacement card token as needed.
+- For merchant spikes: add recommend:merchant_steps and tag MerchantId in your outreach. No card blocking unless other fraud signals are present.
+
+SUSPECTED_FRAUD
+What it means: Our controls flagged the attempt as likely fraud.
+What to check:
+- Confirm DeclineReason = SUSPECTED_FRAUD in Transactions and see if IsFraud = 1 on any nearby events for the same CardId.
+- Check clustering across MerchantId and Channel. A string of SUSPECTED_FRAUD at ECOM with MANUAL or obvious geolocation jumps is high‑risk.
+What to do:
+- If there are two or more SUSPECTED_FRAUD declines within 24 hours on the same CardId, or any SUSPECTED_FRAUD combined with IsFraud = 1 in the last 7 days, immediately set Cards.Status to BLOCKED.
+- If Cards.Status is already BLOCKED or CLOSED, do not change it. Proceed with customer verification steps.
+- Recommend:customer_steps to verify the last approved and declined attempts, freeze any saved credentials, and arrange a reissue. Do not set CLOSED without issuer ops approval.
+
+Answering the golden questions
+- What should we do about INVALID_CVV spikes? First determine if the spike is card‑level (one CardId across many merchants) or merchant‑level (many CardIds at one MerchantId). Card‑level, cross‑merchant bursts of 5+ INVALID_CVV in 15 minutes suggest enumeration—block the card (write Cards.Status = BLOCKED) and contact the customer. Merchant‑level spikes suggest an integration or terminal issue—do not block cards; send recommend:merchant_steps and monitor. If INVALID_CVV is showing on POS with CHIP or TAP, treat that as a merchant data‑quality problem.
+- Is LIMIT_EXCEEDED a fraud signal here? By itself, no. LIMIT_EXCEEDED usually reflects spending controls versus Cards.CreditLimit. It becomes a fraud signal when combined with high velocity, multiple MerchantId values, and CNP patterns (ECOM or MANUAL). Use the “3+ declines, 3+ merchants, 10 minutes” heuristic with Customers.RiskScore and Merchants.RiskTier as context; then block.
+
+Operational steps you can follow quickly
+1) In Transactions, filter the last 24–72 hours for the CardId and Status = DECLINED with DeclineReason in [INSUFFICIENT_FUNDS, LIMIT_EXCEEDED, INVALID_CVV, SUSPECTED_FRAUD]. Note the Counts by DeclineReason and MerchantId.
+2) Check Cards.Status and Cards.CreditLimit. If Status ≠ ACTIVE, stop—do not change it.
+3) Pull Customers.RiskScore and Merchants.RiskTier for the involved merchants.
+4) Apply the rules above. If blocking is warranted, write ModestExpectationsCaptial.Cards.Status = BLOCKED for that CardId.
+5) Add your audit note, including counts, time windows, MerchantId list, Channel/EntryMode mix, and the specific DeclineReason values observed.
+6) Add recommend:customer_steps and/or recommend:merchant_steps in the case record. If a merchant issue is suspected, tag the MerchantId so merchant ops can follow up.
+
+Scenarios
+
+Scenario A: INVALID_CVV burst at one merchant
+A customer reports their online grocery order keeps getting rejected. In Transactions, you see 3 DECLINED attempts with DeclineReason = INVALID_CVV within 10 minutes, all to the same MerchantId and Channel = ECOM; no other merchants are involved, Customers.RiskScore = 22. You do not block the card. You advise the customer to re‑enter the CVV, remove the outdated saved card, and try again. You also check other cards at the same MerchantId and see similar behavior across 30 CardIds in the last hour—this looks merchant‑side, so you add recommend:merchant_steps.
+
+Scenario B: LIMIT_EXCEEDED across many merchants
+You see 6 DECLINED attempts with DeclineReason = LIMIT_EXCEEDED for the same CardId over 8 minutes, across 5 different MerchantId values, all Channel = ECOM with EntryMode = MANUAL. Customers.RiskScore = 81 and two merchants have Merchants.RiskTier = HIGH. You treat this as testing. You set Cards.Status = BLOCKED, add an audit note with evidence, and send recommend:customer_steps to contact support for reissue. You do not adjust Cards.CreditLimit and you do not set CLOSED.
+
+Common pitfalls to avoid
+- Confusing a soft decline (INSUFFICIENT_FUNDS) with fraud and blocking unnecessarily.
+- Missing that Transactions.Status must be DECLINED; an APPROVED followed by a REVERSED is a different workflow.
+- Over‑relying on MerchantName text; use MerchantId for grouping because names can vary by gateway.
+- Blocking on INVALID_CVV when all attempts are at one merchant and POS EntryMode = CHIP/TAP—this is likely a terminal or gateway mapping issue.
+- Setting Cards.Status to CLOSED. Do not do this in this SOP.
+- Ignoring Channel and EntryMode; a TAP (contactless) decline tells a different story than a card‑not‑present ECOM decline.
+
+What to write in the audit note
+Capture the who/what/when/why in plain language, including the exact DeclineReason values, counts, and the evidence that justified your decision. Include CardId (mask in customer‑facing notes), the MerchantId list, time window, Channel/EntryMode mix, Customers.RiskScore, and Merchants.RiskTier where relevant. State the action taken (or not taken) and the recommendations provided.
+
+Example audit note:
+“CardId 8421 (internal only). Between 2026‑03‑03 10:12–10:20 UTC, 6 DECLINED attempts observed: DeclineReason = LIMIT_EXCEEDED across 5 distinct MerchantId (ECOM, EntryMode = MANUAL). Customer RiskScore 81; two merchants RiskTier = HIGH. Pattern consistent with CNP testing. Action: set Cards.Status = BLOCKED. Provided recommend:customer_steps (verify recent activity, reissue). No merchant integration issue suspected.”
+
+Customer and merchant recommendations you can paste
+- recommend:customer_steps: “Your card was declined due to [INSUFFICIENT_FUNDS/LIMIT_EXCEEDED/INVALID_CVV/SUSPECTED_FRAUD]. Please verify recent activity, confirm your CVV and billing details, reduce the purchase amount or wait for pending holds to clear. If we contacted you about possible fraud, please confirm which transactions are yours so we can replace your card.”
+- recommend:merchant_steps: “We are observing elevated INVALID_CVV declines for MerchantId [X]. Please validate CVV capture and gateway formatting, and confirm no recent terminal config change (especially for POS with CHIP/TAP). Share any error logs for the observed time window.”
+
+Notes on terminology and search
+Colleagues may refer to declines as rejects or denials, or talk about soft declines vs hard declines. Contactless equals TAP; EMV equals CHIP; online/CNP equals ECOM. Some customers say lock or freeze the card when we say BLOCKED. When merchants ask about disputes or chargebacks in this context, clarify we are still at the authorization stage.
+
+Governance checkpoints
+- Block only with documented evidence (as specified per DeclineReason above).
+- Never set Cards.Status to CLOSED in this workflow.
+- If you believe a systemic merchant issue exists, do not mass‑block; route to merchant ops with the MerchantId and time‑bound evidence.
+- If a blocked card later proves to be a false alarm, only issuer ops can return it to ACTIVE after customer verification.

@@ -1,0 +1,85 @@
+Refunds, Reversals, and Customer Remediation
+
+This guidance covers how to tell a true refund from a reversal, how that ties into disputes and chargebacks, and when to recommend a refund versus continue the dispute path. It is written for analysts who will query IRIS SQL against our core tables and issue recommendations, not direct postings. When in doubt, get the data first, then apply the simple if/then rules below.
+
+What “REFUNDED” and “REVERSED” mean in our data
+- In ModestExpectationsCaptial.Transactions, Status is one of APPROVED, DECLINED, REFUNDED, or REVERSED. Treat REFUNDED as a settled credit from the merchant after a posted sale. Treat REVERSED as an authorization reversal or same-day void—funds were never settled and the hold should fall off.
+- PostedAt is a quick tell: REVERSED items typically have PostedAt null or close to AuthAt; REFUNDED items have a real PostedAt plus later refund processing (our system marks the original row as REFUNDED).
+- If a customer uses other terms—void, authorization reversal, merchant credit, courtesy credit, goodwill refund, ex gratia, or CBK—map them mentally to REVERSED, REFUNDED, and Disputes.Outcome CHARGEBACK as appropriate.
+
+Where to look in SQL
+Start by pulling the transaction and any linked dispute:
+- Select from ModestExpectationsCaptial.Transactions using TransactionId (or by CardId + date + MerchantName). You’ll rely on Transactions.Status, Transactions.Amount, and Transactions.PostedAt.
+- Left join ModestExpectationsCaptial.Disputes on Disputes.TransactionId. You need Disputes.State (OPEN, UNDER_REVIEW, RESOLVED), Disputes.Outcome (CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK), Disputes.ReasonCode (DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, CANCELLED), and Disputes.DisputedAmount.
+- If you need customer context for remediation risk, you can read ModestExpectationsCaptial.Customers for Customers.CustomerId, Status, Segment, and RiskScore. This is read-only context.
+
+Simple decision rules you’ll use every day
+- If Transactions.Status is DECLINED (any DeclineReason, including INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, or INVALID_CVV), do not refund or dispute. There is no settled charge to remediate. Explain that no funds were taken.
+- If Transactions.Status is REVERSED, do not recommend a refund. It’s a void/auth reversal and the hold should release. If the hold hasn’t dropped after a normal window, reassure and monitor; only consider a goodwill refund per the small-dollar policy if the hold has demonstrably impacted the customer and merchant won’t cooperate.
+- If Transactions.Status is REFUNDED, confirm any open dispute and recommend closing it (see below). We do not send a second refund for the same amount.
+- If Transactions.Status is APPROVED and PostedAt is present, decide refund vs dispute based on reason and merchant behavior:
+  - FRAUD claims (Disputes.ReasonCode FRAUD): recommend dispute, not refund. Fraud belongs in the chargeback flow.
+  - DUPLICATE charges (DUPLICATE): first check for a paired REVERSED or REFUNDED entry for the duplicate. If none, recommend dispute. If the merchant has already refunded one item (REFUNDED), only the remaining APPROVED item is in scope.
+  - NOT_RECEIVED or CANCELLED: ask whether the merchant is cooperating. If merchant has issued a credit (REFUNDED) or void (REVERSED), no refund needed. If the merchant refuses or is non-responsive, recommend dispute. If the amount is small and the customer impact is high, you may recommend a goodwill refund per policy instead of a dispute.
+  - NOT_AS_DESCRIBED: prefer dispute if the merchant refuses remediation. If the merchant agrees to credit but delays beyond a reasonable timeframe, hold a bit for the REFUNDED flag to land; if it doesn’t, proceed to dispute or a goodwill refund recommendation depending on context.
+
+Why a dispute stays open on a refunded transaction
+You’ll see cases where Transactions.Status is REFUNDED but Disputes.State is still OPEN or UNDER_REVIEW. That typically happens when:
+- The merchant issued the refund after we opened a dispute, and our dispute workflow hasn’t been updated yet.
+- The refunded amount equals the original Transactions.Amount, but the dispute amount (Disputes.DisputedAmount) needs comparison.
+In these cases, if the transaction shows REFUNDED and Disputes.DisputedAmount is fully covered by the refund, recommend:close_dispute with a clear note (example below). If Disputes.State is RESOLVED with Outcome CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, or CHARGEBACK, no action is needed—just explain the timeline to the customer to avoid confusion about “chargeback” versus “refund.”
+
+How to make the call: refund vs dispute
+- Recommend dispute when: ReasonCode FRAUD, or merchant non-cooperation on DUPLICATE, NOT_RECEIVED, CANCELLED, or NOT_AS_DESCRIBED, and the charge is still APPROVED and posted. If EntryMode is MANUAL on POS or Channel is ECOM (card-not-present), and the customer asserts no participation, that strengthens the fraud basis. Don’t be swayed by contactless/tap (TAP) or chip (CHIP) if the customer denies the transaction; still route to dispute for FRAUD.
+- Recommend refund (goodwill) when: The case is non-fraud, low complexity, low-to-moderate amount, high customer impact, and the merchant is unwilling or unable to resolve promptly. Consider Customers.RiskScore and Segment for prudence. If Card is BLOCKED or CLOSED due to compromise, and the merchant is unresponsive on a small claim, a one-time goodwill refund can be appropriate. Never recommend refund if Disputes.State is UNDER_REVIEW for FRAUD.
+- Do not recommend any refund if Transactions.Status is REVERSED or REFUNDED; point to the existing credit/void. Do not recommend refund for DECLINED attempts.
+
+Evidence required before you take an action
+For recommend:refund (a goodwill refund recommendation; you are not posting money yourself):
+- Transactions.Status must be APPROVED (not REVERSED, not REFUNDED, not DECLINED).
+- Transactions.PostedAt is not null.
+- Disputes.State is either null (no dispute) or OPEN for a non-FRAUD ReasonCode (DUPLICATE, NOT_RECEIVED, NOT_AS_DESCRIBED, CANCELLED), or the customer declines to pursue a dispute.
+- Document merchant response (e.g., “merchant refused to credit”) in your audit note.
+- If you can, confirm Channel and EntryMode. For POS with CHIP or TAP where the customer acknowledges purchase quality issues (not fraud), goodwill may be more appropriate than a dispute if merchant won’t help.
+
+For recommend:close_dispute (you are recommending to the dispute queue to withdraw or close):
+- Transactions.TransactionId ties to a dispute whose Disputes.State is OPEN or UNDER_REVIEW.
+- Transactions.Status is REFUNDED.
+- The refund covers the customer’s claim. If Disputes.DisputedAmount equals Transactions.Amount, that’s clear. If not equal, verify the customer’s requested amount is covered.
+- Disputes.Outcome must be empty (outcome only appears when State is RESOLVED). If Outcome is already CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, or CHARGEBACK, do not recommend closing—it’s already done.
+
+Operational steps you can follow
+- Pull the record: select t.TransactionId, t.CardId, t.MerchantName, t.Status, t.Amount, t.PostedAt, t.Channel, t.EntryMode from ModestExpectationsCaptial.Transactions t where t.TransactionId = ?.
+- Check for a dispute: select d.DisputeId, d.State, d.ReasonCode, d.DisputedAmount, d.Outcome from ModestExpectationsCaptial.Disputes d where d.TransactionId = ?.
+- If you need nearby duplicates: search by CardId + date range + exact Amount + MerchantName to find twin APPROVED items.
+- Apply the rules above. If you recommend:refund, add an audit note and notify the refund ops channel. If you recommend:close_dispute, send your note to the dispute queue referencing the DisputeId.
+
+Remediation narratives you can use with customers
+- Reversal/void found: “We see your purchase was reversed (voided) by the merchant. Because it never settled, the hold will fall off automatically; you’ll see funds released shortly. No further action is needed.”
+- Refund found, dispute open: “The merchant has refunded this charge. We’ll close the existing dispute so you don’t get double-credited. You’ll see the refund on your statement; no additional credit from us is needed.”
+- Recommend dispute: “Because the merchant hasn’t resolved this and you didn’t authorize it, we’ll file a dispute on your behalf. That process may be called a chargeback. We’ll update you as it moves from OPEN to UNDER_REVIEW and RESOLVED.”
+- Recommend goodwill refund: “Given the delay and your impact, we’ll issue a courtesy refund while we work with the merchant. You won’t need to pursue a dispute.”
+
+Common pitfalls
+- Treating REVERSED as REFUNDED and double-crediting—the REVERSED status means the merchant voided before settlement; do not recommend refund.
+- Closing a fraud dispute because a refund appeared from the merchant—if ReasonCode is FRAUD, let the dispute process complete unless the customer explicitly withdraws and risk approves.
+- Missing a duplicate because MerchantName variants differ; always search by MerchantId or by exact Amount and close AuthAt times.
+- Assuming DECLINED means charged—DECLINED does not result in settled funds, so there’s nothing to refund.
+- Forgetting to check Disputes.Outcome before recommending close—if Outcome is CHARGEBACK or CUSTOMER_WON already, it’s resolved.
+
+Scenarios
+- Scenario 1 (reversal vs refund): A customer calls about a gas station charge at $60 they say was cancelled at the pump. You query Transactions and find Status REVERSED with PostedAt null and EntryMode TAP (contactless). There’s no dispute on file. You explain that this was a void/authorization reversal, no refund is needed, and the hold will drop. You do not recommend a refund or a dispute; you add an audit note and close the case.
+- Scenario 2 (refund with open dispute): A customer disputed a $120 online retailer charge as NOT_RECEIVED last week. Today, Transactions shows Status REFUNDED and PostedAt two weeks ago; Disputes.State remains OPEN with DisputedAmount = 120 and Outcome null. You recommend:close_dispute, stating the refund fully covers the claim to avoid a double credit. You update the customer that the chargeback/dispute will be withdrawn because the merchant refunded.
+
+What to write in the audit note
+Keep it factual, tie it to fields you checked, and state your recommendation clearly. Include TransactionId, any DisputeId, Status, PostedAt, Amount, ReasonCode if present, and your action.
+
+Example audit note:
+“Txn 987654321 at ‘Acme Retail’ is REFUNDED; Amount 120.00, PostedAt 2026-02-12T14:05Z. Dispute 55512 is OPEN, ReasonCode NOT_RECEIVED, DisputedAmount 120.00, Outcome null. Merchant refund fully covers claim. Recommending recommend:close_dispute to prevent duplicate credit. Customer informed; no goodwill refund recommended.”
+
+Governance and limits
+- You may recommend:refund and recommend:close_dispute. You do not change Transactions.Status, Disputes.State, or Disputes.Outcome directly in SQL.
+- Never set Cards.Status (ACTIVE, BLOCKED, CLOSED) or modify customer records under this SOP.
+- For refunds, ensure clear evidence that the transaction is APPROVED and posted, and that a merchant remedy isn’t already present (REFUNDED/REVERSED). For close_dispute, ensure the dispute is OPEN or UNDER_REVIEW and the refund is present.
+
+Helpful phrasing people may search with (embedded here for searchability): chargeback vs dispute; refund vs credit; void vs reversal; auth reversal vs authorization reversal; merchant credit; courtesy credit or goodwill refund; contactless vs tap; card-not-present vs ECOM.

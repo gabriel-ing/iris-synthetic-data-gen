@@ -1,0 +1,105 @@
+Customer Risk Posture and Segmentation
+
+Use this SOP when you need to decide if a customer’s recent card activity looks normal for their segment and region, and whether to increase oversight. You will work primarily from ModestExpectationsCaptial.Customers and ModestExpectationsCaptial.Transactions, with a join through ModestExpectationsCaptial.Cards to attribute transactions to a customer. We also reference ModestExpectationsCaptial.Disputes to understand dispute volume. The goal is to turn Customers.RiskScore, Customers.Segment, Customers.Region, and the segment multipliers into practical “expected bands” for volume, spend, e‑commerce share, declines, and disputes—then act when activity falls outside those bands.
+
+What the fields mean in practice
+- Customers.RiskScore is the current numeric posture. Treat higher as riskier; it does not, by itself, trigger actions here. Use it as context when you choose between recommend:monitoring and recommend:review.
+- Customers.Segment and Customers.Region define the cohort benchmark you compare against. Segment names vary; do not assume a fixed list.
+- The multipliers on Customers (SegmentTxnMultiplier, SegmentAmountMultiplier, SegmentEcomMultiplier, SegmentDeclineMultiplier, SegmentDisputeMultiplier) scale the cohort baseline up or down to set this customer’s expected range. For example, if the region+segment cohort median monthly decline rate is 8% and SegmentDeclineMultiplier=0.75, this customer’s expected decline rate is roughly 6%.
+- On Transactions, use Status to classify outcomes: APPROVED, DECLINED, REFUNDED, REVERSED. Use Channel to split between ECOM (card-not-present, “CNP,” online, e‑commerce) and POS (in‑store, card-present). EntryMode helps explain POS patterns; values are MANUAL (keyed), CHIP, TAP (contactless). For decline diagnostics, DeclineReason will be one of INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, INVALID_CVV.
+- For disputes, Disputes.ReasonCode is one of DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, CANCELLED; State is OPEN, UNDER_REVIEW, or RESOLVED; Outcome is CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK.
+
+Observation window and cohort baseline
+- Use a 30‑day lookback by default (AuthAt for timeliness; PostedAt only if you need settled amounts). Extend to 90 days if volume is very low.
+- Build expected bands from the customer’s segment+region cohort. Compute the cohort medians over the same window across all customers with the same Customers.Segment and Customers.Region, using only Cards where Cards.Status is ACTIVE. Then apply the customer’s multipliers:
+  - Expected transaction count = cohort median count × SegmentTxnMultiplier.
+  - Expected total amount (same currency handling across Transactions.Currency) = cohort median amount × SegmentAmountMultiplier.
+  - Expected ECOM share = cohort median ECOM share × SegmentEcomMultiplier. ECOM share is approved ECOM transactions divided by all approved transactions.
+  - Expected decline rate = cohort median decline rate × SegmentDeclineMultiplier. Decline rate is DECLINED counts over all attempts (APPROVED+DECLINED+REFUNDED+REVERSED treated as attempts if they have an auth).
+  - Expected dispute count = cohort median count of active disputes × SegmentDisputeMultiplier. “Active” means Disputes.State in (OPEN, UNDER_REVIEW).
+- For day‑of‑week and travel seasonality, compare the last 7 days to the customer’s own prior 8–30 days as a sanity check.
+
+How to pull the data (at a glance)
+- Attribute Transactions to a customer by joining Transactions.CardId to Cards.CardId, then Cards.CustomerId to Customers.CustomerId. Filter Cards.Status to ACTIVE unless you are investigating historic behavior across blocks.
+- Count transactions and sum Transactions.Amount by Status and Channel. For amounts, exclude REFUNDED and REVERSED when assessing net spend; include them when you’re explaining anomalies.
+- For declines, count where Transactions.Status=‘DECLINED’ and break down by Transactions.DeclineReason (especially SUSPECTED_FRAUD and LIMIT_EXCEEDED).
+- For disputes, join Disputes on Disputes.TransactionId=Transactions.TransactionId, and count where Disputes.State IN (‘OPEN’, ‘UNDER_REVIEW’). Keep a separate count for FRAUD vs non‑FRAUD ReasonCode.
+- When referencing contactless, remember TAP equals contactless at POS. For card‑not‑present, use Channel=‘ECOM’ (people may say “online,” “e‑comm,” or “CNP”).
+
+Interpreting the multipliers and setting bands
+- The multipliers translate cohort medians into the customer’s tailored “normal.” Use a ±30% tolerance for count and amount, ±20% for ECOM share, and ±25% for decline and dispute rates unless the segment specifically tightens or loosens tolerance. If a metric is sparse (e.g., fewer than 10 transactions), widen tolerance by another 10 percentage points.
+- Example: cohort median 30‑day transactions is 40; customer SegmentTxnMultiplier=1.2 → expected 48, tolerance ±30% → normal band 34–62. If observed is 90, that’s 1.9× expected and outside tolerance.
+
+Decision rules (if / then)
+- If 2 or more of the five key metrics (count, amount, ECOM share, decline rate, dispute count) are outside tolerance in the risk‑increasing direction (e.g., higher ECOM share, higher declines), then recommend:monitoring.
+- If any single metric exceeds 1.7× its expected value (after multipliers) or ECOM share jumps by 20 percentage points week‑over‑week and stays above expected, then recommend:review.
+- If decline rate is ≥2.5× expected and ≥30% of declines are SUSPECTED_FRAUD, or if FRAUD disputes opened in the last 7 days are ≥3 and >2× the customer’s expected dispute count, then recommend:block_card. Under this SOP you only recommend; you do not change Cards.Status yourself.
+- If total amount is >2× expected and concentrated in ECOM with rapid retries (same MerchantName, multiple DECLINED with INVALID_CVV followed by APPROVED), then recommend:review. Escalate to recommend:block_card only if the pattern continues for >24 hours or overlaps with SUSPECTED_FRAUD declines.
+- If the customer is traveling (Transactions.Country via Merchants.Country or out‑of‑Region merchants) and POS CHIP/TAP approvals dominate with few declines, do not escalate unless declines exceed the band and are not LIMIT_EXCEEDED or INSUFFICIENT_FUNDS.
+
+What you are allowed to do
+- Permitted actions in this SOP:
+  - recommend:monitoring (flag for increased automated checks)
+  - recommend:review (hand‑off to human investigator/AML ops)
+  - recommend:block_card (suggest immediate block by Cards Ops/Fraud)
+- Not allowed under this SOP:
+  - Do not set Cards.Status to BLOCKED, ACTIVE, or CLOSED. Those values exist (ACTIVE, BLOCKED, CLOSED) but can only be changed by Cards Ops after review.
+  - Do not change credit limits or customer status. Do not alter Transactions or Disputes records.
+- Evidence required before recommending block_card:
+  - Show the 30‑day expected vs observed with the multiplier math.
+  - Provide the decline breakdown with SUSPECTED_FRAUD share.
+  - Note any Disputes with ReasonCode=FRAUD and State in (OPEN, UNDER_REVIEW).
+  - Call out that activity is predominantly ECOM vs POS if relevant.
+
+Practical steps
+1) Identify the customer by Customers.CustomerId. Confirm Customers.Region, Customers.Segment, and all five multipliers on the Customers row.
+2) Pull the customer’s last 30 days of Transactions by joining via Cards (Transactions.CardId → Cards.CardId → Cards.CustomerId). Filter Cards.Status=‘ACTIVE’. Aggregate:
+   - Count of Transactions by Status (APPROVED, DECLINED, REFUNDED, REVERSED).
+   - Sum of Transactions.Amount for APPROVED (and for context, REFUNDED and REVERSED).
+   - Split all counts and sums by Transactions.Channel (ECOM vs POS).
+   - Decline breakdown by Transactions.DeclineReason (INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, INVALID_CVV).
+3) Pull disputes for this customer’s transactions (Disputes joined on TransactionId). Count active disputes (State OPEN or UNDER_REVIEW) and tag ReasonCode=FRAUD vs non‑fraud.
+4) Build cohort medians for the same window: customers with the same Customers.Segment and Customers.Region. Apply the five multipliers to set this customer’s expected values. Set tolerances as noted above.
+5) Compare observed vs expected and apply the decision rules. Use Customers.RiskScore as a tiebreaker when the decision is borderline: higher scores tilt toward recommend:review over recommend:monitoring.
+
+Short scenarios
+
+Scenario A: E‑commerce surge with fraud signals
+A customer in Region “NE” shows 30‑day ECOM share at 78% vs expected 40% (SegmentEcomMultiplier already applied), and transaction count is 1.9× expected. Declines are 33% vs expected 10%, with 45% of declines marked SUSPECTED_FRAUD and multiple INVALID_CVV retries at one DIGITAL merchant. Disputes include two new FRAUD cases opened this week (State=OPEN). This breaches several bands and meets the block criteria (decline rate ≥2.5× expected and SUSPECTED_FRAUD heavy). Action: recommend:block_card with evidence and hand off.
+
+Scenario B: Travel spike, POS heavy
+A low‑risk customer’s spend doubles vs expected after a trip to a new country, but approvals are mostly POS TAP/CHIP at TRAVEL and DINING merchants; ECOM share is 8% vs expected 15%. Decline rate is 6% vs expected 7%, with most declines LIMIT_EXCEEDED on a single day when they hit the cap, then normal. No active disputes. Although count and amount are outside bands in the high direction, the composition is low‑risk and decline rate is within tolerance. Action: recommend:monitoring for 14 days; no review.
+
+Common pitfalls
+- Mixing auth and posting: using PostedAt to judge “current behavior” can lag; prefer AuthAt for the 30‑day window and use PostedAt only for final net amount. 
+- Counting REFUNDED/REVERSED as new spend: exclude those from amount bands or you’ll overstate spend. 
+- Forgetting to filter to ACTIVE cards and double‑counting across multiple cards per customer. 
+- Treating POS MANUAL entry as ECOM: MANUAL at POS is still POS; ECOM is strictly Channel=ECOM (CNP/online). 
+- Ignoring DeclineReason: SUSPECTED_FRAUD vs INSUFFICIENT_FUNDS imply very different actions. 
+- Equating CHARGEBACK outcomes with open disputes: CHARGEBACK is a Disputes.Outcome on a resolved case; do not count it as “active.”
+
+What to write in the audit note
+Keep it short, factual, and reproducible. Include the window, the segment+region cohort reference, the multipliers used, the observed vs expected for the five metrics, any notable decline reasons, dispute counts by ReasonCode, and your recommendation. Mention that you filtered to Cards.Status=ACTIVE and which Channels (ECOM/POS) dominated.
+
+Example audit note:
+“CustomerId 84213, Region=‘NE’, Segment=‘Everyday’. 30D window (AuthAt). Applied multipliers: Txn=1.2, Amt=1.1, Ecom=1.0, Decl=0.8, Disp=0.9. Observed vs expected: count 92 vs 48 (1.9×), amount $8.7k vs $4.4k (2.0×), ECOM share 78% vs 40%, decline rate 33% vs 10% (45% SUSPECTED_FRAUD), active disputes 2 FRAUD OPEN. Data limited to ACTIVE cards; ECOM heavy at DIGITAL merchants; multiple INVALID_CVV retries. Action: recommend:block_card.”
+
+Operational notes and tips
+- When colleagues ask about “chargebacks,” remember they may mean disputes generally. Clarify whether they need open disputes (State=OPEN/UNDER_REVIEW) or resolved cases with Outcome=CHARGEBACK. 
+- If someone says “freeze the card,” “hotlist,” or “block,” under this SOP you only recommend:block_card; Cards Ops will set Cards.Status to BLOCKED if approved.
+- If you hear “contactless” or “tap,” that maps to Transactions.EntryMode=TAP under Channel=POS; “swipe/chip” is CHIP; keyed entry is MANUAL. 
+- “Rejects” or “declines” map to Transactions.Status=DECLINED; be precise when presenting rates. 
+- “Online,” “e‑comm,” and “CNP” are all the same as Channel=ECOM.
+- For merchant context, consider Merchants.Category (GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, DINING) and Merchants.RiskTier (LOW, MED, HIGH) when writing the narrative, though they don’t change the math here.
+
+Escalation thresholds recap
+- Monitoring: 2+ metrics outside tolerance in a risk‑increasing direction OR a steady drift (three consecutive weeks) toward higher ECOM share or decline rate near the band.
+- Review: any one metric ≥1.7× expected, or an abrupt 20+ percentage point jump in ECOM share, or new non‑FRAUD disputes ≥3 with mixed merchants.
+- Block recommendation: decline rate ≥2.5× expected with ≥30% SUSPECTED_FRAUD, or 3+ FRAUD disputes opened in 7 days and doubling of ECOM share versus expected, or simultaneous spikes in count and amount ≥2× expected with repeated INVALID_CVV then APPROVED at the same ECOM merchant.
+
+Answering the golden questions
+- Is this customer behaving outside their segment profile? Run the 30‑day pulls, apply the multipliers to the cohort medians, and compare all five metrics against tolerance. Cite which ones breach.
+- Should we increase monitoring for this customer? If two or more risk‑increasing metrics breach or any single metric is trending sharply toward the edge, recommend:monitoring; use Customers.RiskScore to lean toward recommend:review if the score is high or rising.
+
+Close the loop
+Log your audit note, attach query snippets or result IDs, and place the chosen recommendation (recommend:monitoring, recommend:review, or recommend:block_card) in the case tracker. If you recommended a block, notify Cards Ops and Fraud, and include evidence on Transactions.Status/DeclineReason and Disputes.State/ReasonCode so they can act quickly.

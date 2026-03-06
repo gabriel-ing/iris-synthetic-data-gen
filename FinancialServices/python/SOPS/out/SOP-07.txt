@@ -1,0 +1,171 @@
+Velocity and Burst Spending Investigation
+
+Use this when you see a spike in authorizations or spend that looks like a run‑up, rapid‑fire swipes, or possible card testing. The goal is to compute velocity metrics over the last 10 minutes, 1 hour, and 24 hours for a single CardId, compare them to the customer’s historical baseline scaled by segment multipliers, and decide whether to recommend:block_card or recommend:monitoring. This SOP is for database-driven analysis; you will query IRIS SQL across ModestExpectationsCaptial.Transactions, ModestExpectationsCaptial.Cards, and ModestExpectationsCaptial.Customers.
+
+What we consider “velocity”
+- Transaction count and total authorized Amount over the last 10 minutes, 1 hour, and 24 hours.
+- We calculate it from Transactions.AuthAt (authorization timestamp). Do not use PostedAt for this purpose.
+- We track totals and also slices by Transactions.Channel (ECOM vs POS), Transactions.EntryMode (MANUAL, CHIP, TAP), and outcome by Transactions.Status (APPROVED, DECLINED, REFUNDED, REVERSED).
+
+Before you start
+- Confirm the card is currently usable: from ModestExpectationsCaptial.Cards, pull Cards.Status where Cards.CardId = :card_id. Proceed only if Status = ACTIVE. If Status is BLOCKED or CLOSED, do not recommend further action; just document what you found.
+- Get the customer context from ModestExpectationsCaptial.Customers via Cards.CustomerId. You’ll need Customers.SegmentTxnMultiplier and Customers.SegmentAmountMultiplier. If available, Customers.SegmentEcomMultiplier can refine ECOM thresholds, and Customers.SegmentDeclineMultiplier helps when many events are DECLINED.
+
+Pull the context
+Run this first to anchor the case:
+
+select
+  c.CardId,
+  c.Status as CardStatus,
+  c.CardType,
+  c.OpenedAt,
+  cu.CustomerId,
+  cu.Segment,
+  cu.RiskScore,
+  cu.SegmentTxnMultiplier,
+  cu.SegmentAmountMultiplier,
+  cu.SegmentEcomMultiplier,
+  cu.SegmentDeclineMultiplier
+from ModestExpectationsCaptial.Cards c
+join ModestExpectationsCaptial.Customers cu on cu.CustomerId = c.CustomerId
+where c.CardId = :card_id;
+
+If CardStatus is not ACTIVE, stop here, note it, and move on.
+
+Compute burst metrics
+Use a reference time (default CURRENT_TIMESTAMP). The query below computes current velocity and a simple trailing baseline. Adjust the windows by changing the DATEADD intervals.
+
+with params as (
+  select :card_id as CardId, :ref_time as RefTime
+),
+last30 as (
+  select t.*
+  from ModestExpectationsCaptial.Transactions t
+  join params p on p.CardId = t.CardId
+  where t.AuthAt >= DATEADD('day', -30, p.RefTime)
+    and t.AuthAt < DATEADD('day', -1, p.RefTime)
+),
+currentw as (
+  select t.*
+  from ModestExpectationsCaptial.Transactions t
+  join params p on p.CardId = t.CardId
+  where t.AuthAt >= DATEADD('day', -1, p.RefTime)
+)
+select
+  -- current windows
+  sum(case when t.AuthAt >= DATEADD('minute', -10, p.RefTime) then 1 else 0 end) as tx_10m,
+  sum(case when t.AuthAt >= DATEADD('minute', -10, p.RefTime) then t.Amount else 0 end) as amt_10m,
+  sum(case when t.AuthAt >= DATEADD('hour', -1, p.RefTime) then 1 else 0 end) as tx_1h,
+  sum(case when t.AuthAt >= DATEADD('hour', -1, p.RefTime) then t.Amount else 0 end) as amt_1h,
+  sum(case when t.AuthAt >= DATEADD('day', -1, p.RefTime) then 1 else 0 end) as tx_24h,
+  sum(case when t.AuthAt >= DATEADD('day', -1, p.RefTime) then t.Amount else 0 end) as amt_24h,
+  -- channel and declines (10m slice as indicator)
+  sum(case when t.AuthAt >= DATEADD('minute', -10, p.RefTime) and t.Channel = 'ECOM' then 1 else 0 end) as tx_10m_ecom,
+  sum(case when t.AuthAt >= DATEADD('minute', -10, p.RefTime) and t.Channel = 'POS' then 1 else 0 end) as tx_10m_pos,
+  sum(case when t.AuthAt >= DATEADD('minute', -10, p.RefTime) and t.Status = 'DECLINED' then 1 else 0 end) as dec_10m,
+  sum(case when t.AuthAt >= DATEADD('minute', -10, p.RefTime) and t.Status = 'APPROVED' then 1 else 0 end) as app_10m,
+  count(distinct case when t.AuthAt >= DATEADD('minute', -10, p.RefTime) then t.MerchantId end) as uniq_merch_10m
+from currentw t
+join params p on p.CardId = t.CardId;
+
+For declines, you may also pull top Transactions.DeclineReason counts in the last hour to see INSUFFICIENT_FUNDS vs SUSPECTED_FRAUD, LIMIT_EXCEEDED, or INVALID_CVV patterns.
+
+Compute a per-hour baseline from the last 30 days (excluding the last day to avoid contaminating the baseline) and scale it to each window:
+
+with params as (
+  select :card_id as CardId, :ref_time as RefTime
+),
+last30 as (
+  select t.*
+  from ModestExpectationsCaptial.Transactions t
+  join params p on p.CardId = t.CardId
+  where t.AuthAt >= DATEADD('day', -30, p.RefTime)
+    and t.AuthAt < DATEADD('day', -1, p.RefTime)
+)
+select
+  cast(count(*) as decimal(18,4)) / (29.0*24.0) as base_txn_per_hour,
+  cast(sum(t.Amount) as decimal(18,4)) / (29.0*24.0) as base_amt_per_hour,
+  cast(sum(case when t.Channel = 'ECOM' then 1 else 0 end) as decimal(18,4)) / (29.0*24.0) as base_ecom_txn_per_hour,
+  cast(sum(case when t.Status = 'DECLINED' then 1 else 0 end) as decimal(18,4)) / (29.0*24.0) as base_decline_per_hour
+from last30 t;
+
+From base_txn_per_hour and base_amt_per_hour:
+- baseline_10m_txn = base_txn_per_hour / 6
+- baseline_10m_amt = base_amt_per_hour / 6
+- baseline_1h_txn = base_txn_per_hour
+- baseline_1h_amt = base_amt_per_hour
+- baseline_24h_txn = base_txn_per_hour * 24
+- baseline_24h_amt = base_amt_per_hour * 24
+
+Compare against segment multipliers
+- Use Customers.SegmentTxnMultiplier for the transaction-count thresholds and Customers.SegmentAmountMultiplier for amount thresholds. Example: threshold_10m_count = baseline_10m_txn * SegmentTxnMultiplier; threshold_10m_amount = baseline_10m_amt * SegmentAmountMultiplier. Do the same for 1h and 24h.
+- If the 10m ECOM share is very high (e.g., tx_10m_ecom / tx_10m >= 0.8) and the customer has a non-null Customers.SegmentEcomMultiplier, apply it by increasing the thresholds proportionally for ECOM-heavy behavior typical of that segment.
+- Is the customer’s decline multiplier relevant here? Yes if dec_10m is elevated or if you see many DECLINED in 1h/24h. Compare observed decline rate to base_decline_per_hour scaled by Customers.SegmentDeclineMultiplier. If declines exceed that scaled baseline and the DeclineReason is SUSPECTED_FRAUD or INVALID_CVV, treat the burst as riskier. If declines are mainly INSUFFICIENT_FUNDS or LIMIT_EXCEEDED during a shopping spree, that can be normal for some segments.
+
+Interpreting by merchant category and channel
+- Ask: Is this burst normal for TRAVEL or FUEL?
+  - TRAVEL often clusters bookings and holds. Multiple APPROVED and DECLINED attempts with POS or ECOM at airlines/hotels are common. For Merchants.Category = TRAVEL, allow more attempts within 1h before recommending a block; prefer recommend:monitoring unless there is a parallel pattern of small ECOM MANUAL keyed attempts at unrelated merchants.
+  - FUEL often has small pre-auths and rapid repeats at the same pump. For Merchants.Category = FUEL and EntryMode = TAP or CHIP with CardPresent = 1, higher 10m velocity is often a false positive. If these are primarily APPROVED and at the same MerchantId, lean toward recommend:monitoring.
+- ECOM fraud and card testing typically show many small amounts, high uniq_merch_10m, and a mix of DECLINED/APPROVED within minutes. MANUAL entry in POS for multiple retailers may also point to card-present testing.
+- Consider Merchants.RiskTier. HIGH combined with elevated velocity is more concerning than LOW. Categories like DIGITAL and RETAIL are common for card testing; DINING and GROCERY bursts are less suspicious if localized.
+
+Decision rules (plain language)
+- If either 10m count or amount exceeds its threshold by 2x or more and the burst is mostly ECOM with multiple merchants, and declines exceed the decline-scaled baseline, then recommend:block_card.
+- If 1h is above threshold but 10m is marginal, and transactions are concentrated in TRAVEL or FUEL with plausible EntryMode (TAP/CHIP) and CardPresent = 1, then recommend:monitoring.
+- If 24h is the only window exceeded and there are REFUNDED or REVERSED offsets and Merchants.Category is LOW-risk verticals (e.g., GROCERY) with Merchants.RiskTier = LOW, then recommend:monitoring.
+- If the card is not ACTIVE (BLOCKED or CLOSED), do not recommend any action; just document with context and close your review.
+- If you cannot establish a reliable baseline (no transactions in last 30 days), compare to segment median (ask your lead for the segment fallback) and be conservative: favor monitoring unless there are clear card testing signals (many small ECOM, INVALID_CVV, HIGH risk merchants).
+
+Quick helper query for most recent 10 minutes with merchant detail
+
+select
+  t.TransactionId, t.AuthAt, t.Amount, t.Currency,
+  t.Channel, t.EntryMode, t.CardPresent,
+  t.Status, t.DeclineReason,
+  t.MerchantId, coalesce(t.MerchantName, m.MerchantName) as MerchantName,
+  m.Category, m.RiskTier
+from ModestExpectationsCaptial.Transactions t
+left join ModestExpectationsCaptial.Merchants m on m.MerchantId = t.MerchantId
+where t.CardId = :card_id
+  and t.AuthAt >= DATEADD('minute', -10, :ref_time)
+order by t.AuthAt desc;
+
+Allowed actions and evidence
+- You may record only recommendations:
+  - recommend:block_card
+  - recommend:monitoring
+- Do not directly change Cards.Status to BLOCKED or CLOSED in ModestExpectationsCaptial.Cards. Escalate to the controls queue if a hard block is needed.
+- Evidence required to justify recommend:block_card:
+  - ACTIVE card status and a computed exceedance where current window metrics are above baseline scaled by Customers.SegmentTxnMultiplier or Customers.SegmentAmountMultiplier (state the numbers).
+  - Pattern indicators: high uniq_merch_10m, ECOM dominance with MANUAL entry, Merchants.RiskTier = HIGH, and declines above baseline scaled by Customers.SegmentDeclineMultiplier with SUSPECTED_FRAUD or INVALID_CVV.
+- Evidence for recommend:monitoring:
+  - Exceedance mainly in TRAVEL or FUEL with EntryMode = TAP or CHIP and CardPresent = 1, or localized same-merchant repeats.
+  - Amount exceedance without count exceedance, consistent with a one-off large purchase.
+
+Scenarios
+- Travel burst, normal: Customer’s CardId 8812 shows tx_10m = 6 and amt_10m = $1,800 at two airlines and one hotel, mostly APPROVED, EntryMode = ECOM and CHIP, Merchants.Category = TRAVEL, RiskTier = MED. Baseline_10m_txn is 0.8, SegmentTxnMultiplier is 4.0, so threshold_10m_count = 3.2 and it’s exceeded; same for amount. Declines are 1 with DeclineReason = LIMIT_EXCEEDED. Given TRAVEL context and CardPresent on earlier CHIP authorizations, choose recommend:monitoring and note expected travel clustering.
+- Card testing, risky: CardId 4420 shows tx_10m = 14 for $1–$3 each, uniq_merch_10m = 11, Channel = ECOM, EntryMode = MANUAL, Status mix APPROVED/DECLINED with 7 INVALID_CVV and 3 SUSPECTED_FRAUD. Baseline_10m_txn is 0.2 with SegmentTxnMultiplier 3.0 (threshold 0.6) and is exceeded by >20x. Merchants.RiskTier mostly HIGH, Category DIGITAL/RETAIL. Recommend recommend:block_card and include the exceedance math.
+
+Common pitfalls
+- Using PostedAt instead of AuthAt, which lags and blunts 10m/1h signals.
+- Ignoring DECLINED attempts; velocity is about attempts, not just APPROVED.
+- Double-counting REFUNDED or REVERSED as fresh spend; they should inform interpretation but not inflate risk if they offset prior approvals.
+- Recommending a block on FUEL pre-auth bursts (small repeats, same MerchantId) that are typical for pumps.
+- Forgetting to check Cards.Status; issuing a recommendation on a BLOCKED or CLOSED card wastes time.
+- Treating ECOM MANUAL and POS MANUAL the same; online “manual” entry coupled with INVALID_CVV is a stronger card testing clue than an in-store key-entry fallback.
+
+What to write in the audit note
+Keep it concise, numeric, and interpretable. Include: windows examined, observed counts/amounts, baseline and threshold values, segment multipliers used, key pattern indicators (channel, entry mode, uniq merchants), and the final recommendation with rationale.
+
+Example audit note:
+“CardId 4420 ACTIVE. 10m: 14 tx / $22.17; baseline 0.20 tx / $3.10; thresholds (SegmentTxnMultiplier 3.0, SegmentAmountMultiplier 2.5): 0.60 tx / $7.75. Exceeded by 23.3x tx and 2.9x amount. 11/14 ECOM, EntryMode MANUAL; uniq_merch_10m = 11; declines = 10 (7 INVALID_CVV, 3 SUSPECTED_FRAUD). Merchants mostly DIGITAL, RiskTier HIGH. Recommend: recommend:block_card. Rationale: classic card testing burst with high merchant spread and CVV failures.”
+
+Answering the common questions
+- Is this burst normal for TRAVEL or FUEL? If most transactions in the burst are at Merchants.Category = TRAVEL or FUEL, EntryMode is CHIP or TAP, CardPresent = 1, and approvals outnumber declines, treat elevated 10m/1h velocity as likely normal. Prefer recommend:monitoring unless there are parallel small ECOM MANUAL attempts at unrelated merchants.
+- Is the customer’s decline multiplier relevant here? Yes, when declines spike. Compare observed declines to your base_decline_per_hour scaled by Customers.SegmentDeclineMultiplier. If exceeded and driven by SUSPECTED_FRAUD or INVALID_CVV, it strengthens a recommend:block_card call even when amounts are small.
+
+Retrieval hooks to help future searches
+Analysts might look this up under “velocity,” “burst,” “spike,” “run-up,” “card testing,” “BIN attack,” “rapid-fire swipes,” “machine-gun taps,” “contactless/tap,” “e-commerce/online,” or “shopping spree.”
+
+Governance
+- This SOP authorizes only recommendations (recommend:block_card, recommend:monitoring). Do not update ModestExpectationsCaptial.Cards.Status to BLOCKED or CLOSED, do not set Transactions.IsFraud, and do not open ModestExpectationsCaptial.Disputes records from this workflow. Escalate per the fraud ops playbook if a hard block is warranted or if a dispute/chargeback (Disputes.Outcome includes CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK) pathway is needed later.

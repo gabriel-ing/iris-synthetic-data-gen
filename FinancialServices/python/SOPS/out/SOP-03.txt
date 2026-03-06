@@ -1,0 +1,91 @@
+Transaction Triage (APPROVED/DECLINED/REFUNDED/REVERSED)
+
+Use this when a teammate asks why a transaction looks odd, why an amount is still “pending,” or when you need to decide if we should push for a reversal, a refund, or a deeper investigation. You’ll mainly work out of ModestExpectationsCaptial.Transactions and join to ModestExpectationsCaptial.Cards and ModestExpectationsCaptial.Merchants for context. Keep your queries narrow and always anchor on Transactions.TransactionId first, then pivot to CardId or MerchantId as needed.
+
+Reading a transaction quickly
+- Pull the row by TransactionId. Look at Transactions.Status (allowed values are APPROVED, DECLINED, REFUNDED, REVERSED), AuthAt, PostedAt, Amount, Currency, Channel, EntryMode, and CardPresent.
+- AuthAt is the authorization timestamp (when the “hold” or approval decision happened). PostedAt is the settlement timestamp (when it actually posted to the ledger).
+- Channel is ECOM or POS. EntryMode is MANUAL, CHIP, or TAP (TAP is “contactless”). CardPresent is a boolean signal for card-present vs card-not-present (CNP).
+- Join to Merchants on MerchantId if you need risk/context and check Merchants.RiskTier (LOW, MED, HIGH) and Category (GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, DINING). Join to Cards on CardId if you need status (ACTIVE, BLOCKED, CLOSED) or to confirm the card is still valid.
+
+Working the statuses (if/then in practice)
+- If Transactions.Status = APPROVED and PostedAt is null, then it’s only authorized; the merchant may still capture or may reverse. For POS, most posts arrive within 1–3 business days; for ECOM, 1–7 days. Travel and fuel sometimes delay longer due to tips/adjustments.
+- If Transactions.Status = APPROVED and PostedAt is populated, then it has posted. Treat any subsequent credit from the same MerchantId as a refund or adjustment, not a reversal.
+- If Transactions.Status = DECLINED, check Transactions.DeclineReason. Allowed reasons are INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, INVALID_CVV. There is no posting for a decline; PostedAt should be null. If you see PostedAt on a DECLINED row, flag and recommend:investigate.
+- If Transactions.Status = REFUNDED, it is a merchant credit after a posted debit. Confirm the credit’s MerchantId matches the original and review Amount. A legitimate refund usually has PostedAt set. If a “refund” has no PostedAt after 3 business days, recommend:investigate.
+- If Transactions.Status = REVERSED, it is an authorization reversal/void before settlement. Expect AuthAt set and PostedAt null. Reversals commonly occur same day or within 24–48 hours when a merchant voids a duplicate auth or the customer abandons a cart.
+
+AuthAt vs PostedAt and missing/late posts
+- If AuthAt exists but PostedAt is missing beyond expected windows:
+  - POS, EntryMode = TAP or CHIP (contactless or EMV): wait up to 3 business days. If still missing on day 4, check for a REVERSED event with same CardId, MerchantId, Amount within 72 hours. If found, no further action. If not found, recommend:investigate for “no presentment.”
+  - POS, EntryMode = MANUAL: allow 5 business days (manual key entries often batch late). After day 5 with no post or reverse, recommend:investigate.
+  - ECOM: allow up to 7 days. Many e-commerce “auth-only” holds expire or reverse if not captured. On day 8 with no post or reverse, close the loop by noting “auth expired” and recommend:investigate only if multiple similar holds appear.
+  - TRAVEL and FUEL merchants (check Merchants.Category): holds and adjustments may run longer. Do not recommend:reverse or recommend:refund before 10 days unless there is a confirmed merchant error.
+- If PostedAt is delayed but arrives later with a different Amount (common at dining for tips), treat the initial APPROVED hold as informational and the final posted debit as the charge of record. If the initial hold remained APPROVED with no REVERSED, that’s usually fine; it will drop off.
+
+Answering “Why was this reversed?”
+- Check for a matching REVERSED row: same CardId, MerchantId, Currency, and Amount within 1–3 days of the original APPROVED AuthAt. Merchants often auto-void duplicate authorizations (e.g., contactless attempted twice), partial shipments that were never captured, or abandoned e-commerce checkouts.
+- If Transactions.EntryMode is TAP and CardPresent is true, a second “tap” can create a duplicate auth that the merchant voids; you’ll see REVERSED shortly after APPROVED. For ECOM, a merchant may run an “auth-only” that they later reverse if they cannot fulfill.
+- If you see REVERSED plus a subsequent APPROVED and PostedAt with a final Amount, the reversal cleared the extra hold; the posted row is the real charge.
+
+Answering “Is this refund legitimate?”
+- For a REFUNDED row, confirm:
+  - MerchantId and MerchantName align with the original debit. Small name variations are normal; the ID should match.
+  - PostedAt is present on the refund. A true refund posts; it is not only authorized.
+  - The refund Amount is less than or equal to the original. If greater, recommend:investigate.
+  - There is a previous APPROVED with PostedAt for the same CardId and MerchantId. If the “refund” appears without an original posted debit from that merchant, recommend:investigate.
+- Cross-check Merchants.RiskTier. A HIGH-risk refund that does not post within 3 business days after AuthAt is suspect; recommend:investigate.
+
+How to query (IRIS SQL quick patterns)
+- Fetch the transaction: select * from ModestExpectationsCaptial.Transactions where TransactionId = ?.
+- Check neighbors by card and merchant: select * from ModestExpectationsCaptial.Transactions where CardId = ? and MerchantId = ? and AuthAt between ? and ? order by AuthAt.
+- Look for a matching reverse: same CardId, MerchantId, Amount, Currency, Status = 'REVERSED', AuthAt within 72 hours of the original.
+- Join for context: select t.*, c.Status as CardStatus, m.RiskTier, m.Category from ...Transactions t left join ...Cards c on t.CardId=c.CardId left join ...Merchants m on t.MerchantId=m.MerchantId where t.TransactionId=?.
+
+When to use the allowed actions
+- recommend:reverse
+  - Use when you confirm a duplicate authorization (same CardId, MerchantId, Amount, Currency, same day) that has not been posted and has not already been REVERSED after 48 hours. Evidence: two APPROVED rows with AuthAt within 10 minutes, same merchant, no PostedAt on either, CardPresent true or EntryMode = TAP often strengthens the case.
+  - Do not recommend:reverse for any transaction with PostedAt present. Reversals apply to authorizations, not settled debits.
+- recommend:refund
+  - Use when a posted debit (APPROVED with PostedAt) is demonstrably erroneous: duplicate posting (two PostedAt debits same Amount/MerchantId within 1 day), wrong amount compared to merchant receipt, or merchant-acknowledged return. Evidence: both posted debits visible or mismatch between posted Amount and documented final.
+  - Do not recommend:refund simply because an authorization hold remained visible; look for the posted debit first.
+- recommend:investigate
+  - Use when data is contradictory (e.g., DECLINED with a non-null PostedAt), prolonged missing PostedAt beyond the windows above, inconsistent MerchantId vs MerchantName, HIGH risk tier with repeated SUSPECTED_FRAUD declines, or customer claims not aligning with the ledger. Evidence: screenshots of SQL results or query outputs, plus timestamps.
+
+Actions not allowed under this SOP
+- Do not update ModestExpectationsCaptial.Transactions.Status, AuthAt, or PostedAt directly.
+- Do not change ModestExpectationsCaptial.Cards.Status (ACTIVE, BLOCKED, CLOSED). If repeated SUSPECTED_FRAUD declines occur on an ACTIVE card, use recommend:investigate; card blocking requires a separate fraud-control SOP.
+- Do not contact merchants directly from this queue; route via standard merchant operations if recommend:refund or recommend:reverse is accepted.
+
+Scenarios
+- POS contactless duplicate tap: A customer taps twice at a RETAIL merchant. You see two APPROVED rows with the same Amount and AuthAt two minutes apart, EntryMode = TAP, CardPresent = true, no PostedAt yet. Next day, one row shows Status = REVERSED with PostedAt still null; the other posts with PostedAt and the correct final Amount. You mark the extra auth as reversed due to duplicate contactless authorization and take no further action.
+- E-commerce auth-only that never posted: An ECOM DIGITAL merchant pre-authorizes 49.00 at 10:05 UTC (APPROVED, AuthAt set, PostedAt null). Seven days pass with no PostedAt and no REFUNDED or REVERSED entry. You check neighbors and see two similar holds from the same merchant over the week. You recommend:investigate for recurring auth-only “no presentment” behavior and note that the initial hold should naturally drop.
+
+Common pitfalls
+- Treating an APPROVED authorization with no PostedAt as a charge. It’s just a hold until posted.
+- Calling a merchant credit a “reversal.” Reversals are pre-settlement; refunds are posted credits after settlement.
+- Missing a mismatch in MerchantId because MerchantName looks similar. Always match on MerchantId when validating duplicates or refunds.
+- Assuming DECLINED means no customer impact. Some merchants still place temporary holds after a decline; check DeclineReason and PostedAt to avoid confusion.
+- Over-escalating ECOM holds before 7 days or TRAVEL/FUEL before 10 days. Give them time.
+
+What to write in the audit note
+- Keep it factual: what you queried, what you found in Transactions.Status, AuthAt, PostedAt, Amount, Channel, EntryMode, CardPresent, and what action you recommend with evidence. Mention MerchantId and CardId only when needed.
+
+Example audit note (free text)
+Reviewed TransactionId 882134. APPROVED at AuthAt 2026-02-19 14:22 UTC, EntryMode TAP, CardPresent true, Channel POS. Found duplicate APPROVED for same CardId/MerchantId/Amount two minutes later; first was REVERSED at 2026-02-19 15:05 UTC (no PostedAt). Second posted at PostedAt 2026-02-20 09:11 UTC for 25.00 USD. No further action needed; duplicate auth voided by merchant. Customer should see the hold drop.
+
+Hints and search phrasing you might hear
+- Void or authorization reversal often refers to Status = REVERSED.
+- Merchant credit, refund, or return maps to Status = REFUNDED.
+- Chargeback or dispute isn’t the same as a refund; use Disputes elsewhere, but here focus on REFUNDED vs REVERSED.
+- Contactless equals TAP; EMV chip equals CHIP; keyed entry equals MANUAL; people might also say swipe for POS in general.
+- Pending, auth-only, or hold refers to APPROVED with no PostedAt.
+- Late presentment or no-post are common ways to describe missing PostedAt.
+
+Quick checks before closing a case
+- Status aligns with timestamps: REVERSED and DECLINED should not have PostedAt; REFUNDED should.
+- Amount consistency across related rows by CardId and MerchantId.
+- Merchant risk/context: HIGH risk with many SUSPECTED_FRAUD declines warrants recommend:investigate.
+- Card state sanity: if Cards.Status is BLOCKED or CLOSED at AuthAt time, a later APPROVED is suspicious; recommend:investigate.
+
+If you’re still unsure after these checks, capture your SQL snippets, point to the relevant fields (Transactions.Status, AuthAt, PostedAt, Amount, Channel, EntryMode, CardPresent), and use recommend:investigate. It’s better to escalate early on ambiguous reversals or refunds than to guess.

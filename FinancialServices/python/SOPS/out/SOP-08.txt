@@ -1,0 +1,101 @@
+Merchant Risk Monitoring and Escalation
+
+This guidance explains how to decide if a merchant is trending risky using dispute rate, fraud rate (Transactions.IsFraud), and decline rate, and when to recommend containment or adjust their Merchants.RiskTier. You’ll work from IRIS SQL against three tables: ModestExpectationsCaptial.Merchants, ModestExpectationsCaptial.Transactions, and ModestExpectationsCaptial.Disputes. Keep your analysis anchored to these fields: Merchants.RiskTier, Merchants.Category, Merchants.PopularityWeight, Transactions.Status, Transactions.DeclineReason, Transactions.IsFraud, Disputes.State, and Disputes.Outcome.
+
+How to pull what you need
+- Work from MerchantId when possible; MerchantName can be duplicated or vary in punctuation. In ModestExpectationsCaptial.Transactions, filter by MerchantId and a time window. Use two windows for trend detection: the last 7 days (7d) and the last 30 days (30d).
+- Only count attempts and outcomes consistently:
+  - For decline rate, the denominator is all attempts in the window with Transactions.Status in APPROVED or DECLINED. The numerator is DECLINED, and you should also break out the share of DECLINED with Transactions.DeclineReason in SUSPECTED_FRAUD, INSUFFICIENT_FUNDS, LIMIT_EXCEEDED, or INVALID_CVV.
+  - For fraud rate, the numerator is Transactions where Status = APPROVED and IsFraud = 1 (or TRUE), and the denominator is all APPROVED in the window.
+  - For dispute rate, join Disputes to Transactions on TransactionId, filter Disputes.OpenedAt in the window, and use APPROVED transactions as the denominator. Also capture Disputes.State (OPEN, UNDER_REVIEW, RESOLVED) and Disputes.Outcome (CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK) for severity.
+- Segment by Transactions.Channel (ECOM vs POS) and Transactions.EntryMode (MANUAL, CHIP, TAP). A spike in contactless/tap (TAP), EMV/chip (CHIP), or keyed/manual (MANUAL) can change expectations between card-present and card-not-present flows.
+- Note Merchants.Category (GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, DINING) and Merchants.Country. DIGITAL and TRAVEL tend to have higher natural chargeback/dispute exposure than GROCERY or FUEL.
+
+Formulas you should use
+- Decline rate = count(DECLINED) / count(DECLINED + APPROVED) over the window. Also compute fraud-decline share = count(DECLINED with SUSPECTED_FRAUD) / count(DECLINED).
+- Fraud rate = count(APPROVED with IsFraud = 1) / count(APPROVED).
+- Dispute rate = count(Disputes opened in window) / count(APPROVED in window). Track chargeback severity as chargeback ratio = count(RESOLVED with Outcome = CHARGEBACK) / count(RESOLVED).
+
+Volume guardrails
+- Do not draw risk conclusions on very small samples. Require at least 100 total attempts (APPROVED + DECLINED) in 7d or 500 attempts in 30d before making a recommendation. If the merchant has lower volume, extend the window or hold for more data. Merchants.PopularityWeight can help you sanity-check volume, but the action thresholds are based on counts, not weight.
+
+What “trending risky” means here
+Use plain if/then rules. Apply them channel-aware (ECOM vs POS) and consider category:
+
+- If 7d dispute rate is at least 2x the merchant’s 30d dispute rate and is ≥ 1.0% (≥ 1 dispute per 100 approvals), and there are ≥ 10 disputes opened in 7d, then consider the merchant trending risky. If Disputes.Outcome among RESOLVED is ≥ 30% CHARGEBACK, treat as high severity.
+- If 7d fraud rate (IsFraud) is ≥ 0.5% for ECOM or ≥ 0.2% for POS, and the 7d rate is ≥ 1.5x the 30d rate, treat as trending risky. If DECLINED with SUSPECTED_FRAUD is also rising, increase severity.
+- If overall 7d decline rate is ≥ 20% and fraud-decline share (SUSPECTED_FRAUD) is ≥ 8% of declines, treat as trending risky. If declines are mostly INSUFFICIENT_FUNDS, it’s usually not risk; look for LIMIT_EXCEEDED or INVALID_CVV clusters for acceptance issues rather than fraud.
+- If the spike is driven primarily by MANUAL entry on POS, or by ECOM with high MANUAL indication (keyed), that increases suspicion vs CHIP/TAP.
+- Category context: for DIGITAL and TRAVEL, allow slightly higher noise; require either (a) the dispute trigger above plus CHARGEBACK share ≥ 30%, or (b) fraud rate thresholds exceeded for two consecutive weeks. For GROCERY and FUEL, any exceedance of thresholds above is sufficient for action.
+
+What you may do, and when
+Allowed actions in this SOP:
+- recommend:containment — You may formally recommend containment measures (e.g., throttling risky channels, forcing 3DS on ECOM, manual review) in your ticket or handoff. This is a recommendation; you do not alter data for containment in the database.
+- recommend:tier_change — You may recommend raising risk tier when evidence meets thresholds but you lack final approval to write it.
+- write:Merchants.RiskTier — You may update Merchants.RiskTier directly only when the evidence thresholds below are met and you record an audit note.
+
+Writing Merchants.RiskTier is permitted in these cases:
+- If current Merchants.RiskTier is MED and any “trending risky” trigger above is met at high severity (dispute trigger met and CHARGEBACK share ≥ 30%, or fraud rate trigger met and fraud-decline share ≥ 8%) for at least 7 consecutive days, you may set Merchants.RiskTier to HIGH.
+- If current Merchants.RiskTier is LOW and any “trending risky” trigger is met (without the severity add-ons) for at least 14 days, you may set Merchants.RiskTier to MED.
+- You may not downgrade a merchant (HIGH to MED or LOW; MED to LOW) without explicit escalation and two clean 30d periods; use recommend:tier_change instead.
+- Only set Merchants.RiskTier to the allowed values LOW, MED, or HIGH. Do not modify Merchants.Category or Merchants.PopularityWeight in this SOP.
+
+Evidence required before any write
+- Show counts and rates for both 7d and 30d for all three metrics (decline, fraud, dispute).
+- Include the breakdown of Transactions.DeclineReason across SUSPECTED_FRAUD, INSUFFICIENT_FUNDS, LIMIT_EXCEEDED, INVALID_CVV.
+- Provide Disputes.State distribution (OPEN, UNDER_REVIEW, RESOLVED) and Disputes.Outcome for RESOLVED (CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK).
+- Note whether spikes are concentrated in ECOM vs POS and in MANUAL vs CHIP/TAP entry modes.
+
+Practical steps (query flow)
+- Identify the merchant: select MerchantId from ModestExpectationsCaptial.Merchants using MerchantName if needed; confirm Category and current RiskTier.
+- Pull attempts and outcomes: from ModestExpectationsCaptial.Transactions where MerchantId = ? and AuthAt/PostedAt within window; group by Status (APPROVED, DECLINED, REFUNDED, REVERSED), Channel (ECOM, POS), and EntryMode (MANUAL, CHIP, TAP).
+- Pull fraud flags: count APPROVED with IsFraud = 1; compute rate by Channel.
+- Pull declines: count DECLINED and the share by DeclineReason in SUSPECTED_FRAUD, INSUFFICIENT_FUNDS, LIMIT_EXCEEDED, INVALID_CVV.
+- Pull disputes: join ModestExpectationsCaptial.Disputes d on d.TransactionId = t.TransactionId; filter d.OpenedAt for the window; capture State (OPEN, UNDER_REVIEW, RESOLVED) and for RESOLVED, Outcome (CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK).
+- Compare 7d vs 30d metrics; apply the if/then rules.
+
+How to record and execute a tier change
+- If criteria are met, write:Merchants.RiskTier is allowed. Example:
+  - Update ModestExpectationsCaptial.Merchants set RiskTier = 'HIGH' where MerchantId = ? and RiskTier = 'MED'.
+- Do not perform any other writes to Transactions or Disputes. Do not alter Transactions.Status, Transactions.IsFraud, or Disputes.State/Outcome. Do not set “CLOSED” or similar statuses on merchants (not a thing here) and do not touch Cards.Status (ACTIVE, BLOCKED, CLOSED) in this SOP.
+- After the write, add the audit note (see below) and file recommend:containment if appropriate.
+
+What to write in the audit note
+Keep it concise, numeric, and reproducible. Include the merchant, windows, rates, and your action.
+
+Example audit note (free text):
+“MerchantId 48291 (MerchantName: TruStream Digital), Category DIGITAL. 7d vs 30d: dispute rate 1.6% (18/1120) vs 0.6% (42/6980); RESOLVED outcomes 35% CHARGEBACK (7/20). Fraud rate ECOM 0.9% (9/1002) vs 0.3%; decline rate 22% (403/1834) with 12% SUSPECTED_FRAUD (48/403). Volume ≥ thresholds. Trigger met for 9 consecutive days. Action: set Merchants.RiskTier MED -> HIGH; recommend:containment for ECOM MANUAL.”
+
+Scenarios
+
+1) Spike in e-commerce disputes and chargebacks
+You review “TruStream Digital” after a partner flags “chargeback” complaints (aka disputes). Transactions show ECOM approvals steady, but 7d dispute rate jumped to 1.6% from 0.6% over 30d, and Disputes.Outcome among RESOLVED includes 35% CHARGEBACK. Fraud rate (IsFraud) also rose to 0.9% ECOM, with declines showing more SUSPECTED_FRAUD and a lot of keyed/manual entries (MANUAL) vs CHIP/TAP. With ≥ 1000 approvals and ≥ 10 disputes opened in 7d, you recommend:containment on ECOM and write Merchants.RiskTier from MED to HIGH. You log the audit note with counts and reasons.
+
+2) High decline rate at fuel pumps but not fraud
+A FUEL merchant reports “authorization failures” (soft declines). POS data shows a 7d decline rate of 24%, but 88% of declines are INSUFFICIENT_FUNDS and INVALID_CVV; SUSPECTED_FRAUD is only 2%. Dispute rate is 0.2%, no CHARGEBACK outcomes; fraud rate is 0.04% on POS with CHIP/TAP dominant. You do not change Merchants.RiskTier and instead recommend monitoring and merchant-acceptance tuning. You document the findings and do not escalate, since none of the risk triggers are met.
+
+Decision reminders and nuance
+- If decline rate is high due to LIMIT_EXCEEDED and INVALID_CVV during a holiday sale for a RETAIL merchant, hold for 72 hours and re-check; these often normalize.
+- If Disputes.State shows a surge of OPEN cases but low RESOLVED volume, watch for the next 3–5 business days to see if outcomes trend toward MERCHANT_WON or WITHDRAWN before moving tier.
+- If a spike is isolated to TAP/contactless with POS at unattended terminals, check EntryMode mix; if fraud flags aren’t rising, favor recommend:containment (e.g., risk review of contactless limits) over an immediate tier write.
+
+Common pitfalls to avoid
+- Using all transactions as the denominator for disputes. Only APPROVED should be used, and only disputes opened in the window. Don’t mix OpenedAt with ResolvedAt when measuring rate.
+- Counting REFUNDED or REVERSED as declines. They are not part of the approval/decline attempt set.
+- Joining on MerchantName and accidentally aggregating multiple MerchantIds with similar names. Always join via MerchantId from ModestExpectationsCaptial.Merchants.
+- Overreacting to tiny samples (e.g., 3 disputes on 120 approvals looks big but is not reliable).
+- Misreading WITHDRAWN as a win for the merchant; WITHDRAWN can still imply operational friction.
+- Confusing keyed/manual (MANUAL) with e-commerce; many POS systems support manual keying that is still card-present.
+
+What to do when unsure
+- If metrics are borderline (e.g., dispute rate 0.9% with low volume), extend the window, break down by Channel and EntryMode, and compare to the merchant’s Category peers.
+- When fraud and disputes disagree (high declines with SUSPECTED_FRAUD but low disputes), prefer recommend:containment first, then revisit a tier change after 7 days of confirmed data.
+
+Search and wording notes
+Colleagues may refer to disputes as chargebacks, reversals as voids, e-commerce as CNP or online, POS as card-present, TAP as contactless, MANUAL as keyed, and CHIP as EMV. Declines may be called soft declines (e.g., INSUFFICIENT_FUNDS) vs hard declines (INVALID_CVV, LIMIT_EXCEEDED). Include those terms in your notes so future searches surface your work.
+
+Final check before you act
+- Do the numbers meet the thresholds with adequate volume?
+- Do you see concentration in ECOM or MANUAL that suggests elevated risk?
+- Are Disputes.Outcome and Transactions.DeclineReason profiles aligned with fraud, not just customer behavior?
+If yes, proceed with recommend:containment and, if criteria are met, write Merchants.RiskTier from LOW to MED or MED to HIGH as outlined. Otherwise, monitor and document.

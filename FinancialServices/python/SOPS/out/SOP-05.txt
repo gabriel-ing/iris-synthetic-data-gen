@@ -1,0 +1,92 @@
+Channel and EntryMode Risk Policy (ECOM/POS; MANUAL/CHIP/TAP)
+
+Use this SOP whenever you review a transaction based on how it was initiated. The core dimensions are Transactions.Channel (ECOM or POS), Transactions.EntryMode (MANUAL, CHIP, or TAP), and Transactions.CardPresent (1 for present, 0 for not present). We cross-check the merchant’s profile (Merchants.RiskTier and Merchants.Category) and the customer’s risk posture (Customers.RiskScore) to decide whether to recommend a step-up, put the card under monitoring, or block the card.
+
+How to pull context fast
+- Start with the transaction record. Query ModestExpectationsCaptial.Transactions by TransactionId and join to Merchants and Customers via Cards:
+  - SELECT t.TransactionId, t.CardId, t.Channel, t.EntryMode, t.CardPresent, t.Amount, t.Currency, t.Status, t.DeclineReason, t.AuthAt, t.IsFraud, m.MerchantId, m.MerchantName, m.RiskTier, m.Category, m.Country, cst.CustomerId, cst.RiskScore
+    FROM ModestExpectationsCaptial.Transactions t
+    JOIN ModestExpectationsCaptial.Merchants m ON m.MerchantId = t.MerchantId
+    JOIN ModestExpectationsCaptial.Cards cd ON cd.CardId = t.CardId
+    JOIN ModestExpectationsCaptial.Customers cst ON cst.CustomerId = cd.CustomerId
+    WHERE t.TransactionId = ?
+- Sanity-check key enums and flags:
+  - Transactions.Channel is ECOM or POS only.
+  - Transactions.EntryMode is MANUAL (keyed), CHIP (EMV/dip), or TAP (contactless).
+  - Transactions.Status is APPROVED, DECLINED, REFUNDED, or REVERSED.
+  - Transactions.DeclineReason, when present, is one of INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, INVALID_CVV.
+  - Merchants.RiskTier is LOW, MED, or HIGH. Merchants.Category is GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, or DINING.
+  - CardPresent is 1 (card-present) or 0 (card-not-present/CNP).
+- Pull the card’s recent pattern for context:
+  - For the same CardId, get the last 30 days of approved transactions with Channel, EntryMode, CardPresent, Amount, and Merchant RiskTier/Category. This helps you spot unusual “keyed” spikes, repeated contactless attempts, or a sudden shift from chip to manual.
+
+Risk view by Channel x EntryMode x CardPresent
+- Low risk (typical): POS + CHIP + CardPresent=1; POS + TAP + CardPresent=1 with Merchants.RiskTier in LOW or MED. These are the everyday “dip” or “tap/contactless” terminal payments. For these, recommend:monitoring only if the Amount is significantly above the customer’s normal range or the merchant is HIGH risk.
+- Medium risk: POS + MANUAL + CardPresent=1. Key-entered at a terminal (e.g., chip malfunction). Watch for high Amounts or higher-risk merchant types (DIGITAL or TRAVEL) and for repeated keyed attempts. Often merits recommend:step_up for the next transaction, or recommend:monitoring if isolated and small.
+- High risk (default): ECOM + MANUAL + CardPresent=0. This is a card-not-present “keyed” online or MOTO-type profile. Treat as high risk especially when Merchants.RiskTier=HIGH or Merchants.Category in DIGITAL or TRAVEL, or when there are repeated attempts. If the record ever shows ECOM with EntryMode CHIP or TAP, treat it as a data issue; validate the source and proceed as if ECOM + MANUAL for risk until corrected.
+
+Compensating controls and step-up actions
+- Step-up means we ask for stronger authentication on the next attempt (e.g., 3-D Secure, OTP, additional KBA). In this SOP, you action that by recording recommend:step_up in the case record and notifying the auth team; you do not alter the transaction’s Status.
+- Monitoring means we increase scrutiny for a period (e.g., 48–72 hours), including real-time alerts for repeats. Record recommend:monitoring in the case record with the monitoring window.
+- Blocking is changing ModestExpectationsCaptial.Cards.Status to BLOCKED when evidence indicates likely compromise. Cards.Status allowed values are ACTIVE, BLOCKED, CLOSED. You may set ACTIVE to BLOCKED and BLOCKED back to ACTIVE (after customer verification). Do not set CLOSED without manager approval and customer confirmation. Do not block solely due to INSUFFICIENT_FUNDS or LIMIT_EXCEEDED.
+
+Decision rules (plain if/then)
+- If Channel=POS and EntryMode=TAP (contactless), CardPresent=1, Merchants.RiskTier in LOW or MED, and the Amount aligns with recent spend, then low risk. Choose recommend:monitoring only if the customer is currently under review or Customers.RiskScore is unusually high for the segment.
+- If Channel=POS and EntryMode=TAP but Merchants.RiskTier=HIGH or there are 3+ TAP transactions within 10 minutes at different merchants, then treat as elevated. Use recommend:step_up and set recommend:monitoring for 48 hours.
+- If Channel=POS and EntryMode=MANUAL with CardPresent=1, and either Merchants.RiskTier=HIGH or Merchants.Category in DIGITAL or TRAVEL, and the Amount is >2x the customer’s 30-day median, then high risk. Choose recommend:step_up; if there are 2+ similar MANUAL attempts in 24 hours or a recent DECLINED with SUSPECTED_FRAUD, proceed to block (see Evidence to block).
+- If Channel=ECOM and EntryMode=MANUAL with CardPresent=0, treat as high risk by default. Choose recommend:step_up on the next auth. If there is a matching prior DECLINED with SUSPECTED_FRAUD in the last 24 hours or IsFraud=1 on any transaction in the past 30 days, block the card (set Cards.Status=BLOCKED).
+- If Channel=ECOM and EntryMode=MANUAL with CardPresent=0 and DeclineReason=INVALID_CVV repeatedly (2+ attempts) within 1 hour, escalate to block unless the customer has contacted us proactively. Otherwise, recommend:step_up and recommend:monitoring.
+- If the transaction is DECLINED with DeclineReason=INSUFFICIENT_FUNDS or LIMIT_EXCEEDED and there are no fraud signals, do not step up or block. At most, recommend:monitoring if there’s an unusual Channel/EntryMode mix.
+
+Evidence to support actions
+- For recommend:step_up, note:
+  - The exact combination (e.g., ECOM + MANUAL + CardPresent=0).
+  - Merchant details: Merchants.MerchantName, Merchants.RiskTier (LOW/MED/HIGH), Merchants.Category.
+  - Any unusual Amount pattern versus the card’s last 30 days.
+- For recommend:monitoring, add:
+  - The time window (e.g., next 72 hours) and what to watch (e.g., repeated keyed entries, bursty contactless).
+- For write:Cards.Status=BLOCKED, ensure at least one of:
+  - ECOM + MANUAL + CardPresent=0 plus either DeclineReason=SUSPECTED_FRAUD in last 24 hours or Transactions.IsFraud=1 on a related merchant in last 30 days.
+  - POS + MANUAL + CardPresent=1 with 2+ high Amount attempts within 24 hours at Merchants.RiskTier=HIGH.
+  - Repeated invalid credential signals (e.g., INVALID_CVV) across 2+ attempts within 1 hour combined with high-risk Channel/EntryMode.
+  Include the supporting TransactionId list and timestamps. Never set Cards.Status=CLOSED under this SOP.
+
+Answering the golden questions
+- Is this tap transaction risky? If EntryMode=TAP with Channel=POS and CardPresent=1, it’s usually low risk, especially at Merchants.RiskTier=LOW or MED. It becomes risky if the merchant is HIGH risk, the Amount is atypically high for this card, or there are rapid repeated contactless attempts across multiple terminals. In those cases, recommend:step_up and recommend:monitoring; do not block on a single clean TAP without supporting evidence.
+- Why did we block an ecom manual entry? Because the combination ECOM + MANUAL + CardPresent=0 is high risk by policy and, in the reviewed case, it co-occurred with fraud indicators (e.g., a prior DECLINED with SUSPECTED_FRAUD, repeated INVALID_CVV, or a recent Transactions.IsFraud=1). Under those conditions, we set Cards.Status to BLOCKED to prevent further card-not-present misuse.
+
+Operational flow (use this for each review)
+1) Pull context for the TransactionId as above.
+2) Confirm enums: Channel, EntryMode, CardPresent, Status, DeclineReason.
+3) Check Merchants.RiskTier and Category; note HIGH, DIGITAL, or TRAVEL as additive risk.
+4) Review the card’s last 30 days for baseline (especially keyed/manual vs chip/dip vs tap/contactless).
+5) Apply the if/then rules. Decide between recommend:step_up, recommend:monitoring, or write:Cards.Status=BLOCKED.
+6) If blocking, update ModestExpectationsCaptial.Cards set Status='BLOCKED' where CardId=?. Capture evidence in the audit note.
+7) If not blocking, log the recommendation(s), including window and trigger conditions. Set a reminder to recheck after the window or after the next auth.
+
+Short scenarios
+- Scenario 1 (contactless at grocery): A POS transaction at a GROCERY merchant, EntryMode=TAP, CardPresent=1, Amount equals the card’s typical weekend spend, Merchants.RiskTier=LOW, Status=APPROVED. No recent SUSPECTED_FRAUD. Treat as low risk. Add recommend:monitoring only if the customer is on a broader alert. No block.
+- Scenario 2 (ecom keyed spike at digital): An ECOM transaction with EntryMode=MANUAL, CardPresent=0, Amount higher than normal, Merchant Category=DIGITAL and RiskTier=HIGH, and a prior DECLINED with SUSPECTED_FRAUD 30 minutes earlier on the same CardId. This hits the high-risk combination plus a clear fraud signal. Set Cards.Status to BLOCKED and record the evidence. Communicate recommend:step_up for any future re-attempts post-verification.
+- Scenario 3 (POS manual fallback at travel): A POS transaction at a TRAVEL merchant, EntryMode=MANUAL, CardPresent=1, Amount 3x the card’s 30-day median. First attempt is DECLINED with INVALID_CVV, second attempt APPROVED five minutes later. Choose recommend:step_up and recommend:monitoring for 72 hours. If a third MANUAL attempt appears in 24 hours, escalate to block.
+
+Common pitfalls
+- Misreading “swipe” or “magstripe” in a note: our EntryMode does not store SWIPE; keyed fallback appears as MANUAL. Verify EntryMode before acting.
+- Blocking on INSUFFICIENT_FUNDS or LIMIT_EXCEEDED without fraud signals. Those are not fraud reasons under this SOP.
+- Treating ECOM with EntryMode CHIP/TAP as legitimate. That pairing should not occur; validate the source and treat risk as if ECOM + MANUAL until corrected.
+- Forgetting CardPresent. ECOM should have CardPresent=0; POS should have CardPresent=1. If not, double-check for data errors before blocking.
+
+What to write in the audit note
+- Document the exact Channel, EntryMode, and CardPresent values, the merchant’s RiskTier and Category, any DeclineReason (especially SUSPECTED_FRAUD or INVALID_CVV), recent pattern observations (e.g., repeats, amount spikes), and the action taken, referencing allowed values exactly as stored. Link related TransactionId(s) and include any monitoring window or step-up request.
+
+Example audit note (free text)
+TransactionId 987654: ECOM + MANUAL + CardPresent=0 for 249.99 USD at “Acme Digital” (Merchants.RiskTier=HIGH, Category=DIGITAL). Prior attempt 30 mins earlier DECLINED with SUSPECTED_FRAUD (TransactionId 987321). Card shows no CHIP/TAP POS activity in last 30 days; sudden CNP keyed spike observed. Action: write:Cards.Status set to BLOCKED on CardId 12345. Also logged recommend:step_up for next auth and recommend:monitoring for 72h. Customer contact pending.
+
+Governance and permissions
+- Allowed: record recommend:step_up and recommend:monitoring in the case record; set ModestExpectationsCaptial.Cards.Status from ACTIVE to BLOCKED when the evidence conditions are met; revert BLOCKED to ACTIVE only after customer verification (document who verified and when).
+- Not allowed without escalation: setting Cards.Status=CLOSED; blocking when the only signal is INSUFFICIENT_FUNDS or LIMIT_EXCEEDED; overriding a manager’s decision on reactivation.
+- Required evidence before blocking: cite the Channel/EntryMode/CardPresent combo, the supporting DeclineReason or IsFraud flag, the merchant’s RiskTier/Category, and any repetition or amount anomaly. Include at least one supporting TransactionId besides the one under review when available.
+
+Search notes and alternate phrasing you may see
+- Agents or customers may say “contactless” for EntryMode=TAP, “EMV” or “dip” for EntryMode=CHIP, “keyed” or “MOTO” for EntryMode=MANUAL, “online” or “web” for Channel=ECOM, and “point-of-sale” or “terminal” for Channel=POS. They may reference “freeze” or “hold” when they mean block the card, and “dispute” or “chargeback” as downstream outcomes (Disputes are tracked separately and are not part of this SOP’s decisions).
+
+If in doubt on an unusual combination or a borderline case, err toward recommend:monitoring and gather one more data point rather than blocking on a single weak signal. When a strong signal is present (ECOM + MANUAL + CardPresent=0 plus SUSPECTED_FRAUD), block promptly and document thoroughly.

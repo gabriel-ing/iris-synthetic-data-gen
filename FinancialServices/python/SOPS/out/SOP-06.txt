@@ -1,0 +1,106 @@
+Fraud Triage and Containment (Rule-Based)
+
+This playbook guides quick investigation and containment when a card shows suspected fraud based on Transactions.IsFraud flags, velocity bursts, out-of-segment behavior, and merchant risk/category patterns. It is written for analysts who can query IRIS SQL and who may take limited actions on cards.
+
+First look: gather the facts you need
+- Identify the card and customer. Pull the card row from ModestExpectationsCaptial.Cards using CardId, and join to ModestExpectationsCaptial.Customers on CustomerId. Confirm Cards.Status (ACTIVE, BLOCKED, or CLOSED) and Cards.CreditLimit.
+- Pull the past 48 hours of ModestExpectationsCaptial.Transactions for this CardId. Only consider Transactions.Status = APPROVED for containment decisions; note that other valid values are DECLINED, REFUNDED, and REVERSED.
+- Join to ModestExpectationsCaptial.Merchants by MerchantId to get Merchants.RiskTier (LOW, MED, HIGH), Merchants.Category (GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, DINING), and Country.
+- Check for any related ModestExpectationsCaptial.Disputes on those transactions, especially Disputes.State in OPEN or UNDER_REVIEW and Disputes.ReasonCode of FRAUD, DUPLICATE, NOT_AS_DESCRIBED, NOT_RECEIVED, or CANCELLED. If a dispute already ended with Outcome CHARGEBACK, note it as prior confirmed fraud.
+
+Helpful IRIS SQL snippets (adapt as needed)
+- Last 48h APPROVED by card:
+  select t.* from ModestExpectationsCaptial.Transactions t
+  where t.CardId = :cardId and t.Status = 'APPROVED' and t.AuthAt >= DATEADD('hour', -48, CURRENT_TIMESTAMP)
+  order by t.AuthAt desc
+- With merchant risk and category:
+  select t.TransactionId, t.AuthAt, t.Amount, t.Currency, t.Channel, t.EntryMode, t.CardPresent, t.IsFraud,
+         m.MerchantName, m.RiskTier, m.Category, m.Country
+  from ModestExpectationsCaptial.Transactions t
+  join ModestExpectationsCaptial.Merchants m on t.MerchantId = m.MerchantId
+  where t.CardId = :cardId and t.Status = 'APPROVED' and t.AuthAt >= DATEADD('hour', -48, CURRENT_TIMESTAMP)
+- Baseline behavior (last 30d averages) by channel:
+  select t.Channel, count(*) as txn_cnt, sum(t.Amount) as amt
+  from ModestExpectationsCaptial.Transactions t
+  where t.CardId = :cardId and t.Status = 'APPROVED' and t.AuthAt >= DATEADD('day', -30, CURRENT_TIMESTAMP)
+  group by t.Channel
+
+What to look for (signals)
+- IsFraud signals: If Transactions.IsFraud = 1 on any APPROVED transaction, treat that as a primary indicator; two or more such flags in a short window strongly points to fraud.
+- Velocity bursts: Rapid-fire spends are classic. Count APPROVED transactions in the last 10 minutes, 1 hour, and 24 hours. Distinguish by Transactions.Channel (ECOM vs POS) and EntryMode (MANUAL, CHIP, TAP). “Tap” and “contactless” both map to EntryMode = TAP; “keyed entry” or “card-not-present” (CNP) typically show as MANUAL.
+- Out-of-segment behavior: Check ModestExpectationsCaptial.Customers for Segment and multipliers: SegmentTxnMultiplier, SegmentAmountMultiplier, SegmentEcomMultiplier, SegmentDeclineMultiplier, SegmentDisputeMultiplier. Compare the last 24 hours vs the last-30-day average approvals. If the last 24h count exceeds average × SegmentTxnMultiplier, that’s a signal. For e-commerce, tighten by SegmentEcomMultiplier.
+- Merchant patterns: Clusters at Merchants.RiskTier = HIGH or MED, especially in Merchants.Category DIGITAL or TRAVEL, are higher risk than LOW risk tier GROCERY or FUEL. Multiple different high-risk merchants in minutes can indicate testing by a fraud ring or account takeover (ATO).
+- Geography: If Merchants.Country deviates from Customers.Region (e.g., customer region “US-East” and merchants in multiple non-US countries in an hour), treat cautiously. A sudden foreign POS spree while CardPresent = true may suggest skimming or lost/stolen; a foreign ECOM run (CNP) maps to ATO more often.
+- Declines: A series of Transactions.Status = DECLINED with DeclineReason like SUSPECTED_FRAUD, INVALID_CVV, or LIMIT_EXCEEDED followed by quick APPROVED attempts can be part of probing. Use declines as context; do not block on declines alone.
+
+If / then decision rules (evidence-based)
+Block immediately (set Cards.Status to BLOCKED) if any of the following are all true:
+- The card is currently ACTIVE, and
+- Evidence threshold met:
+  - Two or more APPROVED transactions with IsFraud = 1 within 15 minutes, and at least one merchant with RiskTier MED or HIGH; or
+  - Five or more APPROVED ECOM transactions within 10 minutes with EntryMode = MANUAL (keyed/CNP), regardless of merchant, and total Amount ≥ average daily approved amount × SegmentAmountMultiplier; or
+  - A single APPROVED ECOM transaction with EntryMode = MANUAL that is ≥ 80% of Cards.CreditLimit (or ≥ 3× the 30-day average ticket) combined with a prior OPEN dispute in the last 14 days on the same card with ReasonCode = FRAUD; or
+  - Three or more APPROVED transactions at Merchants.Category in DIGITAL or TRAVEL, from two or more different MerchantId, totaling ≥ $300 (or local equivalent) within 30 minutes, with CardPresent = false and Customers.Region not matching Merchants.Country for any of them.
+
+Recommend monitoring (do not block yet) if:
+- Velocity is elevated but within SegmentTxnMultiplier and SegmentEcomMultiplier adjusted norms, or
+- Activity is at Merchants.RiskTier = LOW (e.g., GROCERY, FUEL) near the customer’s usual region, and
+- IsFraud = 0 on recent approvals, and there are no OPEN/UNDER_REVIEW disputes with ReasonCode FRAUD.
+
+Recommend escalation to fraud operations lead if:
+- Exposure is high: any single APPROVED amount ≥ 50% of Cards.CreditLimit or total last-24h APPROVED ≥ 2× average daily, but evidence for immediate block is borderline; or
+- You observe linked patterns across multiple Cards for the same Customers.CustomerId (“bust-out”), or across multiple customers at the same HIGH risk merchant (“fraud ring”); or
+- There is a mix of card-present (TAP/CHIP) and CNP (ECOM/MANUAL) across distant geographies in hours, suggesting sophisticated ATO/skimming.
+
+How to execute allowed actions
+- Allowed: write:Cards.Status
+  - You may set Cards.Status from ACTIVE to BLOCKED when one of the “Block immediately” conditions is met. Use a targeted update:
+    update ModestExpectationsCaptial.Cards
+    set Status = 'BLOCKED'
+    where CardId = :cardId and Status = 'ACTIVE'
+  - Before writing, capture evidence: the TransactionId(s), AuthAt times, IsFraud flags, Merchants.RiskTier/Category, Channel, EntryMode, CardPresent, and any Disputes.State/ReasonCode context.
+- Not allowed without escalation:
+  - Do not set Cards.Status = CLOSED. Closure requires customer confirmation or a card reissue workflow outside this SOP.
+  - Do not modify Transactions rows (Status, DeclineReason, IsFraud) or Disputes rows. You may read only.
+- Allowed: recommend:monitoring
+  - If monitoring is appropriate, note it in the audit and notify the monitoring queue with the observed signals (e.g., “elevated ECOM velocity, within segment multipliers”).
+- Allowed: recommend:escalate
+  - If criteria above are met, include a concise summary and tag for lead review.
+
+Evidence thresholds and baselines (practical tips)
+- To compute a daily baseline, take last-30-day APPROVED count and amount by channel. Multiply by SegmentTxnMultiplier for count, SegmentAmountMultiplier for amounts. For ECOM-only analysis, also apply SegmentEcomMultiplier. Example: if 30-day average is 3 ECOM/day and SegmentEcomMultiplier is 1.5, treat >5 ECOM in 24h as elevated.
+- Consider Transactions.EntryMode carefully: MANUAL often indicates CNP; CHIP and TAP imply card-present. Contactless “tap” is TAP. If CardPresent = false and Channel = POS, recheck joins and data validity.
+- Track declines contextually: repeated DECLINED with SUSPECTED_FRAUD followed by small APPROVEDs can be tests before a larger hit.
+
+Scenarios
+
+Scenario 1: ECOM manual burst with IsFraud flags
+A card with Status = ACTIVE shows three APPROVED ECOM charges in 12 minutes at two DIGITAL merchants. EntryMode = MANUAL on all three, CardPresent = false. Transactions.IsFraud = 1 on the first two; the third is unflagged but at a new MerchantId with RiskTier = HIGH. The last 30-day average for ECOM is 1/day; today’s three exceed SegmentEcomMultiplier × baseline. You set Cards.Status to BLOCKED, document TransactionId, AuthAt, MerchantName, RiskTier, and the IsFraud flags, and recommend escalation because total exposure is 65% of Cards.CreditLimit.
+
+Scenario 2: Local POS tap pattern, low risk
+A customer’s card shows two APPROVED POS transactions: one at GROCERY and one at FUEL, both TAP within 30 minutes and within the customer’s usual region. Merchants.RiskTier = LOW for both. There’s a DECLINED earlier with DeclineReason = INVALID_CVV on an ECOM attempt, but no IsFraud flags and no OPEN disputes. Velocity is slightly elevated but within SegmentTxnMultiplier. You do not block; you recommend monitoring for 24 hours and note the benign merchant categories and local pattern.
+
+Common pitfalls to avoid
+- Blocking on DECLINED or REFUNDED transactions. Only act on APPROVED. Don’t confuse a REVERSED auth with a posted spend.
+- Ignoring time zones in AuthAt; always use server time consistently when defining “last 10 minutes” or “last 24 hours.”
+- Joining Merchants on MerchantName instead of MerchantId, which can merge unrelated stores and distort risk tiers.
+- Treating TAP as e-commerce; TAP is card-present contactless, not CNP.
+- Overweighting single LOW risk tier approvals (e.g., GROCERY) as fraud just because of a prior decline; look for clusters and context.
+- Forgetting to check current Cards.Status; attempting to block an already BLOCKED or CLOSED card adds noise.
+
+What to write in the audit note
+Keep it concise and evidence-driven. Reference the exact rows and fields you used, the rule triggered, and the action. Include CardId, key TransactionId(s), timestamps, Channels, EntryModes, merchant risk details, and any Disputes context.
+
+Example audit note:
+“CardId 9241 blocked due to ECOM manual burst. 3 APPROVED in 12m: Txn 557812 (AuthAt 2026-03-03T14:12Z, $120, ECOM, MANUAL, CardPresent=false, IsFraud=1, Merchant ‘FastPlay’, RiskTier=HIGH, Category=DIGITAL), Txn 557845 (14:18Z, $85, IsFraud=1, same merchant), Txn 557901 (14:24Z, $410, new MerchantId 7781, RiskTier=MED, Category=TRAVEL). 30d ECOM avg 1/day; today=3 > SegmentEcomMultiplier threshold. No prior RESOLVED disputes; 1 OPEN dispute (ReasonCode=FRAUD) on 2026-02-25. Action: set Cards.Status from ACTIVE to BLOCKED. Recommend escalate due to 46% CreditLimit exposure.”
+
+Answering the two golden questions
+- Should we block immediately? Yes, if the “Block immediately” conditions are met: multiple IsFraud=1 approvals in minutes, high-velocity ECOM with MANUAL entry beyond segment-adjusted baselines, high-risk merchants cluster, or recent FRAUD dispute plus high-value CNP approval. Otherwise, monitor or escalate per the criteria.
+- What’s the evidence that this is fraud vs legitimate activity? Evidence includes IsFraud flags on APPROVED transactions, velocity beyond SegmentTxnMultiplier/SegmentEcomMultiplier, CNP patterns (ECOM + MANUAL) with CardPresent = false, clustering at Merchants.RiskTier MED/HIGH and Categories DIGITAL/TRAVEL, mismatched geography, and recent Disputes.State OPEN/UNDER_REVIEW with ReasonCode FRAUD. Legitimate patterns tend to be POS with CHIP/TAP at LOW risk categories (GROCERY, FUEL) near the customer’s region, without IsFraud flags and within segment baselines.
+
+Retrieval hooks and alternate phrasing embedded
+Analysts may search for “chargeback” when they mean Disputes.Outcome CHARGEBACK, or “dispute” for Disputes.State OPEN/UNDER_REVIEW. “Card-not-present” and “CNP” map to ECOM with EntryMode = MANUAL. “Tap” or “contactless” map to EntryMode = TAP. “Velocity” or “rapid fire” refer to counts in short windows. “Account takeover” or “ATO,” “friendly fraud,” “fraud ring,” and “bust-out” are patterns inferred from clusters across merchants, channels, and customers. “Skimming” can appear as POS CHIP/TAP in unexpected geographies with CardPresent = true.
+
+Final reminders
+- Take action only on solid evidence documented from the database: cite Transactions.IsFraud, AuthAt, Amount, Channel, EntryMode, CardPresent; Merchants.RiskTier and Category; Cards.Status; and any Disputes.ReasonCode/State. When in doubt, recommend:escalate rather than over-block.
+- After blocking, hand off for reissue outside this SOP. Keep your audit note crisp; it’s the anchor for downstream decisions and any later chargeback or dispute workflows.

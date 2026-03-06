@@ -1,0 +1,130 @@
+Card Lifecycle Actions (ACTIVE/BLOCKED/CLOSED)
+
+Use this guidance when you need to decide whether to block a card immediately, close it permanently, or return it to service. All actions must be traceable to evidence you can pull from IRIS SQL. Work from the card and customer record first, then confirm what the recent transaction and dispute history tells you.
+
+Statuses you can set
+- Cards.Status can only be set to one of: ACTIVE, BLOCKED, or CLOSED. Use these exact values.
+- When you set a card to CLOSED, also write Cards.ClosedAt to the current timestamp (UTC). Do not set Cards.ClosedAt when changing to BLOCKED or ACTIVE.
+
+Where to look (and why)
+- ModestExpectationsCaptial.Cards is your source of truth for current status (Cards.Status), the card’s age (Cards.OpenedAt), and whether it’s already been closed (Cards.ClosedAt). Cards.CreditLimit can help you reason about “limit exceeded” declines.
+- ModestExpectationsCaptial.Customers provides customer context (CustomerId, Segment, RiskScore, Region). High RiskScore or certain segments can inform caution, but status changes must still be driven by transaction or dispute evidence.
+- ModestExpectationsCaptial.Transactions shows authorizations and posts. Focus on Transactions.Status (APPROVED, DECLINED, REFUNDED, REVERSED), Transactions.DeclineReason (INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, INVALID_CVV), Transactions.Channel (ECOM vs POS), Transactions.EntryMode (MANUAL, CHIP, TAP), and Transactions.IsFraud (true/false). Use AuthAt and PostedAt to check recency.
+- ModestExpectationsCaptial.Disputes indicates whether known fraud or other issues are being worked. Watch Disputes.State (OPEN, UNDER_REVIEW, RESOLVED) and Disputes.Outcome (CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK), and tie disputes to the card by joining through Transactions.TransactionId.
+
+Quick queries you’ll use often (adapt CardId = :cardId and time windows as needed)
+- Card and customer: select c.CardId, c.CustomerId, c.Status, c.OpenedAt, c.ClosedAt from ModestExpectationsCaptial.Cards c where c.CardId = :cardId;
+- Last 7 days of activity: select t.TransactionId, t.Status, t.DeclineReason, t.Channel, t.EntryMode, t.IsFraud, t.AuthAt, t.PostedAt from ModestExpectationsCaptial.Transactions t where t.CardId = :cardId and t.AuthAt >= dateadd('day', -7, current_timestamp);
+- Open/active disputes: select d.DisputeId, d.State, d.ReasonCode, d.Outcome from ModestExpectationsCaptial.Disputes d join ModestExpectationsCaptial.Transactions t on d.TransactionId = t.TransactionId where t.CardId = :cardId and d.State in ('OPEN','UNDER_REVIEW');
+
+When to BLOCK now
+Block quickly to stop further use when there’s credible evidence of misuse or elevated risk. Set Cards.Status to BLOCKED in these cases:
+- If any Transactions.IsFraud = 1 on an APPROVED or POSTED transaction in the last 7 days. If/then: if you see IsFraud = 1 on a recent row, then set Status to BLOCKED.
+- If there are three or more DECLINED attempts within 24 hours with DeclineReason = SUSPECTED_FRAUD or INVALID_CVV, especially for ECOM (online) or MANUAL (keyed) entries. If/then: if >= 3 declines with SUSPECTED_FRAUD or INVALID_CVV in 24h, then block.
+- If a fraud-related dispute is OPEN or UNDER_REVIEW with ReasonCode = FRAUD for any transaction in the last 30 days. If/then: if Disputes.State is OPEN or UNDER_REVIEW on FRAUD, then block.
+
+Do not block only because of INSUFFICIENT_FUNDS or LIMIT_EXCEEDED declines unless other fraud indicators are present. Those can be normal for high-spend periods or near the CreditLimit.
+
+When to CLOSE (permanent)
+Closing is final. Only close when one of the following is true and evidence supports it. Set Cards.Status to CLOSED and Cards.ClosedAt = current timestamp. If the evidence is incomplete, use recommend:close_card and escalate.
+
+Allowed to close (you may write:Cards.Status and write:Cards.ClosedAt) if all conditions below are met:
+- Customer-directed closure: the customer explicitly asks to cancel/terminate the card (freeze/unfreeze is not the same as closure).
+  - Evidence required:
+    - You have verified the customer (per channel policy; log this in the audit note).
+    - The card is currently BLOCKED or ACTIVE with no fraud flags in the last 7 days (no Transactions.IsFraud = 1 in that window).
+    - There are no disputes in OPEN or UNDER_REVIEW states tied to this card (Disputes.State must not be OPEN or UNDER_REVIEW).
+    - There are no recent authorizations likely to post: no Transactions.Status = APPROVED with PostedAt null or within the last 72 hours.
+  - If/then: if customer requests permanent closure and the above evidence checks out, then set Status = CLOSED and set ClosedAt.
+
+- Account lifecycle closure (e.g., the customer is moving away from our service, or compliance instructs permanent closure without fraud involved).
+  - Evidence required:
+    - Written instruction or internal ticket referencing compliance decision (note the reference in audit).
+    - Same checks as above: no OPEN/UNDER_REVIEW disputes and no very recent APPROVED transactions pending post.
+  - If/then: if compliance or customer lifecycle requires closure and evidence checks out, then close.
+
+Not allowed to close without escalation (use recommend:close_card):
+- Active or recent fraud: any Transactions.IsFraud = 1 in last 7 days, or any FRAUD dispute in OPEN or UNDER_REVIEW. Block instead; recommend:close_card to Fraud Ops.
+- Chargeback or dispute still working: any dispute in OPEN or UNDER_REVIEW, regardless of ReasonCode (DUPLICATE, NOT_AS_DESCRIBED, NOT_RECEIVED, CANCELLED, FRAUD). Wait for RESOLVED, or escalate if special handling is requested.
+- Fresh activity likely to settle: APPROVED authorizations in the past 72 hours with PostedAt missing or in the future. If/then: if recent APPROVED auths exist, then do not close; block if risk warrants.
+
+When to REACTIVATE (unblock back to ACTIVE)
+Sometimes we block on suspicion that proves benign. You may set Cards.Status from BLOCKED back to ACTIVE only if:
+- Customer confirms the recent activity as legitimate and requests reactivation, and
+- There are zero Transactions.IsFraud = 1 rows in the last 30 days, and
+- There are no disputes in OPEN or UNDER_REVIEW tied to this card, and
+- The most recent declines (if any) are not SUSPECTED_FRAUD or INVALID_CVV in the last 48 hours (INSUFFICIENT_FUNDS or LIMIT_EXCEEDED alone are acceptable).
+If/then: if all reactivation checks pass, then set Status = ACTIVE. Otherwise, keep BLOCKED and escalate if needed.
+
+How to decide between BLOCK vs CLOSE (plain rules)
+- If time matters and you need to stop spend now, block first. Closure can follow after checks.
+- If the customer says “please cancel my card permanently,” and there are no open disputes or pending approvals, close it now.
+- If fraud is indicated (IsFraud = 1, or FRAUD dispute OPEN/UNDER_REVIEW, or clustered SUSPECTED_FRAUD/INVALID_CVV declines), do not close immediately. Block, then recommend:close_card with notes for Fraud Ops to replace and close.
+- If the request is to “freeze,” “pause,” or “hotlist,” treat that as BLOCKED, not CLOSED.
+- If the request is to “reopen,” “unfreeze,” or “reactivate,” treat that as moving from BLOCKED to ACTIVE only after reactivation checks.
+
+Operational steps
+1) Identify the card and current state.
+- Query Cards by CardId. Confirm Cards.Status and note Cards.OpenedAt (age can explain fraud models flagging new cards).
+2) Check recent transactions.
+- Pull the last 7 days for Status, DeclineReason, Channel (ECOM vs POS/in-store), EntryMode (TAP/contactless, CHIP, MANUAL/keyed), and IsFraud.
+- Count clustered declines with SUSPECTED_FRAUD or INVALID_CVV.
+- Look for APPROVED auths within 72 hours that might still post (PostedAt null or very recent).
+3) Check disputes.
+- Join Disputes to Transactions by TransactionId for this CardId. If any Disputes.State is OPEN or UNDER_REVIEW, note ReasonCode and hold off on closure.
+4) Decide action.
+- If fraud indicators exist, set Status = BLOCKED now. Create an audit note and, if permanent closure seems likely, recommend:close_card.
+- If the customer requests permanent closure and evidence checks pass, set Status = CLOSED and set ClosedAt to current timestamp.
+- If the customer confirms activity and all reactivation checks pass, set Status = ACTIVE.
+5) Record the audit note (see below). If you used recommend:close_card, include why.
+
+Allowed actions you may perform
+- write:Cards.Status to ACTIVE, BLOCKED, or CLOSED per rules above.
+- write:Cards.ClosedAt when and only when setting Status to CLOSED.
+- recommend:close_card to Fraud Ops or Compliance when fraud is active or an exception is needed.
+
+Actions you must not perform without escalation
+- Do not set Status = CLOSED while any Disputes.State is OPEN or UNDER_REVIEW.
+- Do not set Status = CLOSED if any Transactions.Status = APPROVED in the last 72 hours and likely to post.
+- Do not change Cards.CreditLimit or any customer attributes as part of this SOP.
+
+Scenarios
+
+Scenario 1: Block due to suspected fraud, then recommend closure
+An analyst sees four DECLINED attempts in 10 minutes at an online merchant (Transactions.Channel = ECOM) with DeclineReason = SUSPECTED_FRAUD and EntryMode = MANUAL, followed by one APPROVED transaction that has Transactions.IsFraud = 1. There is also a FRAUD dispute opened (Disputes.State = OPEN). The analyst immediately sets Cards.Status to BLOCKED to stop further tap/contactless and e-commerce use. They add an audit note referencing the fraudulent TransactionId and the open dispute, then use recommend:close_card to Fraud Ops for permanent closure and reissue.
+
+Scenario 2: Customer-directed closure with no open issues
+A customer chats in to cancel/terminate their card permanently. The card is currently ACTIVE. The analyst checks the last 7 days: no Transactions.IsFraud = 1, just one DECLINED with DeclineReason = INSUFFICIENT_FUNDS, and no recent APPROVED authorizations. Disputes join shows none in OPEN or UNDER_REVIEW; one old RESOLVED dispute with Outcome = CUSTOMER_WON from last year. The analyst sets Cards.Status to CLOSED and writes Cards.ClosedAt to current timestamp, then records the customer’s request and verification steps in the audit note.
+
+Common pitfalls
+- Closing while a dispute is still OPEN or UNDER_REVIEW (any ReasonCode). Always check Disputes.State before closing.
+- Assuming REFUNDED or REVERSED means “safe to close.” Recent APPROVED auths can still post; check PostedAt and the 72-hour window.
+- Treating “freeze my card” as closure. That is a BLOCK, not a CLOSE.
+- Forgetting to set Cards.ClosedAt when closing, or mistakenly setting ClosedAt when only blocking.
+- Reactivating to ACTIVE while recent SUSPECTED_FRAUD declines are still appearing. Wait at least 48 hours without new risk signals.
+- Misreading EntryMode: TAP is contactless; CHIP is in-store with the chip; MANUAL is keyed, typically higher risk for e-commerce/phone orders.
+
+What to write in the audit note
+Capture the who/what/why/when, plus the exact evidence you checked and the SQL you relied on (summarized, not pasted wholesale). Include key field values: Cards.Status before/after, any TransactionId with IsFraud = 1, DeclineReason patterns, Disputes.State/Outcome, and whether any APPROVED transactions were pending. Reference any customer authorization or internal ticket number.
+
+Example audit note (free text)
+“2026-03-03 14:22Z — CardId 987654321. Customer authenticated via 2FA (ticket CS-22314). Customer requested permanent closure. Checked last 7 days Transactions: no IsFraud = 1; 1 DECLINED (INSUFFICIENT_FUNDS) ECOM TAP; no APPROVED auths in past 72h; PostedAt present for last posted txn. Disputes: none OPEN/UNDER_REVIEW; 1 RESOLVED (Outcome = CUSTOMER_WON) from 2025-11. Action: set Cards.Status from ACTIVE to CLOSED; set Cards.ClosedAt = 2026-03-03T14:22Z. No further action pending.”
+
+If you need to escalate
+Use recommend:close_card when you believe a permanent close is warranted but any of these block you from closing: active FRAUD signals, OPEN/UNDER_REVIEW disputes, or recent APPROVED authorizations likely to post. Include a one-paragraph summary of evidence and your recommendation.
+
+Additional notes and language you may hear
+- Customers may say “freeze,” “lock,” “hotlist,” or “stop my card” when they mean BLOCKED. They may say “cancel,” “terminate,” or “close my account/card” when they mean CLOSED. “Unfreeze,” “reopen,” or “reactivate” typically maps to returning to ACTIVE.
+- “Contactless” is TAP; “chip and PIN” is CHIP; “keyed” or “manual entry” is MANUAL. “Online” or “e‑commerce” is ECOM; “in‑store” or “card‑present” is POS.
+- “Chargeback” outcomes appear in Disputes.Outcome as CHARGEBACK. Do not close purely because of a CHARGEBACK; ensure Disputes.State is RESOLVED and other checks pass.
+
+Quality checks before you end the case
+- Finalize the correct Cards.Status and (if closed) Cards.ClosedAt.
+- Re-run a quick disputes check to confirm nothing moved to OPEN/UNDER_REVIEW while you worked.
+- Ensure the audit note is complete and includes field names and values that justify the action.
+- If you blocked due to fraud, verify that recommend:close_card was submitted with sufficient context.
+
+Reversal of mistakes
+If you closed in error and the card must be reopened, do not set Status back to ACTIVE yourself. Escalate; closures are permanent in this SOP, and reopening requires managerial approval and system-level actions outside of write:Cards.Status. If you blocked in error and criteria for reactivation are satisfied, you may set Status to ACTIVE and note the justification.
+
+By following these steps with clear if/then decisions based on Transactions and Disputes evidence, your changes to ACTIVE, BLOCKED, or CLOSED will stand up to review and minimize customer impact.

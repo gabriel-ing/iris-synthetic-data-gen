@@ -1,0 +1,118 @@
+Dispute Investigation and Resolution Outcomes
+
+This guidance tells you how to decide and record the final outcome for a cardholder dispute, and when to move a case to chargeback. You will look up context from the transaction and merchant, then set the resolution on ModestExpectationsCaptial.Disputes. Keep it practical: confirm what happened on the ledger first (approved, refunded, reversed), check card-present and entry mode, assess merchant risk tier, and then decide if the customer wins, the merchant wins, the case is withdrawn, or we proceed by filing a chargeback.
+
+What outcomes and states you can set
+- You may write Disputes.State to one of: OPEN, UNDER_REVIEW, RESOLVED.
+- You may write Disputes.Outcome to one of: CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK.
+- You may write Disputes.ResolvedAt to the current timestamp when you close the case.
+- You may not modify any other tables under this SOP (do not alter Transactions, Cards, or Customers). Specifically, do not change Cards.Status to BLOCKED or CLOSED, and do not alter Transactions.Status.
+
+Where to start in the database
+Pull the dispute and its transaction context. Use Disputes.TransactionId to join to Transactions.TransactionId, then join the merchant to get merchant category and risk tier. You’ll reference these fields repeatedly: Disputes.ReasonCode, Disputes.State, Disputes.Outcome; Transactions.Channel, Transactions.EntryMode, Transactions.CardPresent, Transactions.Status; Merchants.RiskTier, Merchants.Category.
+
+Example quick fetch
+- One-row snapshot to work the case:
+  select d.DisputeId, d.ReasonCode, d.State, t.TransactionId, t.CardId, t.MerchantId, t.MerchantName, t.AuthAt, t.PostedAt, t.Amount, t.Currency, t.Channel, t.EntryMode, t.CardPresent, t.Status, m.RiskTier, m.Category
+  from ModestExpectationsCaptial.Disputes d
+  join ModestExpectationsCaptial.Transactions t on t.TransactionId = d.TransactionId
+  left join ModestExpectationsCaptial.Merchants m on m.MerchantId = t.MerchantId
+  where d.DisputeId = :DisputeId;
+
+Allowed values you will see and use
+- Disputes.ReasonCode is one of: DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, CANCELLED.
+- Transactions.Channel is ECOM (e-commerce, card-not-present) or POS (in-store).
+- Transactions.EntryMode is MANUAL (keyed), CHIP (EMV), or TAP (contactless).
+- Transactions.Status is APPROVED, DECLINED, REFUNDED, or REVERSED.
+- Merchants.RiskTier is LOW, MED, or HIGH. Merchants.Category is GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, or DINING.
+
+Fast outcomes based on ledger reality
+If the ledger already made the customer whole, do not escalate.
+- If Transactions.Status is REFUNDED or REVERSED, set Disputes.Outcome = CUSTOMER_WON, Disputes.State = RESOLVED, Disputes.ResolvedAt = now(). This also covers cancellations where the merchant issued a credit. Do not set MERCHANT_WON in a refund scenario—the customer got the money back.
+
+If the transaction never posted as APPROVED (for example, DECLINED), close the dispute as MERCHANT_WON only if the customer was not charged. Otherwise, if the cardholder is seeing a pending hold that later dropped, confirm drop with PostedAt is null and Status is DECLINED or REVERSED, then set MERCHANT_WON and RESOLVED to reflect no loss.
+
+Reason-specific decision rules
+FRAUD (answering “Likely outcome for FRAUD on ECOM MANUAL?” included below)
+- If Channel = ECOM and EntryMode = MANUAL, treat this as card-not-present keyed. If Transactions.Status = APPROVED and not REFUNDED/REVERSED, default to filing a chargeback unless there is compelling merchant evidence. Set Disputes.Outcome = CHARGEBACK and Disputes.State = RESOLVED when you submit the chargeback. This is the likely outcome for FRAUD on ECOM MANUAL.
+- If Channel = ECOM and EntryMode is CHIP or TAP (rare, but can occur due to gateway mapping), use CardPresent to guide you. If CardPresent = false and Merchants.RiskTier is HIGH (e.g., DIGITAL with HIGH), proceed to CHARGEBACK. If LOW and there is a merchant credit in progress, keep UNDER_REVIEW up to 5 business days, then either CUSTOMER_WON (if credit lands) or CHARGEBACK.
+- If Channel = POS and EntryMode = CHIP or TAP and CardPresent = true, lean toward MERCHANT_WON unless there is evidence of counterfeit or a refund posting. For FRAUD at POS with CHIP/TAP, only move to CHARGEBACK when additional evidence shows the card wasn’t present (CardPresent = false in our record), or the same card was used contemporaneously far away (check Transactions by CardId around AuthAt ±1 day). If evidence is insufficient, set UNDER_REVIEW and escalate to risk operations; do not close as MERCHANT_WON prematurely.
+
+DUPLICATE
+- Look for two APPROVED Transactions for the same CardId, MerchantId, Amount, Currency, same day, with AuthAt within 10 minutes. Example helper:
+  select count(*) as cnt
+  from ModestExpectationsCaptial.Transactions
+  where CardId = :CardId and MerchantId = :MerchantId and Amount = :Amount and Currency = :Currency and Status = 'APPROVED' and AuthAt between :AuthAt - interval '10' minute and :AuthAt + interval '10' minute;
+- If there are two or more, and no offsetting REFUNDED/REVERSED on the extra item, set CHARGEBACK for the extra item(s) if the merchant won’t refund within 3 business days. Otherwise, if one was already reversed or refunded, set CUSTOMER_WON and RESOLVED.
+- If the “duplicate” is actually a tip adjustment or split shipment (common in DINING or TRAVEL), Merchants.Category can explain the variance. If the second amount is different and Category is DINING or TRAVEL, keep UNDER_REVIEW and request receipt detail; do not set CHARGEBACK until variance is confirmed as an error.
+
+NOT_RECEIVED and NOT_AS_DESCRIBED
+- If Channel = ECOM and Merchants.Category = DIGITAL with RiskTier = HIGH, and no merchant refund or shipment confirmation within 7 days of dispute OpenedAt, proceed to CHARGEBACK. Close as RESOLVED with Outcome = CHARGEBACK.
+- If POS, CHIP/TAP with CardPresent = true, first ask for merchant remediation. Keep UNDER_REVIEW up to 7 days. If they refuse and the claim is credible, consider CHARGEBACK only if the amount is material and there’s no evidence of pickup/consumption (e.g., FUEL or DINING are hard to win—prefer MERCHANT_WON unless clear error).
+
+CANCELLED
+- If the cardholder cancelled and there’s a REFUNDED or REVERSED posting, set CUSTOMER_WON and RESOLVED.
+- If no credit within 10 calendar days of cancellation and Channel = ECOM, proceed to CHARGEBACK.
+- If POS, keep UNDER_REVIEW and request proof (cancellation email/void slip). If not provided within 5 business days, set MERCHANT_WON and RESOLVED.
+
+When to proceed to CHARGEBACK
+- If the transaction is APPROVED, not REFUNDED or REVERSED, the ReasonCode is FRAUD on an e-commerce, card-not-present flow (Channel = ECOM), especially with EntryMode = MANUAL, proceed to CHARGEBACK immediately. That answers: we do so right away for FRAUD on ECOM MANUAL unless objective evidence contradicts the claim.
+- For DUPLICATE without a merchant-initiated refund by T+3 business days, proceed to CHARGEBACK for the extra approval(s).
+- For NOT_RECEIVED/NOT_AS_DESCRIBED at HIGH risk DIGITAL merchants with no remediation by T+7 days, proceed to CHARGEBACK.
+- Do not proceed to CHARGEBACK if Transactions.Status is REFUNDED or REVERSED, or if CardPresent = true with EntryMode = CHIP or TAP and Merchants.RiskTier = LOW and there’s no anomaly. In that case, lean MERCHANT_WON or keep UNDER_REVIEW.
+
+State handling while you work
+- Leave Disputes.State = OPEN when first picked up. Change to UNDER_REVIEW while you wait for merchant response or additional documentation. Move to RESOLVED only when you set Disputes.Outcome to one of CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, or CHARGEBACK. Always set Disputes.ResolvedAt when you move to RESOLVED.
+
+Customer withdrawal
+- If the customer retracts the claim (they recognize the purchase or received a refund outside our ledger), set Outcome = WITHDRAWN and State = RESOLVED. Capture who confirmed and when in the audit note. Do not set MERCHANT_WON for withdrawals.
+
+Additional lookups you may need
+- To check recent usage pattern on the same card near the disputed time:
+  select TransactionId, MerchantName, Channel, EntryMode, CardPresent, Amount, Status, AuthAt
+  from ModestExpectationsCaptial.Transactions
+  where CardId = :CardId and AuthAt between :AuthAt - interval '1' day and :AuthAt + interval '1' day
+  order by AuthAt;
+
+- To confirm merchant risk profile:
+  select MerchantId, MerchantName, RiskTier, Category, Country
+  from ModestExpectationsCaptial.Merchants
+  where MerchantId = :MerchantId;
+
+Evidence you must have before you set the outcome
+- CUSTOMER_WON: Transactions.Status = REFUNDED or REVERSED, or documented merchant credit visible on the ledger.
+- MERCHANT_WON: CardPresent = true with EntryMode = CHIP or TAP at POS, Merchants.RiskTier = LOW or MED, and no contra evidence; or transaction never settled (DECLINED/REVERSED) while the cardholder was not charged.
+- WITHDRAWN: Customer confirmation (call/chat/email) that the claim is dropped.
+- CHARGEBACK: Transactions.Status = APPROVED, not REFUNDED/REVERSED, ReasonCode supports liability (FRAUD, DUPLICATE, NOT_RECEIVED, NOT_AS_DESCRIBED, CANCELLED), and the appropriate waiting period for merchant remediation has elapsed unless the rule above says immediate (FRAUD on ECOM MANUAL).
+
+Scenarios
+- FRAUD on ECOM MANUAL, HIGH-risk digital merchant: The customer reports an unauthorized online game top-up. Query shows Channel = ECOM, EntryMode = MANUAL, CardPresent = false, Transactions.Status = APPROVED, Merchants.RiskTier = HIGH, Merchants.Category = DIGITAL. No refund is visible. Proceed to CHARGEBACK now. Update Disputes.Outcome = CHARGEBACK, Disputes.State = RESOLVED, Disputes.ResolvedAt = now(), and write the audit note.
+
+- “Double swipe” at a grocery POS with contactless: The customer claims they were charged twice. Query shows two APPROVED transactions 3 minutes apart, same Amount and MerchantId, Channel = POS, EntryMode = TAP, CardPresent = true, Merchants.RiskTier = LOW. Three hours later, the second transaction is REFUNDED. Close as CUSTOMER_WON and RESOLVED because the refund posted. Do not raise a chargeback for something already reversed.
+
+Common pitfalls
+- Confusing pending holds with posted charges; do not charge back a DECLINED or REVERSED authorization. Always check Transactions.Status first.
+- Treating in-store CHIP/TAP as card-not-present; CardPresent and EntryMode together matter. “Tap” means contactless (TAP), not online.
+- Setting MERCHANT_WON when the merchant actually issued a refund—refunds mean CUSTOMER_WON in our taxonomy.
+- Waiting too long on high-risk ECOM FRAUD. For ECOM MANUAL, move to CHARGEBACK promptly; don’t wait for merchant outreach unless policy says otherwise.
+- Calling a tip adjustment a duplicate. For DINING, look at amount variance and timing before deciding DUPLICATE.
+
+What to write in the audit note
+Capture what you saw, the fields that drove the decision, any merchant/customer communication, and the exact action taken. Keep it clear so another analyst (or network reviewer) can follow without re-querying.
+
+Example audit note
+“DisputeId 48291. ReasonCode=FRAUD. Txn 771203 APPROVED at 2026-02-14 18:42Z, Amount 89.99 USD, Channel=ECOM, EntryMode=MANUAL, CardPresent=false. MerchantId 993, ‘GameBox Ltd’, RiskTier=HIGH, Category=DIGITAL. No REFUNDED/REVERSED entries as of now. FRAUD on ECOM MANUAL qualifies for immediate chargeback. Set Outcome=CHARGEBACK, State=RESOLVED, ResolvedAt=2026-03-03T10:17Z.”
+
+Language people might search for (embedded here so this SOP is findable): dispute vs chargeback vs claim vs case vs ticket; contactless vs tap; EMV vs chip; online vs e-comm vs card-not-present (CNP); manual keyed vs key-entered; in-store vs POS; refund vs reversal vs credit.
+
+Closing the case
+- If you are resolving: set Disputes.Outcome (CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, or CHARGEBACK), set Disputes.State = RESOLVED, and set Disputes.ResolvedAt = now().
+- If you need time or documentation: set Disputes.State = UNDER_REVIEW and leave Outcome null/unchanged until you decide.
+- Do not update Customers.Status, Cards.Status (ACTIVE, BLOCKED, CLOSED), or any Transactions fields under this SOP. If you believe a card should be BLOCKED due to confirmed FRAUD, escalate to the fraud ops SOP rather than taking action here.
+
+If/then quick reminders
+- If ReasonCode = FRAUD and Channel = ECOM and EntryMode = MANUAL and Status = APPROVED → Outcome = CHARGEBACK, State = RESOLVED.
+- If Status = REFUNDED or REVERSED (any ReasonCode) → Outcome = CUSTOMER_WON, State = RESOLVED.
+- If POS + CHIP/TAP + CardPresent = true + RiskTier = LOW and no anomalies → Outcome = MERCHANT_WON, State = RESOLVED.
+- If DUPLICATE and second approval not reversed by T+3 business days → Outcome = CHARGEBACK, State = RESOLVED.
+- If customer retracts → Outcome = WITHDRAWN, State = RESOLVED.

@@ -1,0 +1,117 @@
+Dispute Intake (OPEN/UNDER_REVIEW) and Eligibility
+
+Use this when a customer asks us to start a dispute (sometimes called a chargeback or retrieval) on a card transaction. Your job at intake is to verify the transaction is eligible, capture the correct ReasonCode and DisputedAmount, open the case in ModestExpectationsCaptial.Disputes, and move the State to the right place (OPEN or UNDER_REVIEW). You can insert into Disputes and update Disputes.State. Do not change any other tables or fields as part of intake.
+
+What you’re allowed to do
+- Allowed: write:Disputes(insert) to create a new row with TransactionId, OpenedAt, ReasonCode, State, and DisputedAmount.
+- Allowed: write:Disputes.State to move a dispute from OPEN to UNDER_REVIEW (or back to OPEN if intake was premature).
+- Not allowed without escalation: setting Disputes.State to RESOLVED or touching Disputes.Outcome (CUSTOMER_WON, MERCHANT_WON, WITHDRAWN, CHARGEBACK). Do not modify Transactions, Cards, or Customers. Specifically, do not set Cards.Status to BLOCKED or CLOSED as part of dispute intake.
+
+Quick eligibility rules (apply in order)
+1) Confirm the transaction exists and is eligible:
+   - Pull it by TransactionId from ModestExpectationsCaptial.Transactions. Check Transactions.Status.
+   - If Status = DECLINED (DeclineReason may be INSUFFICIENT_FUNDS, SUSPECTED_FRAUD, LIMIT_EXCEEDED, or INVALID_CVV), do not open a dispute. Declines aren’t chargeable events.
+   - If Status = REVERSED or REFUNDED, do not open a dispute. Explain that a reversal/merchant credit is the resolution. If the customer insists the amount did not fully cover the charge, escalate to the disputes queue; do not create a new Disputes row.
+   - If Status = APPROVED, proceed.
+
+2) Validate the card context:
+   - Look up the card in ModestExpectationsCaptial.Cards via Transactions.CardId. Cards.Status may be ACTIVE, BLOCKED, or CLOSED. You can take a dispute on transactions that were APPROVED while the card was ACTIVE or BLOCKED. If the card is CLOSED, ensure the transaction’s AuthAt/PostedAt is before Cards.ClosedAt. If after, stop and escalate.
+
+3) Check for an existing dispute on the same TransactionId:
+   - Search ModestExpectationsCaptial.Disputes for the TransactionId. If there’s any case with State in OPEN or UNDER_REVIEW, don’t create a second one; add a note to the existing case and, if needed, update Disputes.State to UNDER_REVIEW after new evidence is received. If an older case is RESOLVED, open a new case only if the ReasonCode and evidence are meaningfully different; otherwise escalate to a senior reviewer.
+
+4) Validate amount:
+   - The Disputes.DisputedAmount must be greater than 0 and must not exceed Transactions.Amount. If the customer requests more, cap it at Transactions.Amount and note why.
+   - For partial deliveries or partial credits (customer says there was a small “merchant credit” or “refund” separate from the original sale), we still use the original Transactions.Amount unless the customer can show a separate posted credit. We cannot net against unknown credits at intake.
+
+5) Map the customer story to a ReasonCode and evidence requirements:
+   - We only use the following Disputes.ReasonCode values: DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, CANCELLED.
+   - Transactions context to consider: Transactions.Channel is ECOM or POS; Transactions.EntryMode is MANUAL, CHIP, or TAP; Transactions.CardPresent is true/false; these help you sanity-check the story (e.g., “contactless/tap” vs “chip insert”; “online/e-commerce” vs “in-store/POS”).
+
+Evidence expectations by ReasonCode
+- DUPLICATE:
+  - Customer claims they were charged twice. Verify in Transactions whether there are two APPROVED rows with same CardId, similar MerchantName/MerchantId, and same Amount within the same day.
+  - Evidence to collect: screenshots of statement highlighting both entries, any merchant email acknowledging a duplicate.
+  - Intake tip: run an IRIS SQL like “select TransactionId, AuthAt, Amount, MerchantName from ModestExpectationsCaptial.Transactions where CardId = ? and Amount = ? and MerchantId = ? and Status = 'APPROVED' and AuthAt between ? and ?” (24–48h window).
+- FRAUD:
+  - Customer didn’t authorize the charge. If Channel = ECOM or CardPresent = false, or EntryMode = MANUAL (keyed), that supports CNP (card-not-present) fraud. If EntryMode = CHIP or TAP (contactless), confirm customer did not have the card and did not use tap.
+  - Evidence to collect: customer attestation of non-authorization, any device or location mismatch info they provide, police report if available (not required at intake), notes if card was later BLOCKED/CLOSED.
+- NOT_AS_DESCRIBED:
+  - Goods/services were received but differ from what was advertised.
+  - Evidence to collect: description of what was expected vs received, photos/screenshots, timestamps of merchant communications, any return attempts.
+- NOT_RECEIVED:
+  - Goods/services were not delivered or access never granted.
+  - Evidence to collect: expected delivery date, shipping/tracking pages or “no tracking available,” merchant promise dates, proof of attempts to resolve with merchant.
+  - Do not open earlier than the expected delivery date unless the merchant confirmed cancellation without refund; otherwise set expectation and diary.
+- CANCELLED:
+  - Customer cancelled before fulfillment and was still charged.
+  - Evidence to collect: cancellation confirmation with date/time, return/cancellation policy, chat/email logs.
+
+State handling
+- Default to Disputes.State = OPEN when you first create the row.
+- Move to UNDER_REVIEW when you have all minimum evidence for the selected ReasonCode and the core checks are complete. You can update Disputes.State from OPEN to UNDER_REVIEW. Do not set RESOLVED.
+
+How to open the dispute (step by step)
+1) Pull the transaction:
+   - select * from ModestExpectationsCaptial.Transactions where TransactionId = :txnId;
+   - If Transactions.Status is DECLINED, REFUNDED, or REVERSED, stop. For REFUNDED/REVERSED, answer the customer that a refund/reversal (sometimes called a void) is already in place. For DECLINED, explain no funds were taken.
+2) Check for existing cases:
+   - select DisputeId, State from ModestExpectationsCaptial.Disputes where TransactionId = :txnId and State in ('OPEN','UNDER_REVIEW');
+   - If any row returns, don’t insert a new one. Add notes and, if evidence is now complete, update State to UNDER_REVIEW.
+3) Confirm card timing:
+   - select CardId from ModestExpectationsCaptial.Transactions where TransactionId = :txnId;
+   - select Status, OpenedAt, ClosedAt from ModestExpectationsCaptial.Cards where CardId = :cardId;
+   - If Cards.Status = CLOSED and Transactions.AuthAt > Cards.ClosedAt, escalate (likely not eligible).
+4) Validate DisputedAmount:
+   - Compare to Transactions.Amount. Use the lower of the two. If the customer mentions a “merchant credit” or “refund,” search for a separate credit on the same card and merchant if they can provide a date; otherwise proceed with full amount.
+5) Insert the case:
+   - insert into ModestExpectationsCaptial.Disputes (TransactionId, OpenedAt, ReasonCode, State, DisputedAmount) values (:txnId, CURRENT_TIMESTAMP, :reasonCode, 'OPEN', :disputedAmount);
+6) Move to UNDER_REVIEW when evidence is complete:
+   - update ModestExpectationsCaptial.Disputes set State = 'UNDER_REVIEW' where DisputeId = :newId;
+
+Answering the golden questions
+- Can we open a dispute for this reversed transaction?
+  - No. If Transactions.Status is REVERSED or REFUNDED, we do not open a dispute. A reversal/refund is already the merchant credit the customer is seeking. If the customer alleges a mismatch (e.g., partial refund), escalate for senior review; intake should not create a new case.
+- What evidence is needed for NOT_RECEIVED?
+  - We need the expected delivery date (or service start date), proof that delivery/access did not occur (tracking screenshot, “no tracking available,” or merchant promise date that passed), and any attempt the customer made to resolve with the merchant. Collect order confirmation if available. Once those are in, you can move State from OPEN to UNDER_REVIEW.
+
+Invalid or duplicate dispute scenarios
+- If Disputes exists for the same TransactionId in OPEN or UNDER_REVIEW, do not create another row. Add notes to the existing case; if new documentation materially changes completeness, set State to UNDER_REVIEW.
+- If a RESOLVED dispute exists with the same ReasonCode and no new facts, do not open. If the customer brings new evidence (e.g., new proof of cancellation for CANCELLED), you may open a new case referencing the prior DisputeId in your audit note.
+
+Using context fields to sanity-check the story
+- Channel ECOM (online/e-commerce) vs POS (in-store/point-of-sale). If the customer describes an “online purchase,” expect Channel = ECOM.
+- EntryMode TAP (contactless), CHIP (chip insert), or MANUAL (keyed). If the customer says “I never tap,” but EntryMode = TAP and CardPresent = true, probe further.
+- Merchant details like Merchants.Category (GROCERY, DIGITAL, RETAIL, FUEL, TRAVEL, DINING) and Merchants.RiskTier (LOW, MED, HIGH) don’t change eligibility at intake, but include them in your note for triage.
+
+Common pitfalls to avoid
+- Opening a case on a DECLINED authorization because it “looked real.” If not APPROVED, there’s nothing to reverse.
+- Treating “reversal,” “void,” or “refund” as different from REVERSED/REFUNDED. In our data, if Status is REVERSED or REFUNDED, do not open a dispute.
+- Selecting the wrong ReasonCode because the customer is upset; match their story to DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, or CANCELLED only.
+- Ignoring CardPresent and EntryMode context; a claim of contactless fraud when EntryMode is MANUAL needs clarification.
+- Creating a second dispute because the customer called again. Always check Disputes for OPEN/UNDER_REVIEW first.
+
+Two quick scenarios
+
+Scenario 1: NOT_RECEIVED on an e-commerce order
+A customer reports a missing online purchase. You pull ModestExpectationsCaptial.Transactions by TransactionId and see Status = APPROVED, Channel = ECOM, CardPresent = false. No existing Disputes rows. You collect the order confirmation, expected delivery date (which passed), and a tracking screenshot showing “label created, no movement.” You insert a Disputes row with ReasonCode = NOT_RECEIVED, DisputedAmount equal to Transactions.Amount, State = OPEN, then update State to UNDER_REVIEW once the customer emails the tracking evidence.
+
+Scenario 2: Reversed in-store tap
+A customer asks for a “chargeback” on an in-store tap. The transaction shows Status = REVERSED, EntryMode = TAP, CardPresent = true. You explain that the merchant already reversed the charge (a void/reversal) and we can’t open a dispute on a reversed transaction. You add an internal note referencing the TransactionId and close the intake without creating a Disputes row. If the customer later claims a partial refund, you escalate instead of opening a case.
+
+What to write in the audit note
+Document your checks so another analyst can rebuild your decision without re-calling the customer. Include TransactionId, Status, Channel/EntryMode/CardPresent, the chosen ReasonCode, DisputedAmount, duplicate check result, and a one-line evidence summary with dates.
+
+Example audit note:
+“Intake for DisputeId 48291 on TransactionId 771234. Txn APPROVED (ECOM, CardPresent=false, EntryMode=MANUAL). ReasonCode NOT_RECEIVED. DisputedAmount 69.99 USD (<= original amount). No existing OPEN/UNDER_REVIEW disputes found. Evidence: order conf #A1145 (exp delivery 2026-02-10), tracking shows no movement as of 2026-02-15, customer attempted merchant chat on 2026-02-12. State moved OPEN -> UNDER_REVIEW.”
+
+If/then reminders you can trust
+- If Transactions.Status = APPROVED and ReasonCode is one of DUPLICATE, FRAUD, NOT_AS_DESCRIBED, NOT_RECEIVED, or CANCELLED and DisputedAmount > 0 and <= Transactions.Amount, then insert a Disputes row with State = OPEN.
+- If evidence for the selected ReasonCode is complete, then update Disputes.State to UNDER_REVIEW.
+- If Transactions.Status = REFUNDED or REVERSED, then do not insert; advise the customer a refund/reversal is already in place.
+- If any Disputes row exists for the same TransactionId with State in OPEN or UNDER_REVIEW, then do not insert; work the existing case.
+
+Natural search terms you might hear
+Agents and customers may say chargeback, retrieval, dispute, merchant credit, refund, reversal/void, tap/contactless, online/e-commerce, in-store/POS, keyed/manual, card-not-present (CNP), chip insert. We capture these as Channel (ECOM/POS) and EntryMode (TAP/CHIP/MANUAL) and map the story to the allowed ReasonCode list.
+
+That’s all you need to get a clean intake into ModestExpectationsCaptial.Disputes while keeping the workflow moving and avoiding duplicate or invalid cases.
