@@ -1,0 +1,43 @@
+seed: 42
+
+time:
+  start_date: "2026-01-01"
+  days: 180
+  timezone: "UTC"
+
+scale:
+  mode: "explicit"
+  factor: 1
+  base_counts:
+    products: 600
+    locations: 80
+    suppliers: 120
+    customers: 1500
+    product_suppliers: 1500
+    sales_order_lines: 20000
+    purchase_order_lines: 8000
+    stock_count_events: 400
+  counts:
+    products: 200
+    locations: 40
+    suppliers: 60
+    customers: 300
+    product_suppliers: 500
+    sales_order_lines: 3000
+    purchase_order_lines: 1200
+    stock_count_events: 120
+
+output:
+  path: "./out_supply_chain"
+  overwrite: true
+
+behavior:
+  sales:
+    cancel_rate: 0.04
+    partial_ship_rate: 0.22
+  shipments:
+    split_shipment_rate: 0.28
+    delay_rate: 0.12
+  purchase_orders:
+    partial_receipt_rate: 0.2
+    late_receipt_rate: 0.13

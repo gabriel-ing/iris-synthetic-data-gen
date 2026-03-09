@@ -1,12 +1,12 @@
 /// 
-Class finance.Transactions Extends %Persistent [ ClassType = persistent, DdlAllowed, Final, Owner = {SuperUser}, ProcedureBlock, SqlRowIdPrivate, SqlTableName = Transactions ]
+Class Finance.Transactions Extends %Persistent [ ClassType = persistent, DdlAllowed, Final, Owner = {SuperUser}, ProcedureBlock, SqlRowIdPrivate, SqlTableName = Transactions ]
 {
 
 Property TransactionId As %Library.BigInt [ Required, SqlColumnNumber = 2 ];
 
-Property Card As finance.Cards;
+Property Card As Finance.Cards;
 
-Property Merchant As finance.Merchants;
+Property Merchant As Finance.Merchants;
 
 Property AuthAt As %Library.String(MAXLEN = 35) [ SqlColumnNumber = 6 ];
 

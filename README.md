@@ -1,6 +1,6 @@
-# Synthetic Financial Dataset Generator
+# Synthetic Dataset Generators
 
-Synthetic dataset generator for Financial Services demos (InterSystems IRIS-ready later).
+Synthetic dataset generators for InterSystems IRIS demos, currently covering Financial Services and Supply Chain domains.
 
 Detailed architecture and extension guide:
 
@@ -48,7 +48,7 @@ pip install intersystems-irispython
 2. Print DDL only (easy copy/paste):
 
 ```bash
-python scripts/load_csv_to_iris.py --package finance --print-ddl
+python scripts/load_csv_to_iris.py --package Finance --print-ddl
 ```
 
 3. Create tables and load CSV data:
@@ -58,14 +58,14 @@ python scripts/load_csv_to_iris.py \
 	--data-dir out \
 	--server localhost --port 52776 \
 	--namespace USER --username SuperUser --password SYS \
-	--package finance \
+	--package Finance \
 	--chunk-size 5000
 ```
 
 4. Optional reset of tables before load:
 
 ```bash
-python scripts/load_csv_to_iris.py --data-dir out --package finance --drop-existing
+python scripts/load_csv_to_iris.py --data-dir out --package Finance --drop-existing
 ```
 
 ## Direct Insert Into IRIS (No CSV)
@@ -76,7 +76,7 @@ Use the alternate entrypoint to generate in memory and insert directly with
 ```bash
 python -m synthetic_data_gen.main_iris \
 	--config config/sample_config.yaml \
-	--package finance \
+	--package Finance \
 	--clear-existing \
 	--commit-every 20000
 ```
@@ -88,9 +88,9 @@ Notes:
 
 ### Class reference columns used by generator
 
-- `cards.csv`: uses `Customer` (reference to `finance.Customers`)
-- `transactions.csv`: uses `Card` and `Merchant` (references to `finance.Cards` and `finance.Merchants`)
-- `disputes.csv`: uses `Transactions` (reference to `finance.Transactions`)
+- `cards.csv`: uses `Customer` (reference to `Finance.Customers`)
+- `transactions.csv`: uses `Card` and `Merchant` (references to `Finance.Cards` and `Finance.Merchants`)
+- `disputes.csv`: uses `Transactions` (reference to `Finance.Transactions`)
 
 ### IRIS SQL arrow notation examples
 
@@ -103,7 +103,7 @@ SELECT TOP 10
 	t.Merchant->Country AS MerchantCountry,
 	t.Amount,
 	t.Status
-FROM finance.Transactions t
+FROM Finance.Transactions t
 ORDER BY t.TransactionId;
 ```
 
@@ -114,7 +114,7 @@ SELECT
 	d.Transactions->Merchant->Category AS MerchantCategory,
 	d.Transactions->Card->Customer->RiskScore AS CustomerRiskScore,
 	d.DisputedAmount
-FROM finance.Disputes d;
+FROM Finance.Disputes d;
 ```
 
 ## Notes
@@ -124,3 +124,15 @@ FROM finance.Disputes d;
 - Merchant names are generated as synthetic company names via Faker.
 - Merchant country distribution is USA-primary with additional countries included.
 - IRIS loading can be added in a later phase.
+
+## Supply Chain Domain (New)
+
+- Python package location: `SupplyChain/python/SupplyDataGen`
+- Sample config: `SupplyChain/python/config/sample_config.yaml`
+- Run from `SupplyChain/python`:
+
+```bash
+c:/Users/ging/external_hackathon/synthetic_data_gen/.venv/Scripts/python.exe -m SupplyDataGen.main --config config/sample_config.yaml
+```
+
+Supply Chain output includes dimensions, sourcing relationships, sales/purchase/shipment transactions, inventory movements, stock count events, and daily inventory snapshots.

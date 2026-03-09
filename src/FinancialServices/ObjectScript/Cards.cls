@@ -1,10 +1,10 @@
 /// 
-Class finance.Cards Extends %Persistent [ ClassType = persistent, DdlAllowed, Final, Owner = {SuperUser}, ProcedureBlock, SqlRowIdPrivate, SqlTableName = Cards ]
+Class Finance.Cards Extends %Persistent [ ClassType = persistent, DdlAllowed, Final, Owner = {SuperUser}, ProcedureBlock, SqlRowIdPrivate, SqlTableName = Cards ]
 {
 
 Property CardId As %Library.Integer(MAXVAL = 2147483647, MINVAL = -2147483648) [ Required, SqlColumnNumber = 2 ];
 
-Property Customer As finance.Customers;
+Property Customer As Finance.Customers;
 
 Property CardType As %Library.String(MAXLEN = 20) [ SqlColumnNumber = 4 ];
 

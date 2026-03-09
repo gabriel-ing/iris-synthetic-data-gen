@@ -1,10 +1,10 @@
 /// 
-Class finance.Disputes Extends %Persistent [ ClassType = persistent, DdlAllowed, Final, Owner = {SuperUser}, ProcedureBlock, SqlRowIdPrivate, SqlTableName = Disputes ]
+Class Finance.Disputes Extends %Persistent [ ClassType = persistent, DdlAllowed, Final, Owner = {SuperUser}, ProcedureBlock, SqlRowIdPrivate, SqlTableName = Disputes ]
 {
 
 Property DisputeId As %Library.BigInt [ Required, SqlColumnNumber = 2 ];
 
-Property Transactions As finance.Transactions;
+Property Transactions As Finance.Transactions;
 
 Property OpenedAt As %Library.String(MAXLEN = 35) [ SqlColumnNumber = 4 ];
 

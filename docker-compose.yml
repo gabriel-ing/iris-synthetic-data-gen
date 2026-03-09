@@ -1,0 +1,13 @@
+services:
+  iris:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 62972
+      - 62773:52773
+      - 63773
+      - 65030:5000
+    volumes:
+      - ./:/home/irisowner/dev

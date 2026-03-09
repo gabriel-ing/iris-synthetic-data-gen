@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import argparse
 import math
 from typing import Iterable
 
@@ -15,26 +14,6 @@ from DataGen.generators.merchants import generate_merchants
 from DataGen.generators.transactions import generate_transactions
 from DataGen.rng import make_rng
 from DataGen.validate import validate_all
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Generate synthetic data and insert directly into IRIS (no CSV files)."
-    )
-    parser.add_argument("--config", required=True, help="Path to YAML config")
-    parser.add_argument("--package", default="finance", help="IRIS SQL package/schema prefix")
-    parser.add_argument(
-        "--clear-existing",
-        action="store_true",
-        help="Delete existing rows before insert (child tables first)",
-    )
-    parser.add_argument(
-        "--commit-every",
-        type=int,
-        default=20000,
-        help="Issue SQL COMMIT every N inserted rows per table",
-    )
-    return parser.parse_args()
 
 
 def _summary(
@@ -91,6 +70,10 @@ def _normalize_value(value):
             value = value.item()
         except Exception:
             pass
+    # IRIS %Integer fields reject Python bool wrappers in some embedded contexts.
+    # Normalize all booleans to explicit 0/1 integers before parameter binding.
+    if isinstance(value, bool):
+        return int(value)
     return value
 
 
@@ -121,9 +104,13 @@ def _insert_df(iris, table_name: str, columns: list[str], df: pd.DataFrame, comm
     return inserted
 
 
-def main() -> None:
-    args = parse_args()
-    config = load_config(args.config)
+def main(
+    config_path: str,
+    package: str = "Finance",
+    clear_existing: bool = False,
+    commit_every: int = 20000,
+) -> dict:
+    config = load_config(config_path)
     seed = int(config["seed"])
 
     merchants = generate_merchants(config, make_rng(seed, "merchants"))
@@ -168,14 +155,14 @@ def main() -> None:
             "iris module not found. Run this in IRIS Embedded Python or install intersystems-irispython."
         ) from exc
 
-    pkg = args.package
+    pkg = package
     table_customers = f"{pkg}.Customers"
     table_merchants = f"{pkg}.Merchants"
     table_cards = f"{pkg}.Cards"
     table_transactions = f"{pkg}.Transactions"
     table_disputes = f"{pkg}.Disputes"
 
-    if args.clear_existing:
+    if clear_existing:
         for table in [table_disputes, table_transactions, table_cards, table_merchants, table_customers]:
             _exec_sql(iris, f"DELETE FROM {table}")
             print(f"Cleared {table}")
@@ -238,21 +225,21 @@ def main() -> None:
         "DisputedAmount",
     ]
 
-    inserted_customers = _insert_df(iris, table_customers, customers_cols, customers, args.commit_every)
+    inserted_customers = _insert_df(iris, table_customers, customers_cols, customers, commit_every)
     print(f"Inserted {inserted_customers:,} rows into {table_customers}")
-    inserted_merchants = _insert_df(iris, table_merchants, merchants_cols, merchants, args.commit_every)
+    inserted_merchants = _insert_df(iris, table_merchants, merchants_cols, merchants, commit_every)
     print(f"Inserted {inserted_merchants:,} rows into {table_merchants}")
-    inserted_cards = _insert_df(iris, table_cards, cards_cols, cards, args.commit_every)
+    inserted_cards = _insert_df(iris, table_cards, cards_cols, cards, commit_every)
     print(f"Inserted {inserted_cards:,} rows into {table_cards}")
     inserted_transactions = _insert_df(
         iris,
         table_transactions,
         transactions_cols,
         transactions,
-        args.commit_every,
+        commit_every,
     )
     print(f"Inserted {inserted_transactions:,} rows into {table_transactions}")
-    inserted_disputes = _insert_df(iris, table_disputes, disputes_cols, disputes, args.commit_every)
+    inserted_disputes = _insert_df(iris, table_disputes, disputes_cols, disputes, commit_every)
     print(f"Inserted {inserted_disputes:,} rows into {table_disputes}")
 
     summary = _summary(customers, cards, merchants, transactions, disputes)
@@ -260,6 +247,36 @@ def main() -> None:
     for key, value in summary.items():
         print(f"{key}: {value}")
 
+    return summary
+
+
+def parse_args():
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Generate synthetic data and insert directly into IRIS (no CSV files)."
+    )
+    parser.add_argument("--config", required=True, help="Path to YAML config")
+    parser.add_argument("--package", default="Finance", help="IRIS SQL package/schema prefix")
+    parser.add_argument(
+        "--clear-existing",
+        action="store_true",
+        help="Delete existing rows before insert (child tables first)",
+    )
+    parser.add_argument(
+        "--commit-every",
+        type=int,
+        default=20000,
+        help="Issue SQL COMMIT every N inserted rows per table",
+    )
+    return parser.parse_args()
+
 
 if __name__ == "__main__":
-    main()
+    args = parse_args()
+    main(
+        config_path=args.config,
+        package=args.package,
+        clear_existing=args.clear_existing,
+        commit_every=args.commit_every,
+    )

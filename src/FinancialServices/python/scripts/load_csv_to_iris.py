@@ -237,7 +237,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--namespace", default="USER")
     parser.add_argument("--username", default="_system")
     parser.add_argument("--password", default="SYS")
-    parser.add_argument("--package", default="finance", help="SQL package/schema prefix, e.g. finance")
+    parser.add_argument("--package", default="Finance", help="SQL package/schema prefix, e.g. Finance")
     parser.add_argument("--chunk-size", type=int, default=5000)
     parser.add_argument("--drop-existing", action="store_true", help="Drop existing tables first")
     parser.add_argument("--create-only", action="store_true", help="Create tables only, skip data load")

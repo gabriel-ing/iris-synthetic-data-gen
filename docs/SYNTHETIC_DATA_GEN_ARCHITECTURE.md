@@ -19,7 +19,7 @@ Current domain tables/classes:
 - `Transactions` -> references `Cards` via `Card`, `Merchants` via `Merchant`
 - `Disputes` -> references `Transactions` via `Transactions`
 
-Current IRIS persistent classes are in `src/finance/*.cls`.
+Current IRIS persistent classes are in `src/Finance/*.cls`.
 
 ## End-to-End Pipeline
 
@@ -210,7 +210,7 @@ SELECT TOP 20
   t.Card->Customer->Segment AS CustomerSegment,
   t.Merchant->MerchantName AS MerchantName,
   t.Amount
-FROM finance.Transactions t;
+FROM Finance.Transactions t;
 ```
 
 ## Testing Strategy
@@ -253,7 +253,7 @@ This project is intentionally split so only domain-specific layers need replacem
 
 - `synthetic_data_gen/generators/*.py`
   - these encode financial semantics and should be rewritten for healthcare, telecom, retail, manufacturing, etc.
-- `src/finance/*.cls`
+- `src/Finance/*.cls`
   - replace class definitions with your target sector schema
 - edge-case scenarios in `edge_cases.py`
   - replace with domain-specific events (for example outages, claims spikes, shipment exceptions)
