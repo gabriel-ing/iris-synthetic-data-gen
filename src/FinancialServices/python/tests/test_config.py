@@ -53,3 +53,29 @@ scale:
         "transactions": 120,
         "disputes": 150,
     }
+
+
+def test_scale_factor_override_multiplies_configured_counts(tmp_path):
+    path = tmp_path / "cfg_override.yaml"
+    path.write_text(
+        """
+scale:
+  mode: explicit
+  counts:
+    customers: 7
+    merchants: 8
+    cards: 9
+    transactions: 10
+    disputes: 11
+""",
+        encoding="utf-8",
+    )
+    cfg = load_config(path, scale_factor_override=4)
+    assert cfg["resolved_counts"] == {
+        "customers": 28,
+        "merchants": 32,
+        "cards": 36,
+        "transactions": 40,
+        "disputes": 44,
+    }
+    assert cfg["behavior"]["disputes"]["target_count"] == 44

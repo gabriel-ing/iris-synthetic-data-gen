@@ -1,0 +1,33 @@
+seed: 7
+currency: "USD"
+
+time:
+  start_date: "2026-01-01"
+  days: 14
+  timezone: "UTC"
+
+scale:
+  mode: "explicit"
+  counts:
+    customers: 12
+    merchants: 8
+    cards: 16
+    transactions: 80
+    disputes: 4
+
+output:
+  format: "csv"
+  path: "./.pytest_artifacts/financial_out"
+  partition_transactions_by: "none"
+  overwrite: true
+
+edge_cases:
+  enable: true
+  customers_with_no_cards: 1
+  cards_with_only_declines: 1
+  blocked_cards_mid_window: 1
+  fraud_bursts:
+    count_cards: 1
+    txns_per_card: 4
+    burst_hours: 2
+    amount_range: [1.0, 10.0]

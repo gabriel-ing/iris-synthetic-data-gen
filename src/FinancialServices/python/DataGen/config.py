@@ -161,6 +161,27 @@ def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any
     return merged
 
 
+def _selected_base_counts(scale: dict[str, Any]) -> dict[str, int]:
+    source = scale["counts"] if scale["mode"] == "explicit" else scale["base_counts"]
+    return {key: int(value) for key, value in source.items()}
+
+
+def _apply_scale_factor_override(config: dict[str, Any], scale_factor_override: int | None) -> dict[str, Any]:
+    if scale_factor_override is None:
+        return config
+
+    factor = int(scale_factor_override)
+    if factor <= 0:
+        raise ValueError("scale_factor_override must be a positive integer")
+
+    scale = dict(config["scale"])
+    scale["mode"] = "factor"
+    scale["factor"] = factor
+    scale["base_counts"] = _selected_base_counts(config["scale"])
+    config["scale"] = scale
+    return config
+
+
 def _derive_counts(config: dict[str, Any]) -> Counts:
     scale = config["scale"]
     mode = scale["mode"]
@@ -182,12 +203,13 @@ def _derive_counts(config: dict[str, Any]) -> Counts:
     )
 
 
-def load_config(config_path: str | Path) -> dict[str, Any]:
+def load_config(config_path: str | Path, scale_factor_override: int | None = None) -> dict[str, Any]:
     path = Path(config_path)
     with path.open("r", encoding="utf-8") as f:
         user_cfg = yaml.safe_load(f) or {}
 
     merged = _deep_merge(_default_config(), user_cfg)
+    merged = _apply_scale_factor_override(merged, scale_factor_override)
     counts = _derive_counts(merged)
     merged["resolved_counts"] = {
         "customers": counts.customers,

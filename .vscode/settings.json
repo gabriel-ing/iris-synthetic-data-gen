@@ -3,5 +3,8 @@
         "server": "62773",
         "ns": "USER",
         "active": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        "docker-compose": true
     }
 }

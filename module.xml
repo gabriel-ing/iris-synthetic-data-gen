@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+  <Document name="SyntheticDataGen.ZPM">
+    <Module>
+      <Name>SyntheticDataGen</Name>
+      <Version>1.3.0</Version>
+      <Description>Module for generating large, configurable synthetic datasets for Financial Services, Supply Chain, Retail, and Theme Park demos</Description>
+      <Packaging>module</Packaging>
+      <SourcesRoot>src</SourcesRoot>
+      <FileCopy Name="requirements.txt" Target="${libdir}SyntheticDataGen/requirements.txt"/>
+      <FileCopy Name="src/FinancialServices/ObjectScript/" Target="${libdir}SyntheticDataGen/FinancialServices/ObjectScript/"/>
+      <FileCopy Name="src/FinancialServices/python/" Target="${libdir}SyntheticDataGen/FinancialServices/python/"/>
+      <FileCopy Name="src/SupplyChain/ObjectScript/" Target="${libdir}SyntheticDataGen/SupplyChain/ObjectScript/"/>
+      <FileCopy Name="src/SupplyChain/python/" Target="${libdir}SyntheticDataGen/SupplyChain/python/"/>
+      <FileCopy Name="src/Retail/ObjectScript/" Target="${libdir}SyntheticDataGen/Retail/ObjectScript/"/>
+      <FileCopy Name="src/Retail/python/" Target="${libdir}SyntheticDataGen/Retail/python/"/>
+      <FileCopy Name="src/ThemePark/ObjectScript/" Target="${libdir}SyntheticDataGen/ThemePark/ObjectScript/"/>
+      <FileCopy Name="src/ThemePark/python/" Target="${libdir}SyntheticDataGen/ThemePark/python/"/>
+      <Resource Name="SyntheticDataGen.DataLoader.cls"/>
+      <Invoke Class="SyntheticDataGen.DataLoader" Method="PersistInstallRoot" Phase="Activate" When="After" CheckStatus="true"/>
+      <AfterInstallMessage>SyntheticDataGen installed. ^SyntheticDataGen("InstallRoot") now points at the copied dataset assets, and dataset classes will only be compiled when ##class(SyntheticDataGen.DataLoader).LoadData("FinancialServices"), ##class(SyntheticDataGen.DataLoader).LoadData("SupplyChain"), ##class(SyntheticDataGen.DataLoader).LoadData("Retail"), or ##class(SyntheticDataGen.DataLoader).LoadData("ThemePark") is called.</AfterInstallMessage>
+    </Module>
+  </Document>
+</Export>

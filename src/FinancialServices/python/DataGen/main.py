@@ -20,6 +20,7 @@ from DataGen.writer import prepare_output_dir, write_csv, write_transactions
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Synthetic financial dataset generator")
     parser.add_argument("--config", required=True, help="Path to YAML config")
+    parser.add_argument("--scale-factor", type=int, help="Multiply the configured base dataset size by this factor")
     return parser.parse_args()
 
 
@@ -60,7 +61,7 @@ def _summary(customers: pd.DataFrame, cards: pd.DataFrame, merchants: pd.DataFra
 
 def main() -> None:
     args = parse_args()
-    config = load_config(args.config)
+    config = load_config(args.config, scale_factor_override=args.scale_factor)
     seed = int(config["seed"])
 
     out_dir = prepare_output_dir(config["output"]["path"], config["output"].get("overwrite", True))

@@ -7,7 +7,7 @@ time:
 
 scale:
   mode: "explicit"
-  factor: 1
+  factor: 30
   base_counts:
     products: 600
     locations: 80

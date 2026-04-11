@@ -59,18 +59,31 @@ def _summary(
 
 def _normalize_value(value):
     if value is None:
-        return None
-    if isinstance(value, float) and math.isnan(value):
-        return None
-    if value is pd.NA:
-        return None
+        return ""
     if hasattr(value, "item"):
         try:
             value = value.item()
         except Exception:
             pass
+    if isinstance(value, float) and math.isnan(value):
+        return ""
+    if value is pd.NA:
+        return ""
+    try:
+        if pd.isna(value):
+            return ""
+    except Exception:
+        pass
+    if isinstance(value, pd.Timestamp):
+        if pd.isna(value):
+            return None
+        if value.tzinfo is not None:
+            value = value.tz_convert("UTC").tz_localize(None)
+        return value.strftime("%Y-%m-%d %H:%M:%S")
     if isinstance(value, bool):
         return int(value)
+    if isinstance(value, str) and "T" in value and value.endswith("Z"):
+        return value.replace("T", " ").removesuffix("Z")
     return value
 
 
@@ -92,7 +105,13 @@ def _insert_df(iris, table_name: str, columns: list[str], df: pd.DataFrame, comm
 
     inserted = 0
     for row in _iter_rows(df, columns):
-        stmt.execute(*row)
+        try:
+            stmt.execute(*row)
+        except Exception:
+            print(f"SQL insert failed for {table_name} at row {inserted + 1}")
+            for col, val in zip(columns, row):
+                print(f"  {col}: {val!r} ({type(val).__name__})")
+            raise
         inserted += 1
         if commit_every > 0 and inserted % commit_every == 0:
             _exec_sql(iris, "COMMIT")
@@ -101,13 +120,33 @@ def _insert_df(iris, table_name: str, columns: list[str], df: pd.DataFrame, comm
     return inserted
 
 
+def _without_object_id(df: pd.DataFrame, id_column: str) -> pd.DataFrame:
+    # Insert in deterministic ID order, but let IRIS generate RowIDs.
+    return df.sort_values(id_column).drop(columns=[id_column]).reset_index(drop=True)
+
+
+def _prepare_dim_date_for_iris(df: pd.DataFrame) -> pd.DataFrame:
+    out = _without_object_id(df, "DateId")
+    base = pd.Timestamp("1840-12-31")
+    parsed = pd.to_datetime(out["CalendarDate"], format="%Y-%m-%d", errors="raise")
+    out["CalendarDate"] = (parsed - base).dt.days.astype(int)
+    return out
+
+
+def _prepare_dim_product_for_iris(df: pd.DataFrame) -> pd.DataFrame:
+    out = _without_object_id(df, "ProductId")
+    out["ShelfLifeDays"] = pd.to_numeric(out["ShelfLifeDays"], errors="coerce").round().astype("Int64")
+    return out
+
+
 def main(
     config_path: str,
     package: str = "SupplyChain",
     clear_existing: bool = False,
     commit_every: int = 20000,
+    scale_factor_override: int | None = None,
 ) -> dict:
-    config = load_config(config_path)
+    config = load_config(config_path, scale_factor_override=scale_factor_override)
     seed = int(config["seed"])
 
     dim_date = generate_dim_date(config)
@@ -209,7 +248,7 @@ def main(
         "InventorySnapshotDaily": f"{pkg}.InventorySnapshotDaily",
     }
 
-    # Delete children first to respect object-reference constraints.
+    # Clear children first to respect object-reference constraints.
     if clear_existing:
         delete_order = [
             "InventorySnapshotDaily",
@@ -226,13 +265,11 @@ def main(
             "DimDate",
         ]
         for key in delete_order:
-            _exec_sql(iris, f"DELETE FROM {tables[key]}")
-            print(f"Cleared {tables[key]}")
+            _exec_sql(iris, f"TRUNCATE TABLE {tables[key]}")
+            print(f"Truncated {tables[key]}")
         _exec_sql(iris, "COMMIT")
 
-    # Insert with explicit %ID so generated references line up with object IDs.
     dim_date_cols = [
-        "%ID",
         "DateKey",
         "CalendarDate",
         "Year",
@@ -243,7 +280,6 @@ def main(
         "IsWeekend",
     ]
     dim_product_cols = [
-        "%ID",
         "Sku",
         "ProductName",
         "Brand",
@@ -262,7 +298,6 @@ def main(
         "DiscontinueDate",
     ]
     dim_location_cols = [
-        "%ID",
         "LocationCode",
         "LocationName",
         "LocationType",
@@ -274,7 +309,6 @@ def main(
         "IsActive",
     ]
     dim_supplier_cols = [
-        "%ID",
         "SupplierCode",
         "SupplierName",
         "SupplierTier",
@@ -285,7 +319,6 @@ def main(
         "DefaultShipFromLocation",
     ]
     dim_customer_cols = [
-        "%ID",
         "CustomerNumber",
         "CustomerName",
         "CustomerType",
@@ -296,7 +329,6 @@ def main(
         "DefaultShipToLocation",
     ]
     product_supplier_cols = [
-        "%ID",
         "Product",
         "Supplier",
         "IsPrimarySupplier",
@@ -309,7 +341,6 @@ def main(
         "ShipMode",
     ]
     sales_order_line_cols = [
-        "%ID",
         "SalesOrderId",
         "LineNumber",
         "Customer",
@@ -329,7 +360,6 @@ def main(
         "Channel",
     ]
     purchase_order_line_cols = [
-        "%ID",
         "PurchaseOrderId",
         "LineNumber",
         "Supplier",
@@ -348,7 +378,6 @@ def main(
         "ActualLeadTimeDays",
     ]
     shipment_line_cols = [
-        "%ID",
         "ShipmentId",
         "LineNumber",
         "SalesOrderLine",
@@ -367,7 +396,6 @@ def main(
         "DelayReason",
     ]
     stock_count_event_cols = [
-        "%ID",
         "Location",
         "Product",
         "CountDate",
@@ -377,7 +405,6 @@ def main(
         "VarianceReason",
     ]
     inventory_movement_cols = [
-        "%ID",
         "Product",
         "FromLocation",
         "ToLocation",
@@ -391,7 +418,6 @@ def main(
         "ReasonCode",
     ]
     inventory_snapshot_daily_cols = [
-        "%ID",
         "SnapshotDate",
         "Product",
         "Location",
@@ -404,21 +430,45 @@ def main(
         "InventoryValue",
     ]
 
-    inserted = _insert_df(iris, tables["DimDate"], dim_date_cols, dim_date.rename(columns={"DateId": "%ID"}), commit_every)
+    inserted = _insert_df(iris, tables["DimDate"], dim_date_cols, _prepare_dim_date_for_iris(dim_date), commit_every)
     print(f"Inserted {inserted:,} rows into {tables['DimDate']}")
-    inserted = _insert_df(iris, tables["DimProduct"], dim_product_cols, products.rename(columns={"ProductId": "%ID"}), commit_every)
+    inserted = _insert_df(
+        iris,
+        tables["DimProduct"],
+        dim_product_cols,
+        _prepare_dim_product_for_iris(products),
+        commit_every,
+    )
     print(f"Inserted {inserted:,} rows into {tables['DimProduct']}")
-    inserted = _insert_df(iris, tables["DimLocation"], dim_location_cols, locations.rename(columns={"LocationId": "%ID"}), commit_every)
+    inserted = _insert_df(
+        iris,
+        tables["DimLocation"],
+        dim_location_cols,
+        _without_object_id(locations, "LocationId"),
+        commit_every,
+    )
     print(f"Inserted {inserted:,} rows into {tables['DimLocation']}")
-    inserted = _insert_df(iris, tables["DimSupplier"], dim_supplier_cols, suppliers.rename(columns={"SupplierId": "%ID"}), commit_every)
+    inserted = _insert_df(
+        iris,
+        tables["DimSupplier"],
+        dim_supplier_cols,
+        _without_object_id(suppliers, "SupplierId"),
+        commit_every,
+    )
     print(f"Inserted {inserted:,} rows into {tables['DimSupplier']}")
-    inserted = _insert_df(iris, tables["DimCustomer"], dim_customer_cols, customers.rename(columns={"CustomerId": "%ID"}), commit_every)
+    inserted = _insert_df(
+        iris,
+        tables["DimCustomer"],
+        dim_customer_cols,
+        _without_object_id(customers, "CustomerId"),
+        commit_every,
+    )
     print(f"Inserted {inserted:,} rows into {tables['DimCustomer']}")
     inserted = _insert_df(
         iris,
         tables["ProductSupplier"],
         product_supplier_cols,
-        product_supplier.rename(columns={"ProductSupplierId": "%ID"}),
+        _without_object_id(product_supplier, "ProductSupplierId"),
         commit_every,
     )
     print(f"Inserted {inserted:,} rows into {tables['ProductSupplier']}")
@@ -426,7 +476,7 @@ def main(
         iris,
         tables["SalesOrderLine"],
         sales_order_line_cols,
-        sales_order_lines.rename(columns={"SalesOrderLineId": "%ID"}),
+        _without_object_id(sales_order_lines, "SalesOrderLineId"),
         commit_every,
     )
     print(f"Inserted {inserted:,} rows into {tables['SalesOrderLine']}")
@@ -434,7 +484,7 @@ def main(
         iris,
         tables["PurchaseOrderLine"],
         purchase_order_line_cols,
-        purchase_order_lines.rename(columns={"PurchaseOrderLineId": "%ID"}),
+        _without_object_id(purchase_order_lines, "PurchaseOrderLineId"),
         commit_every,
     )
     print(f"Inserted {inserted:,} rows into {tables['PurchaseOrderLine']}")
@@ -442,7 +492,7 @@ def main(
         iris,
         tables["ShipmentLine"],
         shipment_line_cols,
-        shipment_lines.rename(columns={"ShipmentLineId": "%ID"}),
+        _without_object_id(shipment_lines, "ShipmentLineId"),
         commit_every,
     )
     print(f"Inserted {inserted:,} rows into {tables['ShipmentLine']}")
@@ -450,7 +500,7 @@ def main(
         iris,
         tables["StockCountEvent"],
         stock_count_event_cols,
-        stock_count_events.rename(columns={"StockCountEventId": "%ID"}),
+        _without_object_id(stock_count_events, "StockCountEventId"),
         commit_every,
     )
     print(f"Inserted {inserted:,} rows into {tables['StockCountEvent']}")
@@ -458,7 +508,7 @@ def main(
         iris,
         tables["InventoryMovement"],
         inventory_movement_cols,
-        inventory_movements.rename(columns={"InventoryMovementId": "%ID"}),
+        _without_object_id(inventory_movements, "InventoryMovementId"),
         commit_every,
     )
     print(f"Inserted {inserted:,} rows into {tables['InventoryMovement']}")
@@ -466,7 +516,7 @@ def main(
         iris,
         tables["InventorySnapshotDaily"],
         inventory_snapshot_daily_cols,
-        inventory_snapshot_daily.rename(columns={"InventorySnapshotDailyId": "%ID"}),
+        _without_object_id(inventory_snapshot_daily, "InventorySnapshotDailyId"),
         commit_every,
     )
     print(f"Inserted {inserted:,} rows into {tables['InventorySnapshotDaily']}")
@@ -498,6 +548,7 @@ def parse_args():
         default=20000,
         help="Issue SQL COMMIT every N inserted rows per table",
     )
+    parser.add_argument("--scale-factor", type=int, help="Multiply the configured base dataset size by this factor")
     return parser.parse_args()
 
 
@@ -508,4 +559,5 @@ if __name__ == "__main__":
         package=args.package,
         clear_existing=args.clear_existing,
         commit_every=args.commit_every,
+        scale_factor_override=args.scale_factor,
     )

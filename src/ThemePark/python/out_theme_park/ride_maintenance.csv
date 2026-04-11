@@ -1,0 +1,261 @@
+RideMaintenanceId,MaintenanceNumber,Ride,ScheduledStart,ActualStart,ActualEnd,MaintenanceType,Status,Severity,DowntimeHours,IssueSummary,VendorName
+1,MNT0000001,35,2026-08-19T04:00:00Z,2026-08-19T07:00:00Z,2026-08-19T11:40:48Z,SENSOR_CALIBRATION,COMPLETED,HIGH,4.68,ride control panel triggered a protective shutdown during load,InHouseOps
+2,MNT0000002,11,2026-05-12T04:00:00Z,2026-05-12T13:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,MEDIUM,6.92,ride control panel triggered a protective shutdown during load,LiftWorks
+3,MNT0000003,20,2026-07-23T12:00:00Z,2026-07-23T14:00:00Z,,COSMETIC,IN_PROGRESS,MEDIUM,6.6,guest flow backed up near accessibility entrance and dispatch lane,InHouseOps
+4,MNT0000004,72,2026-07-08T21:00:00Z,2026-07-08T23:00:00Z,2026-07-09T00:28:48Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,1.48,ride control panel triggered a protective shutdown during load,ParkTech
+5,MNT0000005,50,2026-07-15T13:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,HIGH,3.83,ride dispatch paused after restraint sensor mismatch,Apex Systems
+6,MNT0000006,47,2026-06-13T02:00:00Z,2026-06-13T09:00:00Z,2026-06-13T16:19:12Z,EMERGENCY_REPAIR,COMPLETED,HIGH,7.32,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+7,MNT0000007,37,2026-05-24T05:00:00Z,2026-05-24T12:00:00Z,2026-05-24T13:32:24Z,RESTRAINT_TEST,COMPLETED,MEDIUM,1.54,ride control panel triggered a protective shutdown during load,ParkTech
+8,MNT0000008,57,2026-07-29T11:00:00Z,2026-07-29T11:00:00Z,2026-07-29T18:30:00Z,COSMETIC,DELAYED,LOW,5.5,guest flow backed up near accessibility entrance and dispatch lane,LiftWorks
+9,MNT0000009,19,2026-08-21T06:00:00Z,2026-08-21T15:00:00Z,2026-08-21T18:23:24Z,COSMETIC,COMPLETED,LOW,3.39,guest flow backed up near accessibility entrance and dispatch lane,LiftWorks
+10,MNT0000010,52,2026-08-17T11:00:00Z,,,INSPECTION,SCHEDULED,MEDIUM,2.32,queue line stalled after merge-point crowding increased wait times,MotionLab
+11,MNT0000011,72,2026-06-01T13:00:00Z,2026-06-01T22:00:00Z,2026-06-02T07:18:36Z,EMERGENCY_REPAIR,DELAYED,HIGH,7.31,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+12,MNT0000012,50,2026-08-02T16:00:00Z,2026-08-02T21:00:00Z,2026-08-03T01:06:00Z,INSPECTION,COMPLETED,MEDIUM,4.1,queue line stalled after merge-point crowding increased wait times,ParkTech
+13,MNT0000013,18,2026-06-20T17:00:00Z,2026-06-21T00:00:00Z,2026-06-21T02:15:36Z,RESTRAINT_TEST,COMPLETED,HIGH,2.26,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+14,MNT0000014,86,2026-05-06T02:00:00Z,2026-05-06T06:00:00Z,2026-05-06T07:59:24Z,COSMETIC,COMPLETED,MEDIUM,1.99,guest flow backed up near accessibility entrance and dispatch lane,Apex Systems
+15,MNT0000015,12,2026-08-23T06:00:00Z,2026-08-23T14:00:00Z,2026-08-23T21:33:36Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,7.56,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+16,MNT0000016,109,2026-06-10T02:00:00Z,2026-06-10T02:00:00Z,2026-06-10T04:30:00Z,SENSOR_CALIBRATION,COMPLETED,HIGH,2.5,ride dispatch paused after restraint sensor mismatch,MotionLab
+17,MNT0000017,4,2026-08-22T12:00:00Z,,,INSPECTION,SCHEDULED,MEDIUM,4.12,guest flow backed up near accessibility entrance and dispatch lane,ParkTech
+18,MNT0000018,106,2026-07-04T00:00:00Z,2026-07-04T09:00:00Z,,SENSOR_CALIBRATION,IN_PROGRESS,MEDIUM,2.36,ride control panel triggered a protective shutdown during load,ParkTech
+19,MNT0000019,63,2026-06-22T20:00:00Z,2026-06-23T04:00:00Z,2026-06-23T09:03:00Z,INSPECTION,COMPLETED,LOW,5.05,queue line stalled after merge-point crowding increased wait times,MotionLab
+20,MNT0000020,25,2026-07-27T02:00:00Z,2026-07-27T06:00:00Z,2026-07-27T07:16:12Z,COSMETIC,COMPLETED,LOW,1.27,boarding lane disruption caused temporary hold at the platform,ParkTech
+21,MNT0000021,112,2026-07-20T17:00:00Z,2026-07-20T17:00:00Z,2026-07-20T18:51:36Z,RESTRAINT_TEST,COMPLETED,HIGH,1.86,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+22,MNT0000022,20,2026-07-06T13:00:00Z,2026-07-06T17:00:00Z,,SENSOR_CALIBRATION,IN_PROGRESS,HIGH,3.54,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+23,MNT0000023,4,2026-07-28T18:00:00Z,2026-07-28T19:00:00Z,2026-07-28T23:26:24Z,RESTRAINT_TEST,COMPLETED,MEDIUM,4.44,ride dispatch paused after restraint sensor mismatch,LiftWorks
+24,MNT0000024,111,2026-06-21T06:00:00Z,,,RESTRAINT_TEST,SCHEDULED,HIGH,2.29,ride control panel triggered a protective shutdown during load,MotionLab
+25,MNT0000025,42,2026-06-30T12:00:00Z,2026-06-30T21:00:00Z,,INSPECTION,IN_PROGRESS,MEDIUM,2.73,boarding lane disruption caused temporary hold at the platform,LiftWorks
+26,MNT0000026,54,2026-08-13T22:00:00Z,,,COSMETIC,SCHEDULED,LOW,4.98,boarding lane disruption caused temporary hold at the platform,MotionLab
+27,MNT0000027,10,2026-07-25T01:00:00Z,2026-07-25T07:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,HIGH,2.73,ride control panel triggered a protective shutdown during load,MotionLab
+28,MNT0000028,5,2026-06-04T21:00:00Z,,,INSPECTION,SCHEDULED,LOW,4.23,boarding lane disruption caused temporary hold at the platform,TrackLine
+29,MNT0000029,71,2026-06-17T21:00:00Z,,,SENSOR_CALIBRATION,SCHEDULED,HIGH,2.98,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+30,MNT0000030,103,2026-08-15T15:00:00Z,2026-08-15T22:00:00Z,2026-08-16T03:29:24Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,5.49,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+31,MNT0000031,96,2026-08-23T18:00:00Z,2026-08-24T02:00:00Z,2026-08-24T06:16:12Z,INSPECTION,COMPLETED,MEDIUM,4.27,queue line stalled after merge-point crowding increased wait times,MotionLab
+32,MNT0000032,109,2026-08-24T15:00:00Z,2026-08-24T19:00:00Z,2026-08-24T23:37:12Z,RESTRAINT_TEST,COMPLETED,HIGH,4.62,ride control panel triggered a protective shutdown during load,Apex Systems
+33,MNT0000033,21,2026-07-26T01:00:00Z,,,INSPECTION,SCHEDULED,LOW,4.71,boarding lane disruption caused temporary hold at the platform,InHouseOps
+34,MNT0000034,80,2026-08-15T05:00:00Z,,,INSPECTION,SCHEDULED,LOW,5.28,boarding lane disruption caused temporary hold at the platform,MotionLab
+35,MNT0000035,61,2026-07-25T03:00:00Z,2026-07-25T03:00:00Z,2026-07-25T07:29:24Z,SENSOR_CALIBRATION,DELAYED,MEDIUM,2.49,ride dispatch paused after restraint sensor mismatch,LiftWorks
+36,MNT0000036,3,2026-06-22T00:00:00Z,2026-06-22T03:00:00Z,2026-06-22T04:42:00Z,INSPECTION,COMPLETED,MEDIUM,1.7,boarding lane disruption caused temporary hold at the platform,Apex Systems
+37,MNT0000037,109,2026-06-06T00:00:00Z,2026-06-06T00:00:00Z,2026-06-06T02:45:36Z,INSPECTION,COMPLETED,MEDIUM,2.76,queue line stalled after merge-point crowding increased wait times,Apex Systems
+38,MNT0000038,67,2026-05-19T01:00:00Z,2026-05-19T06:00:00Z,2026-05-19T10:39:00Z,RESTRAINT_TEST,DELAYED,MEDIUM,2.65,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+39,MNT0000039,88,2026-07-20T21:00:00Z,2026-07-21T00:00:00Z,2026-07-21T03:55:48Z,RESTRAINT_TEST,COMPLETED,MEDIUM,3.93,ride control panel triggered a protective shutdown during load,MotionLab
+40,MNT0000040,72,2026-07-03T05:00:00Z,2026-07-03T10:00:00Z,2026-07-03T15:39:36Z,INSPECTION,COMPLETED,MEDIUM,5.66,queue line stalled after merge-point crowding increased wait times,TrackLine
+41,MNT0000041,61,2026-08-14T17:00:00Z,2026-08-14T18:00:00Z,2026-08-15T00:55:12Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,6.92,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+42,MNT0000042,10,2026-07-16T22:00:00Z,2026-07-17T04:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,MEDIUM,3.33,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+43,MNT0000043,74,2026-08-10T09:00:00Z,2026-08-10T15:00:00Z,2026-08-10T20:57:00Z,RESTRAINT_TEST,DELAYED,MEDIUM,3.95,ride control panel triggered a protective shutdown during load,Apex Systems
+44,MNT0000044,70,2026-08-05T15:00:00Z,2026-08-05T18:00:00Z,2026-08-05T22:00:00Z,COSMETIC,COMPLETED,MEDIUM,4.0,queue line stalled after merge-point crowding increased wait times,LiftWorks
+45,MNT0000045,69,2026-08-25T08:00:00Z,2026-08-25T17:00:00Z,2026-08-25T22:03:36Z,RESTRAINT_TEST,COMPLETED,MEDIUM,5.06,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+46,MNT0000046,49,2026-07-18T20:00:00Z,2026-07-19T03:00:00Z,2026-07-19T05:47:24Z,INSPECTION,COMPLETED,LOW,2.79,guest flow backed up near accessibility entrance and dispatch lane,InHouseOps
+47,MNT0000047,87,2026-05-18T11:00:00Z,2026-05-18T14:00:00Z,2026-05-18T15:49:12Z,RESTRAINT_TEST,COMPLETED,MEDIUM,1.82,ride dispatch paused after restraint sensor mismatch,LiftWorks
+48,MNT0000048,42,2026-07-23T18:00:00Z,2026-07-24T01:00:00Z,2026-07-24T02:03:36Z,RESTRAINT_TEST,COMPLETED,MEDIUM,1.06,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+49,MNT0000049,76,2026-06-21T10:00:00Z,,,RESTRAINT_TEST,SCHEDULED,MEDIUM,5.47,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+50,MNT0000050,3,2026-07-06T19:00:00Z,,,RESTRAINT_TEST,SCHEDULED,HIGH,4.44,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+51,MNT0000051,98,2026-06-25T02:00:00Z,2026-06-25T05:00:00Z,,INSPECTION,IN_PROGRESS,MEDIUM,6.34,queue line stalled after merge-point crowding increased wait times,LiftWorks
+52,MNT0000052,102,2026-06-16T00:00:00Z,2026-06-16T05:00:00Z,2026-06-16T12:32:24Z,COSMETIC,DELAYED,LOW,5.54,queue line stalled after merge-point crowding increased wait times,Apex Systems
+53,MNT0000053,77,2026-07-28T02:00:00Z,2026-07-28T05:00:00Z,2026-07-28T08:39:00Z,SENSOR_CALIBRATION,COMPLETED,HIGH,3.65,ride control panel triggered a protective shutdown during load,LiftWorks
+54,MNT0000054,7,2026-08-14T15:00:00Z,2026-08-14T17:00:00Z,2026-08-14T23:42:00Z,RESTRAINT_TEST,COMPLETED,HIGH,6.7,ride dispatch paused after restraint sensor mismatch,MotionLab
+55,MNT0000055,104,2026-05-19T09:00:00Z,2026-05-19T09:00:00Z,2026-05-19T13:45:00Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,4.75,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+56,MNT0000056,55,2026-07-14T18:00:00Z,2026-07-14T23:00:00Z,2026-07-15T02:26:24Z,SENSOR_CALIBRATION,COMPLETED,HIGH,3.44,ride control panel triggered a protective shutdown during load,InHouseOps
+57,MNT0000057,82,2026-05-24T05:00:00Z,2026-05-24T09:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,HIGH,3.81,ride control panel triggered a protective shutdown during load,Apex Systems
+58,MNT0000058,14,2026-08-15T16:00:00Z,2026-08-16T00:00:00Z,2026-08-16T03:30:36Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,3.51,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+59,MNT0000059,23,2026-07-22T07:00:00Z,2026-07-22T16:00:00Z,2026-07-22T19:16:12Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,3.27,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+60,MNT0000060,22,2026-07-02T22:00:00Z,2026-07-03T07:00:00Z,2026-07-03T09:56:24Z,COSMETIC,COMPLETED,MEDIUM,2.94,queue line stalled after merge-point crowding increased wait times,ParkTech
+61,MNT0000061,97,2026-05-06T17:00:00Z,,,COSMETIC,SCHEDULED,MEDIUM,4.61,queue line stalled after merge-point crowding increased wait times,Apex Systems
+62,MNT0000062,93,2026-05-14T19:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,HIGH,1.75,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+63,MNT0000063,8,2026-07-27T18:00:00Z,2026-07-27T21:00:00Z,2026-07-28T02:51:00Z,RESTRAINT_TEST,COMPLETED,MEDIUM,5.85,ride dispatch paused after restraint sensor mismatch,InHouseOps
+64,MNT0000064,55,2026-07-05T21:00:00Z,2026-07-05T22:00:00Z,2026-07-06T02:40:12Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,4.67,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+65,MNT0000065,56,2026-06-11T01:00:00Z,2026-06-11T07:00:00Z,2026-06-11T09:28:12Z,RESTRAINT_TEST,COMPLETED,HIGH,2.47,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+66,MNT0000066,34,2026-06-20T20:00:00Z,2026-06-21T03:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,HIGH,3.31,ride control panel triggered a protective shutdown during load,MotionLab
+67,MNT0000067,109,2026-07-06T16:00:00Z,2026-07-07T00:00:00Z,2026-07-07T03:31:12Z,INSPECTION,COMPLETED,LOW,3.52,boarding lane disruption caused temporary hold at the platform,LiftWorks
+68,MNT0000068,94,2026-05-19T07:00:00Z,2026-05-19T11:00:00Z,2026-05-19T14:07:12Z,RESTRAINT_TEST,COMPLETED,MEDIUM,3.12,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+69,MNT0000069,22,2026-07-09T16:00:00Z,2026-07-09T17:00:00Z,2026-07-10T00:18:00Z,RESTRAINT_TEST,DELAYED,MEDIUM,5.3,ride control panel triggered a protective shutdown during load,Apex Systems
+70,MNT0000070,88,2026-08-21T07:00:00Z,2026-08-21T15:00:00Z,,SENSOR_CALIBRATION,IN_PROGRESS,HIGH,2.03,ride dispatch paused after restraint sensor mismatch,MotionLab
+71,MNT0000071,71,2026-06-29T08:00:00Z,2026-06-29T08:00:00Z,2026-06-29T13:16:48Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,5.28,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+72,MNT0000072,82,2026-07-13T15:00:00Z,2026-07-13T20:00:00Z,2026-07-14T03:51:00Z,SENSOR_CALIBRATION,COMPLETED,HIGH,7.85,ride dispatch paused after restraint sensor mismatch,MotionLab
+73,MNT0000073,68,2026-07-08T06:00:00Z,2026-07-08T07:00:00Z,2026-07-08T08:04:48Z,INSPECTION,COMPLETED,MEDIUM,1.08,guest flow backed up near accessibility entrance and dispatch lane,ParkTech
+74,MNT0000074,81,2026-05-18T21:00:00Z,2026-05-19T00:00:00Z,2026-05-19T03:10:12Z,COSMETIC,COMPLETED,MEDIUM,3.17,guest flow backed up near accessibility entrance and dispatch lane,LiftWorks
+75,MNT0000075,78,2026-05-16T09:00:00Z,2026-05-16T18:00:00Z,2026-05-16T19:46:12Z,SENSOR_CALIBRATION,COMPLETED,HIGH,1.77,ride dispatch paused after restraint sensor mismatch,Apex Systems
+76,MNT0000076,39,2026-08-12T03:00:00Z,2026-08-12T08:00:00Z,2026-08-12T12:50:24Z,RESTRAINT_TEST,DELAYED,HIGH,2.84,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+77,MNT0000077,43,2026-07-20T22:00:00Z,2026-07-21T00:00:00Z,2026-07-21T01:18:00Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,1.3,ride dispatch paused after restraint sensor mismatch,ParkTech
+78,MNT0000078,111,2026-05-26T04:00:00Z,2026-05-26T10:00:00Z,2026-05-26T12:01:48Z,INSPECTION,COMPLETED,MEDIUM,2.03,boarding lane disruption caused temporary hold at the platform,MotionLab
+79,MNT0000079,77,2026-05-30T22:00:00Z,2026-05-31T06:00:00Z,2026-05-31T07:42:00Z,RESTRAINT_TEST,COMPLETED,MEDIUM,1.7,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+80,MNT0000080,20,2026-06-22T18:00:00Z,2026-06-23T00:00:00Z,2026-06-23T05:28:12Z,EMERGENCY_REPAIR,COMPLETED,HIGH,5.47,ride dispatch paused after restraint sensor mismatch,InHouseOps
+81,MNT0000081,8,2026-08-17T13:00:00Z,2026-08-17T21:00:00Z,2026-08-18T01:45:36Z,INSPECTION,COMPLETED,MEDIUM,4.76,boarding lane disruption caused temporary hold at the platform,InHouseOps
+82,MNT0000082,109,2026-07-18T17:00:00Z,2026-07-18T20:00:00Z,2026-07-19T00:18:36Z,RESTRAINT_TEST,DELAYED,MEDIUM,2.31,ride dispatch paused after restraint sensor mismatch,TrackLine
+83,MNT0000083,66,2026-05-06T17:00:00Z,2026-05-06T23:00:00Z,2026-05-07T03:54:36Z,EMERGENCY_REPAIR,DELAYED,CRITICAL,2.91,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+84,MNT0000084,81,2026-06-25T19:00:00Z,2026-06-26T01:00:00Z,2026-06-26T04:13:48Z,INSPECTION,COMPLETED,LOW,3.23,guest flow backed up near accessibility entrance and dispatch lane,ParkTech
+85,MNT0000085,29,2026-06-22T18:00:00Z,2026-06-23T03:00:00Z,2026-06-23T04:34:12Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,1.57,ride dispatch paused after restraint sensor mismatch,LiftWorks
+86,MNT0000086,100,2026-08-23T09:00:00Z,2026-08-23T12:00:00Z,2026-08-23T14:46:12Z,INSPECTION,COMPLETED,LOW,2.77,queue line stalled after merge-point crowding increased wait times,LiftWorks
+87,MNT0000087,76,2026-05-22T14:00:00Z,2026-05-22T19:00:00Z,,INSPECTION,IN_PROGRESS,MEDIUM,3.22,guest flow backed up near accessibility entrance and dispatch lane,Apex Systems
+88,MNT0000088,96,2026-07-05T10:00:00Z,2026-07-05T14:00:00Z,2026-07-05T18:51:36Z,INSPECTION,COMPLETED,MEDIUM,4.86,boarding lane disruption caused temporary hold at the platform,TrackLine
+89,MNT0000089,101,2026-05-14T17:00:00Z,2026-05-14T22:00:00Z,2026-05-15T01:43:12Z,COSMETIC,COMPLETED,MEDIUM,3.72,queue line stalled after merge-point crowding increased wait times,Apex Systems
+90,MNT0000090,105,2026-08-24T13:00:00Z,2026-08-24T13:00:00Z,2026-08-24T20:46:48Z,SENSOR_CALIBRATION,COMPLETED,HIGH,7.78,ride dispatch paused after restraint sensor mismatch,InHouseOps
+91,MNT0000091,10,2026-06-25T05:00:00Z,2026-06-25T13:00:00Z,2026-06-25T18:43:48Z,SENSOR_CALIBRATION,COMPLETED,HIGH,5.73,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+92,MNT0000092,4,2026-06-09T14:00:00Z,2026-06-09T22:00:00Z,2026-06-10T00:09:00Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,2.15,ride dispatch paused after restraint sensor mismatch,TrackLine
+93,MNT0000093,63,2026-05-13T06:00:00Z,2026-05-13T07:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,MEDIUM,2.44,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+94,MNT0000094,106,2026-08-09T09:00:00Z,2026-08-09T16:00:00Z,2026-08-09T21:13:12Z,INSPECTION,DELAYED,MEDIUM,3.22,guest flow backed up near accessibility entrance and dispatch lane,ParkTech
+95,MNT0000095,3,2026-06-20T20:00:00Z,2026-06-20T20:00:00Z,2026-06-20T23:27:36Z,RESTRAINT_TEST,DELAYED,HIGH,1.46,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+96,MNT0000096,1,2026-07-13T20:00:00Z,2026-07-13T21:00:00Z,2026-07-14T00:49:12Z,COSMETIC,COMPLETED,MEDIUM,3.82,queue line stalled after merge-point crowding increased wait times,InHouseOps
+97,MNT0000097,1,2026-05-15T07:00:00Z,2026-05-15T07:00:00Z,2026-05-15T12:00:00Z,EMERGENCY_REPAIR,COMPLETED,HIGH,5.0,ride control panel triggered a protective shutdown during load,InHouseOps
+98,MNT0000098,48,2026-05-01T05:00:00Z,2026-05-01T09:00:00Z,,INSPECTION,IN_PROGRESS,LOW,7.05,queue line stalled after merge-point crowding increased wait times,MotionLab
+99,MNT0000099,65,2026-08-05T17:00:00Z,2026-08-06T02:00:00Z,2026-08-06T07:33:00Z,INSPECTION,COMPLETED,MEDIUM,5.55,guest flow backed up near accessibility entrance and dispatch lane,LiftWorks
+100,MNT0000100,102,2026-06-20T07:00:00Z,2026-06-20T16:00:00Z,2026-06-20T22:21:00Z,COSMETIC,DELAYED,LOW,4.35,queue line stalled after merge-point crowding increased wait times,ParkTech
+101,MNT0000101,51,2026-08-15T02:00:00Z,2026-08-15T11:00:00Z,2026-08-15T13:30:00Z,EMERGENCY_REPAIR,COMPLETED,HIGH,2.5,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+102,MNT0000102,38,2026-06-06T16:00:00Z,2026-06-06T17:00:00Z,2026-06-06T22:27:00Z,INSPECTION,COMPLETED,LOW,5.45,queue line stalled after merge-point crowding increased wait times,ParkTech
+103,MNT0000103,107,2026-05-26T18:00:00Z,2026-05-27T03:00:00Z,,INSPECTION,IN_PROGRESS,LOW,4.25,boarding lane disruption caused temporary hold at the platform,MotionLab
+104,MNT0000104,88,2026-06-18T06:00:00Z,2026-06-18T14:00:00Z,2026-06-18T16:33:36Z,RESTRAINT_TEST,COMPLETED,HIGH,2.56,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+105,MNT0000105,34,2026-06-03T13:00:00Z,2026-06-03T19:00:00Z,2026-06-04T01:57:00Z,RESTRAINT_TEST,COMPLETED,HIGH,6.95,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+106,MNT0000106,76,2026-07-31T14:00:00Z,2026-07-31T15:00:00Z,2026-07-31T19:01:12Z,SENSOR_CALIBRATION,COMPLETED,HIGH,4.02,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+107,MNT0000107,59,2026-08-03T17:00:00Z,2026-08-04T02:00:00Z,2026-08-04T04:34:12Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,2.57,ride dispatch paused after restraint sensor mismatch,InHouseOps
+108,MNT0000108,68,2026-07-08T01:00:00Z,2026-07-08T10:00:00Z,2026-07-08T11:43:48Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,1.73,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+109,MNT0000109,42,2026-05-08T22:00:00Z,2026-05-09T01:00:00Z,2026-05-09T07:04:48Z,SENSOR_CALIBRATION,DELAYED,MEDIUM,4.08,ride dispatch paused after restraint sensor mismatch,MotionLab
+110,MNT0000110,6,2026-08-26T18:00:00Z,,,INSPECTION,SCHEDULED,MEDIUM,2.18,queue line stalled after merge-point crowding increased wait times,MotionLab
+111,MNT0000111,112,2026-05-22T12:00:00Z,2026-05-22T18:00:00Z,2026-05-22T22:36:00Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,4.6,ride dispatch paused after restraint sensor mismatch,InHouseOps
+112,MNT0000112,41,2026-07-15T21:00:00Z,2026-07-15T23:00:00Z,2026-07-16T02:33:36Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,3.56,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+113,MNT0000113,98,2026-05-03T00:00:00Z,2026-05-03T02:00:00Z,2026-05-03T06:23:24Z,RESTRAINT_TEST,COMPLETED,HIGH,4.39,ride dispatch paused after restraint sensor mismatch,Apex Systems
+114,MNT0000114,39,2026-07-03T11:00:00Z,2026-07-03T15:00:00Z,2026-07-03T19:54:36Z,SENSOR_CALIBRATION,COMPLETED,HIGH,4.91,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+115,MNT0000115,22,2026-08-26T08:00:00Z,2026-08-26T09:00:00Z,2026-08-26T12:40:48Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,3.68,ride control panel triggered a protective shutdown during load,TrackLine
+116,MNT0000116,20,2026-08-26T18:00:00Z,2026-08-26T18:00:00Z,,COSMETIC,IN_PROGRESS,LOW,3.85,queue line stalled after merge-point crowding increased wait times,InHouseOps
+117,MNT0000117,22,2026-06-22T00:00:00Z,2026-06-22T07:00:00Z,,COSMETIC,IN_PROGRESS,MEDIUM,5.74,queue line stalled after merge-point crowding increased wait times,LiftWorks
+118,MNT0000118,36,2026-05-27T10:00:00Z,2026-05-27T10:00:00Z,2026-05-27T13:38:24Z,SENSOR_CALIBRATION,DELAYED,HIGH,1.64,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+119,MNT0000119,11,2026-05-13T15:00:00Z,2026-05-13T19:00:00Z,2026-05-14T02:28:12Z,RESTRAINT_TEST,COMPLETED,HIGH,7.47,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+120,MNT0000120,35,2026-06-25T06:00:00Z,2026-06-25T09:00:00Z,,SENSOR_CALIBRATION,IN_PROGRESS,HIGH,5.12,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+121,MNT0000121,11,2026-05-29T11:00:00Z,2026-05-29T13:00:00Z,2026-05-29T16:42:00Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,3.7,ride dispatch paused after restraint sensor mismatch,TrackLine
+122,MNT0000122,52,2026-06-05T00:00:00Z,2026-06-05T08:00:00Z,2026-06-05T12:12:00Z,COSMETIC,COMPLETED,MEDIUM,4.2,guest flow backed up near accessibility entrance and dispatch lane,Apex Systems
+123,MNT0000123,1,2026-06-02T19:00:00Z,2026-06-02T21:00:00Z,2026-06-03T02:21:36Z,INSPECTION,COMPLETED,LOW,5.36,guest flow backed up near accessibility entrance and dispatch lane,InHouseOps
+124,MNT0000124,66,2026-05-12T04:00:00Z,2026-05-12T07:00:00Z,2026-05-12T10:07:48Z,INSPECTION,COMPLETED,LOW,3.13,boarding lane disruption caused temporary hold at the platform,Apex Systems
+125,MNT0000125,63,2026-08-20T15:00:00Z,2026-08-21T00:00:00Z,2026-08-21T02:38:24Z,COSMETIC,COMPLETED,LOW,2.64,boarding lane disruption caused temporary hold at the platform,LiftWorks
+126,MNT0000126,32,2026-05-06T08:00:00Z,,,COSMETIC,SCHEDULED,LOW,4.61,boarding lane disruption caused temporary hold at the platform,InHouseOps
+127,MNT0000127,47,2026-08-17T00:00:00Z,2026-08-17T07:00:00Z,2026-08-17T11:59:24Z,SENSOR_CALIBRATION,DELAYED,MEDIUM,2.99,ride dispatch paused after restraint sensor mismatch,MotionLab
+128,MNT0000128,1,2026-07-06T03:00:00Z,2026-07-06T09:00:00Z,,EMERGENCY_REPAIR,IN_PROGRESS,CRITICAL,5.91,ride control panel triggered a protective shutdown during load,InHouseOps
+129,MNT0000129,31,2026-08-26T08:00:00Z,2026-08-26T16:00:00Z,2026-08-27T00:58:12Z,EMERGENCY_REPAIR,DELAYED,HIGH,6.97,ride dispatch paused after restraint sensor mismatch,Apex Systems
+130,MNT0000130,19,2026-05-09T08:00:00Z,2026-05-09T15:00:00Z,2026-05-09T21:01:48Z,INSPECTION,DELAYED,LOW,4.03,queue line stalled after merge-point crowding increased wait times,TrackLine
+131,MNT0000131,69,2026-08-25T15:00:00Z,,,COSMETIC,SCHEDULED,MEDIUM,5.49,queue line stalled after merge-point crowding increased wait times,MotionLab
+132,MNT0000132,5,2026-08-16T06:00:00Z,2026-08-16T13:00:00Z,2026-08-16T14:56:24Z,RESTRAINT_TEST,COMPLETED,MEDIUM,1.94,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+133,MNT0000133,94,2026-07-13T14:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,HIGH,4.63,ride control panel triggered a protective shutdown during load,TrackLine
+134,MNT0000134,7,2026-05-25T10:00:00Z,2026-05-25T10:00:00Z,2026-05-25T15:56:24Z,INSPECTION,COMPLETED,LOW,5.94,guest flow backed up near accessibility entrance and dispatch lane,ParkTech
+135,MNT0000135,59,2026-08-14T22:00:00Z,2026-08-15T05:00:00Z,2026-08-15T07:48:00Z,RESTRAINT_TEST,COMPLETED,MEDIUM,2.8,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+136,MNT0000136,53,2026-06-28T22:00:00Z,2026-06-29T00:00:00Z,2026-06-29T07:27:00Z,RESTRAINT_TEST,DELAYED,MEDIUM,5.45,ride control panel triggered a protective shutdown during load,TrackLine
+137,MNT0000137,43,2026-06-17T12:00:00Z,,,INSPECTION,SCHEDULED,MEDIUM,5.12,guest flow backed up near accessibility entrance and dispatch lane,ParkTech
+138,MNT0000138,38,2026-07-02T07:00:00Z,2026-07-02T09:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,MEDIUM,3.53,ride control panel triggered a protective shutdown during load,MotionLab
+139,MNT0000139,7,2026-06-23T03:00:00Z,2026-06-23T03:00:00Z,2026-06-23T06:22:48Z,INSPECTION,DELAYED,LOW,1.38,guest flow backed up near accessibility entrance and dispatch lane,LiftWorks
+140,MNT0000140,106,2026-06-29T17:00:00Z,2026-06-29T22:00:00Z,2026-06-29T23:27:36Z,INSPECTION,COMPLETED,LOW,1.46,boarding lane disruption caused temporary hold at the platform,TrackLine
+141,MNT0000141,103,2026-07-01T07:00:00Z,2026-07-01T11:00:00Z,2026-07-01T19:04:12Z,RESTRAINT_TEST,COMPLETED,HIGH,8.07,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+142,MNT0000142,104,2026-05-08T06:00:00Z,2026-05-08T09:00:00Z,2026-05-08T16:21:36Z,RESTRAINT_TEST,COMPLETED,HIGH,7.36,ride dispatch paused after restraint sensor mismatch,InHouseOps
+143,MNT0000143,45,2026-08-05T15:00:00Z,2026-08-05T17:00:00Z,2026-08-05T20:13:48Z,INSPECTION,DELAYED,LOW,1.23,guest flow backed up near accessibility entrance and dispatch lane,Apex Systems
+144,MNT0000144,32,2026-07-15T22:00:00Z,2026-07-15T22:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,HIGH,2.24,ride dispatch paused after restraint sensor mismatch,InHouseOps
+145,MNT0000145,77,2026-08-02T01:00:00Z,2026-08-02T07:00:00Z,2026-08-02T12:54:36Z,EMERGENCY_REPAIR,DELAYED,HIGH,3.91,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+146,MNT0000146,87,2026-08-06T21:00:00Z,,,INSPECTION,SCHEDULED,LOW,2.94,guest flow backed up near accessibility entrance and dispatch lane,MotionLab
+147,MNT0000147,32,2026-05-30T17:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,CRITICAL,4.53,ride control panel triggered a protective shutdown during load,InHouseOps
+148,MNT0000148,96,2026-05-29T01:00:00Z,2026-05-29T06:00:00Z,2026-05-29T11:27:36Z,INSPECTION,COMPLETED,MEDIUM,5.46,boarding lane disruption caused temporary hold at the platform,LiftWorks
+149,MNT0000149,65,2026-07-06T02:00:00Z,,,SENSOR_CALIBRATION,SCHEDULED,HIGH,2.57,ride control panel triggered a protective shutdown during load,LiftWorks
+150,MNT0000150,64,2026-05-25T07:00:00Z,2026-05-25T08:00:00Z,2026-05-25T11:29:24Z,COSMETIC,COMPLETED,LOW,3.49,boarding lane disruption caused temporary hold at the platform,TrackLine
+151,MNT0000151,62,2026-08-25T02:00:00Z,2026-08-25T03:00:00Z,2026-08-25T09:22:12Z,INSPECTION,DELAYED,LOW,4.37,guest flow backed up near accessibility entrance and dispatch lane,Apex Systems
+152,MNT0000152,95,2026-07-29T10:00:00Z,2026-07-29T14:00:00Z,2026-07-29T18:42:00Z,SENSOR_CALIBRATION,DELAYED,HIGH,2.7,ride dispatch paused after restraint sensor mismatch,ParkTech
+153,MNT0000153,9,2026-08-15T14:00:00Z,2026-08-15T23:00:00Z,,SENSOR_CALIBRATION,IN_PROGRESS,HIGH,2.79,ride dispatch paused after restraint sensor mismatch,LiftWorks
+154,MNT0000154,82,2026-05-03T22:00:00Z,2026-05-03T22:00:00Z,2026-05-04T03:24:36Z,RESTRAINT_TEST,COMPLETED,HIGH,5.41,ride control panel triggered a protective shutdown during load,MotionLab
+155,MNT0000155,105,2026-07-27T18:00:00Z,2026-07-27T19:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,HIGH,5.08,ride dispatch paused after restraint sensor mismatch,InHouseOps
+156,MNT0000156,40,2026-06-29T22:00:00Z,2026-06-29T23:00:00Z,2026-06-30T06:33:00Z,INSPECTION,DELAYED,LOW,5.55,guest flow backed up near accessibility entrance and dispatch lane,Apex Systems
+157,MNT0000157,92,2026-07-23T22:00:00Z,2026-07-24T01:00:00Z,2026-07-24T04:19:12Z,RESTRAINT_TEST,COMPLETED,MEDIUM,3.32,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+158,MNT0000158,97,2026-06-24T05:00:00Z,2026-06-24T09:00:00Z,2026-06-24T17:27:36Z,RESTRAINT_TEST,COMPLETED,HIGH,8.46,ride dispatch paused after restraint sensor mismatch,Apex Systems
+159,MNT0000159,85,2026-05-18T06:00:00Z,2026-05-18T08:00:00Z,2026-05-18T14:02:24Z,RESTRAINT_TEST,COMPLETED,HIGH,6.04,ride control panel triggered a protective shutdown during load,InHouseOps
+160,MNT0000160,96,2026-07-02T16:00:00Z,2026-07-02T23:00:00Z,2026-07-03T07:16:48Z,RESTRAINT_TEST,COMPLETED,HIGH,8.28,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+161,MNT0000161,21,2026-06-01T22:00:00Z,2026-06-02T06:00:00Z,,RESTRAINT_TEST,IN_PROGRESS,HIGH,2.13,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+162,MNT0000162,5,2026-07-07T13:00:00Z,2026-07-07T20:00:00Z,2026-07-08T01:19:48Z,COSMETIC,COMPLETED,MEDIUM,5.33,guest flow backed up near accessibility entrance and dispatch lane,ParkTech
+163,MNT0000163,15,2026-06-14T17:00:00Z,2026-06-14T17:00:00Z,2026-06-14T21:39:36Z,INSPECTION,DELAYED,LOW,2.66,boarding lane disruption caused temporary hold at the platform,MotionLab
+164,MNT0000164,81,2026-08-18T16:00:00Z,2026-08-18T19:00:00Z,,COSMETIC,IN_PROGRESS,LOW,5.0,boarding lane disruption caused temporary hold at the platform,MotionLab
+165,MNT0000165,54,2026-07-07T06:00:00Z,2026-07-07T14:00:00Z,2026-07-08T00:01:48Z,SENSOR_CALIBRATION,DELAYED,HIGH,8.03,ride control panel triggered a protective shutdown during load,Apex Systems
+166,MNT0000166,32,2026-08-12T20:00:00Z,2026-08-12T23:00:00Z,2026-08-13T04:14:24Z,INSPECTION,COMPLETED,LOW,5.24,guest flow backed up near accessibility entrance and dispatch lane,InHouseOps
+167,MNT0000167,65,2026-08-02T00:00:00Z,2026-08-02T03:00:00Z,2026-08-02T07:09:00Z,RESTRAINT_TEST,COMPLETED,HIGH,4.15,ride control panel triggered a protective shutdown during load,TrackLine
+168,MNT0000168,66,2026-07-14T13:00:00Z,2026-07-14T20:00:00Z,2026-07-14T23:23:24Z,EMERGENCY_REPAIR,COMPLETED,HIGH,3.39,ride control panel triggered a protective shutdown during load,TrackLine
+169,MNT0000169,94,2026-05-21T17:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,CRITICAL,4.26,ride control panel triggered a protective shutdown during load,MotionLab
+170,MNT0000170,67,2026-05-22T08:00:00Z,2026-05-22T10:00:00Z,2026-05-22T13:09:36Z,RESTRAINT_TEST,COMPLETED,HIGH,3.16,ride control panel triggered a protective shutdown during load,ParkTech
+171,MNT0000171,64,2026-06-10T00:00:00Z,2026-06-10T02:00:00Z,2026-06-10T05:10:48Z,INSPECTION,COMPLETED,MEDIUM,3.18,queue line stalled after merge-point crowding increased wait times,ParkTech
+172,MNT0000172,96,2026-05-28T13:00:00Z,2026-05-28T19:00:00Z,2026-05-28T20:47:24Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,1.79,ride control panel triggered a protective shutdown during load,TrackLine
+173,MNT0000173,68,2026-08-18T08:00:00Z,2026-08-18T14:00:00Z,2026-08-18T18:33:36Z,RESTRAINT_TEST,COMPLETED,MEDIUM,4.56,ride control panel triggered a protective shutdown during load,LiftWorks
+174,MNT0000174,79,2026-07-18T00:00:00Z,2026-07-18T09:00:00Z,2026-07-18T11:34:48Z,COSMETIC,COMPLETED,MEDIUM,2.58,queue line stalled after merge-point crowding increased wait times,Apex Systems
+175,MNT0000175,28,2026-06-26T20:00:00Z,2026-06-27T04:00:00Z,,SENSOR_CALIBRATION,IN_PROGRESS,MEDIUM,7.05,ride dispatch paused after restraint sensor mismatch,InHouseOps
+176,MNT0000176,95,2026-05-01T00:00:00Z,2026-05-01T03:00:00Z,2026-05-01T08:16:12Z,COSMETIC,COMPLETED,MEDIUM,5.27,queue line stalled after merge-point crowding increased wait times,MotionLab
+177,MNT0000177,27,2026-08-26T21:00:00Z,2026-08-27T05:00:00Z,2026-08-27T10:47:24Z,COSMETIC,COMPLETED,LOW,5.79,queue line stalled after merge-point crowding increased wait times,InHouseOps
+178,MNT0000178,92,2026-08-04T16:00:00Z,2026-08-04T17:00:00Z,2026-08-04T18:52:48Z,SENSOR_CALIBRATION,COMPLETED,HIGH,1.88,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+179,MNT0000179,56,2026-08-08T09:00:00Z,2026-08-08T17:00:00Z,,SENSOR_CALIBRATION,IN_PROGRESS,MEDIUM,7.41,ride control panel triggered a protective shutdown during load,ParkTech
+180,MNT0000180,11,2026-05-20T01:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,CRITICAL,4.9,ride control panel triggered a protective shutdown during load,ParkTech
+181,MNT0000181,84,2026-06-23T21:00:00Z,2026-06-24T04:00:00Z,2026-06-24T08:23:24Z,INSPECTION,COMPLETED,LOW,4.39,queue line stalled after merge-point crowding increased wait times,InHouseOps
+182,MNT0000182,39,2026-05-24T14:00:00Z,2026-05-24T14:00:00Z,2026-05-24T19:58:48Z,COSMETIC,DELAYED,LOW,3.98,guest flow backed up near accessibility entrance and dispatch lane,Apex Systems
+183,MNT0000183,80,2026-06-10T08:00:00Z,2026-06-10T10:00:00Z,2026-06-10T14:49:12Z,INSPECTION,DELAYED,MEDIUM,2.82,guest flow backed up near accessibility entrance and dispatch lane,TrackLine
+184,MNT0000184,9,2026-08-14T07:00:00Z,2026-08-14T07:00:00Z,2026-08-14T11:13:48Z,RESTRAINT_TEST,COMPLETED,MEDIUM,4.23,ride control panel triggered a protective shutdown during load,LiftWorks
+185,MNT0000185,1,2026-06-26T20:00:00Z,2026-06-27T03:00:00Z,2026-06-27T07:13:48Z,COSMETIC,COMPLETED,LOW,4.23,guest flow backed up near accessibility entrance and dispatch lane,InHouseOps
+186,MNT0000186,78,2026-08-13T13:00:00Z,2026-08-13T22:00:00Z,2026-08-14T01:24:00Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,3.4,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+187,MNT0000187,53,2026-08-07T06:00:00Z,2026-08-07T10:00:00Z,2026-08-07T15:03:00Z,SENSOR_CALIBRATION,DELAYED,HIGH,3.05,vehicle cycle stopped for repeated lap-bar fault signal,Apex Systems
+188,MNT0000188,77,2026-05-21T01:00:00Z,,,INSPECTION,SCHEDULED,LOW,4.39,boarding lane disruption caused temporary hold at the platform,TrackLine
+189,MNT0000189,84,2026-05-31T15:00:00Z,2026-06-01T00:00:00Z,2026-06-01T06:59:24Z,INSPECTION,DELAYED,LOW,4.99,guest flow backed up near accessibility entrance and dispatch lane,InHouseOps
+190,MNT0000190,42,2026-05-29T00:00:00Z,2026-05-29T00:00:00Z,2026-05-29T04:34:48Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,4.58,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+191,MNT0000191,93,2026-06-23T20:00:00Z,2026-06-24T03:00:00Z,2026-06-24T07:55:12Z,INSPECTION,COMPLETED,MEDIUM,4.92,boarding lane disruption caused temporary hold at the platform,Apex Systems
+192,MNT0000192,49,2026-06-14T13:00:00Z,2026-06-14T21:00:00Z,2026-06-14T22:50:24Z,EMERGENCY_REPAIR,COMPLETED,HIGH,1.84,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+193,MNT0000193,5,2026-08-18T21:00:00Z,2026-08-18T23:00:00Z,2026-08-19T05:43:48Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,6.73,ride control panel triggered a protective shutdown during load,TrackLine
+194,MNT0000194,82,2026-07-06T08:00:00Z,2026-07-06T13:00:00Z,2026-07-06T18:49:12Z,COSMETIC,COMPLETED,LOW,5.82,queue line stalled after merge-point crowding increased wait times,LiftWorks
+195,MNT0000195,93,2026-05-03T10:00:00Z,2026-05-03T11:00:00Z,2026-05-03T18:19:12Z,RESTRAINT_TEST,COMPLETED,HIGH,7.32,ride dispatch paused after restraint sensor mismatch,TrackLine
+196,MNT0000196,1,2026-06-13T17:00:00Z,2026-06-13T18:00:00Z,2026-06-13T22:36:36Z,EMERGENCY_REPAIR,DELAYED,CRITICAL,2.61,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+197,MNT0000197,104,2026-05-07T14:00:00Z,,,COSMETIC,SCHEDULED,MEDIUM,3.4,guest flow backed up near accessibility entrance and dispatch lane,InHouseOps
+198,MNT0000198,87,2026-08-16T21:00:00Z,2026-08-17T04:00:00Z,2026-08-17T07:25:48Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,3.43,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+199,MNT0000199,11,2026-05-23T22:00:00Z,,,INSPECTION,SCHEDULED,LOW,4.49,boarding lane disruption caused temporary hold at the platform,TrackLine
+200,MNT0000200,82,2026-07-29T16:00:00Z,2026-07-29T16:00:00Z,,INSPECTION,IN_PROGRESS,MEDIUM,3.93,boarding lane disruption caused temporary hold at the platform,Apex Systems
+201,MNT0000201,96,2026-07-15T01:00:00Z,,,RESTRAINT_TEST,SCHEDULED,MEDIUM,2.28,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+202,MNT0000202,8,2026-07-21T12:00:00Z,2026-07-21T21:00:00Z,2026-07-21T22:07:12Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,1.12,ride control panel triggered a protective shutdown during load,InHouseOps
+203,MNT0000203,23,2026-07-19T19:00:00Z,,,SENSOR_CALIBRATION,SCHEDULED,MEDIUM,5.03,ride dispatch paused after restraint sensor mismatch,Apex Systems
+204,MNT0000204,5,2026-08-17T07:00:00Z,2026-08-17T14:00:00Z,2026-08-17T19:58:48Z,SENSOR_CALIBRATION,DELAYED,MEDIUM,3.98,ride control panel triggered a protective shutdown during load,TrackLine
+205,MNT0000205,1,2026-06-11T10:00:00Z,2026-06-11T13:00:00Z,2026-06-11T21:30:00Z,RESTRAINT_TEST,COMPLETED,HIGH,8.5,ride control panel triggered a protective shutdown during load,InHouseOps
+206,MNT0000206,8,2026-07-28T01:00:00Z,2026-07-28T08:00:00Z,2026-07-28T14:19:48Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,6.33,ride dispatch paused after restraint sensor mismatch,InHouseOps
+207,MNT0000207,59,2026-05-05T18:00:00Z,2026-05-06T02:00:00Z,2026-05-06T03:48:36Z,RESTRAINT_TEST,COMPLETED,HIGH,1.81,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+208,MNT0000208,87,2026-08-28T10:00:00Z,2026-08-28T17:00:00Z,2026-08-28T23:28:12Z,RESTRAINT_TEST,DELAYED,MEDIUM,4.47,vehicle cycle stopped for repeated lap-bar fault signal,LiftWorks
+209,MNT0000209,57,2026-05-04T13:00:00Z,2026-05-04T18:00:00Z,2026-05-04T23:03:00Z,COSMETIC,COMPLETED,LOW,5.05,queue line stalled after merge-point crowding increased wait times,Apex Systems
+210,MNT0000210,85,2026-07-24T01:00:00Z,,,COSMETIC,SCHEDULED,MEDIUM,3.52,boarding lane disruption caused temporary hold at the platform,InHouseOps
+211,MNT0000211,89,2026-06-11T18:00:00Z,2026-06-11T22:00:00Z,2026-06-11T23:49:12Z,INSPECTION,COMPLETED,LOW,1.82,queue line stalled after merge-point crowding increased wait times,TrackLine
+212,MNT0000212,44,2026-05-16T07:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,HIGH,3.32,ride dispatch paused after restraint sensor mismatch,InHouseOps
+213,MNT0000213,28,2026-06-07T11:00:00Z,,,RESTRAINT_TEST,SCHEDULED,MEDIUM,4.47,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+214,MNT0000214,16,2026-05-11T10:00:00Z,2026-05-11T17:00:00Z,,EMERGENCY_REPAIR,IN_PROGRESS,HIGH,3.46,ride control panel triggered a protective shutdown during load,InHouseOps
+215,MNT0000215,42,2026-08-11T22:00:00Z,2026-08-12T00:00:00Z,2026-08-12T03:02:24Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,3.04,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+216,MNT0000216,30,2026-06-12T20:00:00Z,2026-06-13T02:00:00Z,2026-06-13T07:36:36Z,SENSOR_CALIBRATION,COMPLETED,HIGH,5.61,ride dispatch paused after restraint sensor mismatch,InHouseOps
+217,MNT0000217,4,2026-08-01T00:00:00Z,2026-08-01T02:00:00Z,2026-08-01T07:34:12Z,INSPECTION,COMPLETED,MEDIUM,5.57,guest flow backed up near accessibility entrance and dispatch lane,TrackLine
+218,MNT0000218,107,2026-05-06T14:00:00Z,2026-05-06T22:00:00Z,2026-05-07T02:14:24Z,EMERGENCY_REPAIR,DELAYED,HIGH,2.24,ride control panel triggered a protective shutdown during load,Apex Systems
+219,MNT0000219,23,2026-06-02T11:00:00Z,2026-06-02T15:00:00Z,2026-06-02T20:19:48Z,EMERGENCY_REPAIR,DELAYED,CRITICAL,3.33,ride control panel triggered a protective shutdown during load,Apex Systems
+220,MNT0000220,89,2026-07-20T20:00:00Z,2026-07-21T03:00:00Z,2026-07-21T06:18:00Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,3.3,ride control panel triggered a protective shutdown during load,TrackLine
+221,MNT0000221,49,2026-06-29T08:00:00Z,,,COSMETIC,SCHEDULED,MEDIUM,3.6,guest flow backed up near accessibility entrance and dispatch lane,InHouseOps
+222,MNT0000222,86,2026-05-12T01:00:00Z,2026-05-12T05:00:00Z,,INSPECTION,IN_PROGRESS,MEDIUM,6.34,guest flow backed up near accessibility entrance and dispatch lane,LiftWorks
+223,MNT0000223,108,2026-06-23T19:00:00Z,2026-06-23T21:00:00Z,2026-06-24T02:57:00Z,INSPECTION,COMPLETED,MEDIUM,5.95,guest flow backed up near accessibility entrance and dispatch lane,LiftWorks
+224,MNT0000224,69,2026-08-23T10:00:00Z,2026-08-23T15:00:00Z,2026-08-23T23:05:24Z,EMERGENCY_REPAIR,COMPLETED,HIGH,8.09,ride dispatch paused after restraint sensor mismatch,TrackLine
+225,MNT0000225,68,2026-08-11T02:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,HIGH,2.61,ride control panel triggered a protective shutdown during load,LiftWorks
+226,MNT0000226,71,2026-05-22T04:00:00Z,2026-05-22T11:00:00Z,2026-05-22T13:09:36Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,2.16,ride dispatch paused after restraint sensor mismatch,LiftWorks
+227,MNT0000227,98,2026-08-19T18:00:00Z,2026-08-20T00:00:00Z,2026-08-20T04:24:00Z,COSMETIC,COMPLETED,LOW,4.4,queue line stalled after merge-point crowding increased wait times,MotionLab
+228,MNT0000228,50,2026-08-17T16:00:00Z,,,RESTRAINT_TEST,SCHEDULED,MEDIUM,3.67,vehicle cycle stopped for repeated lap-bar fault signal,TrackLine
+229,MNT0000229,91,2026-05-28T03:00:00Z,2026-05-28T12:00:00Z,2026-05-28T17:30:36Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,5.51,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+230,MNT0000230,58,2026-05-19T01:00:00Z,2026-05-19T01:00:00Z,2026-05-19T08:32:24Z,INSPECTION,DELAYED,MEDIUM,5.54,queue line stalled after merge-point crowding increased wait times,MotionLab
+231,MNT0000231,60,2026-05-11T00:00:00Z,2026-05-11T08:00:00Z,2026-05-11T11:37:48Z,EMERGENCY_REPAIR,DELAYED,HIGH,1.63,ride dispatch paused after restraint sensor mismatch,ParkTech
+232,MNT0000232,33,2026-07-25T14:00:00Z,2026-07-25T20:00:00Z,2026-07-25T22:04:12Z,SENSOR_CALIBRATION,COMPLETED,HIGH,2.07,vehicle cycle stopped for repeated lap-bar fault signal,InHouseOps
+233,MNT0000233,22,2026-07-10T03:00:00Z,2026-07-10T07:00:00Z,2026-07-10T10:45:36Z,INSPECTION,COMPLETED,LOW,3.76,boarding lane disruption caused temporary hold at the platform,Apex Systems
+234,MNT0000234,64,2026-06-10T01:00:00Z,2026-06-10T06:00:00Z,2026-06-10T07:09:00Z,INSPECTION,COMPLETED,LOW,1.15,queue line stalled after merge-point crowding increased wait times,ParkTech
+235,MNT0000235,97,2026-05-02T17:00:00Z,2026-05-02T23:00:00Z,2026-05-03T03:14:24Z,INSPECTION,DELAYED,MEDIUM,2.24,boarding lane disruption caused temporary hold at the platform,LiftWorks
+236,MNT0000236,110,2026-06-09T11:00:00Z,2026-06-09T20:00:00Z,2026-06-10T04:06:00Z,SENSOR_CALIBRATION,COMPLETED,HIGH,8.1,ride control panel triggered a protective shutdown during load,TrackLine
+237,MNT0000237,43,2026-08-03T08:00:00Z,2026-08-03T13:00:00Z,2026-08-03T18:37:12Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,5.62,ride control panel triggered a protective shutdown during load,TrackLine
+238,MNT0000238,1,2026-05-05T16:00:00Z,2026-05-05T17:00:00Z,,EMERGENCY_REPAIR,IN_PROGRESS,CRITICAL,4.52,ride dispatch paused after restraint sensor mismatch,InHouseOps
+239,MNT0000239,107,2026-05-14T18:00:00Z,,,SENSOR_CALIBRATION,SCHEDULED,MEDIUM,2.61,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+240,MNT0000240,78,2026-05-30T08:00:00Z,2026-05-30T16:00:00Z,2026-05-30T22:41:24Z,RESTRAINT_TEST,COMPLETED,HIGH,6.69,ride control panel triggered a protective shutdown during load,Apex Systems
+241,MNT0000241,6,2026-07-25T20:00:00Z,,,RESTRAINT_TEST,SCHEDULED,HIGH,2.76,ride control panel triggered a protective shutdown during load,TrackLine
+242,MNT0000242,97,2026-07-07T12:00:00Z,2026-07-07T16:00:00Z,2026-07-07T19:36:00Z,RESTRAINT_TEST,DELAYED,MEDIUM,1.6,vehicle cycle stopped for repeated lap-bar fault signal,ParkTech
+243,MNT0000243,33,2026-06-25T07:00:00Z,2026-06-25T16:00:00Z,,SENSOR_CALIBRATION,IN_PROGRESS,HIGH,2.31,ride control panel triggered a protective shutdown during load,InHouseOps
+244,MNT0000244,9,2026-05-14T19:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,HIGH,2.95,ride control panel triggered a protective shutdown during load,ParkTech
+245,MNT0000245,25,2026-06-25T10:00:00Z,2026-06-25T17:00:00Z,2026-06-25T19:36:36Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,2.61,ride control panel triggered a protective shutdown during load,Apex Systems
+246,MNT0000246,88,2026-06-05T17:00:00Z,,,EMERGENCY_REPAIR,SCHEDULED,CRITICAL,3.86,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+247,MNT0000247,104,2026-07-08T17:00:00Z,2026-07-08T20:00:00Z,,EMERGENCY_REPAIR,IN_PROGRESS,CRITICAL,7.81,ride dispatch paused after restraint sensor mismatch,InHouseOps
+248,MNT0000248,86,2026-08-03T17:00:00Z,2026-08-03T21:00:00Z,2026-08-04T00:27:00Z,INSPECTION,DELAYED,LOW,1.45,queue line stalled after merge-point crowding increased wait times,Apex Systems
+249,MNT0000249,90,2026-05-27T08:00:00Z,2026-05-27T08:00:00Z,2026-05-27T12:37:48Z,INSPECTION,COMPLETED,MEDIUM,4.63,queue line stalled after merge-point crowding increased wait times,InHouseOps
+250,MNT0000250,23,2026-05-10T02:00:00Z,2026-05-10T10:00:00Z,2026-05-10T12:26:24Z,EMERGENCY_REPAIR,COMPLETED,HIGH,2.44,ride control panel triggered a protective shutdown during load,LiftWorks
+251,MNT0000251,1,2026-06-01T00:00:00Z,,,SENSOR_CALIBRATION,SCHEDULED,MEDIUM,4.02,ride dispatch paused after restraint sensor mismatch,InHouseOps
+252,MNT0000252,29,2026-07-26T13:00:00Z,2026-07-26T16:00:00Z,2026-07-27T00:28:12Z,RESTRAINT_TEST,COMPLETED,HIGH,8.47,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+253,MNT0000253,69,2026-07-14T06:00:00Z,2026-07-14T13:00:00Z,2026-07-14T17:59:24Z,COSMETIC,COMPLETED,MEDIUM,4.99,queue line stalled after merge-point crowding increased wait times,LiftWorks
+254,MNT0000254,111,2026-08-24T18:00:00Z,2026-08-24T18:00:00Z,2026-08-24T19:42:36Z,EMERGENCY_REPAIR,COMPLETED,HIGH,1.71,ride control panel triggered a protective shutdown during load,TrackLine
+255,MNT0000255,34,2026-05-25T20:00:00Z,2026-05-26T02:00:00Z,2026-05-26T04:19:48Z,INSPECTION,COMPLETED,MEDIUM,2.33,queue line stalled after merge-point crowding increased wait times,TrackLine
+256,MNT0000256,48,2026-05-11T09:00:00Z,2026-05-11T11:00:00Z,2026-05-11T18:40:12Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,7.67,vehicle cycle stopped for repeated lap-bar fault signal,MotionLab
+257,MNT0000257,38,2026-06-03T10:00:00Z,2026-06-03T14:00:00Z,2026-06-03T20:09:00Z,EMERGENCY_REPAIR,COMPLETED,CRITICAL,6.15,ride control panel triggered a protective shutdown during load,Apex Systems
+258,MNT0000258,103,2026-05-24T08:00:00Z,2026-05-24T13:00:00Z,2026-05-24T16:28:48Z,RESTRAINT_TEST,COMPLETED,HIGH,3.48,ride dispatch paused after restraint sensor mismatch,InHouseOps
+259,MNT0000259,19,2026-07-07T02:00:00Z,2026-07-07T08:00:00Z,2026-07-07T10:01:12Z,SENSOR_CALIBRATION,COMPLETED,MEDIUM,2.02,ride control panel triggered a protective shutdown during load,ParkTech
+260,MNT0000260,49,2026-05-09T13:00:00Z,2026-05-09T14:00:00Z,2026-05-09T18:36:00Z,SENSOR_CALIBRATION,COMPLETED,HIGH,4.6,ride control panel triggered a protective shutdown during load,InHouseOps

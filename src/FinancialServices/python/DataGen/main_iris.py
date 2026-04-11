@@ -83,19 +83,36 @@ def _iter_rows(df: pd.DataFrame, columns: list[str]) -> Iterable[tuple]:
 
 
 def _exec_sql(iris, sql: str) -> None:
-    stmt = iris.sql.prepare(sql)
-    stmt.execute()
+    try:
+        stmt = iris.sql.prepare(sql)
+        stmt.execute()
+    except Exception as exc:
+        raise RuntimeError(
+            f"IRIS SQL failed executing statement: {sql} | error_type={type(exc).__name__} | error_args={getattr(exc, 'args', None)}"
+        ) from exc
 
 
 def _insert_df(iris, table_name: str, columns: list[str], df: pd.DataFrame, commit_every: int) -> int:
     placeholders = ", ".join(["?"] * len(columns))
     col_sql = ", ".join(columns)
     sql = f"INSERT INTO {table_name} ({col_sql}) VALUES ({placeholders})"
-    stmt = iris.sql.prepare(sql)
+    try:
+        stmt = iris.sql.prepare(sql)
+    except Exception as exc:
+        raise RuntimeError(
+            f"IRIS SQL prepare failed for table {table_name}: {sql} | error_type={type(exc).__name__} | error_args={getattr(exc, 'args', None)}"
+        ) from exc
 
     inserted = 0
     for row in _iter_rows(df, columns):
-        stmt.execute(*row)
+        try:
+            stmt.execute(*row)
+        except Exception as exc:
+            raise RuntimeError(
+                "IRIS SQL row insert failed "
+                f"table={table_name} row_number={inserted + 1} sql={sql} row={row} "
+                f"error_type={type(exc).__name__} error_args={getattr(exc, 'args', None)}"
+            ) from exc
         inserted += 1
         if commit_every > 0 and inserted % commit_every == 0:
             _exec_sql(iris, "COMMIT")
@@ -109,8 +126,9 @@ def main(
     package: str = "Finance",
     clear_existing: bool = False,
     commit_every: int = 20000,
+    scale_factor_override: int | None = None,
 ) -> dict:
-    config = load_config(config_path)
+    config = load_config(config_path, scale_factor_override=scale_factor_override)
     seed = int(config["seed"])
 
     merchants = generate_merchants(config, make_rng(seed, "merchants"))
@@ -269,6 +287,7 @@ def parse_args():
         default=20000,
         help="Issue SQL COMMIT every N inserted rows per table",
     )
+    parser.add_argument("--scale-factor", type=int, help="Multiply the configured base dataset size by this factor")
     return parser.parse_args()
 
 
@@ -279,4 +298,5 @@ if __name__ == "__main__":
         package=args.package,
         clear_existing=args.clear_existing,
         commit_every=args.commit_every,
+        scale_factor_override=args.scale_factor,
     )

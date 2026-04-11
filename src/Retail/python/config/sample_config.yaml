@@ -1,0 +1,74 @@
+seed: 42
+currency: "USD"
+
+time:
+  start_date: "2026-01-01"
+  days: 90
+  timezone: "UTC"
+
+scale:
+  mode: "explicit"
+  factor: 1
+  counts:
+    users: 48
+    stores: 36
+    products: 320
+    supplier_products: 780
+    promotions: 140
+    purchase_orders: 1200
+    stock_transfers: 320
+    sales_transactions: 18000
+    inventory_snapshots: 9000
+
+output:
+  path: "./out_retail"
+  overwrite: true
+
+behavior:
+  products:
+    department_weights:
+      GROCERY: 0.23
+      BEVERAGE: 0.14
+      HOUSEHOLD: 0.17
+      PERSONAL_CARE: 0.12
+      ELECTRONICS: 0.11
+      APPAREL: 0.13
+      TOYS: 0.10
+    private_label_share: 0.24
+  stores:
+    format_weights:
+      FLAGSHIP: 0.12
+      SUBURBAN: 0.42
+      URBAN: 0.26
+      OUTLET: 0.20
+  access:
+    role_weights:
+      StoreLead: 0.42
+      RegionalViewer: 0.30
+      MerchandisingManager: 0.16
+      InventoryOpsManager: 0.12
+    partial_store_min: 2
+    partial_store_max: 8
+  sales:
+    channel_weights:
+      INSTORE: 0.74
+      CLICK_COLLECT: 0.11
+      DELIVERY: 0.09
+      SHIP_FROM_STORE: 0.06
+    return_rate: 0.045
+    stockout_rate: 0.035
+    promo_attach_rate: 0.72
+  supply:
+    preferred_supplier_share: 0.55
+    late_po_rate: 0.14
+    transfer_delay_rate: 0.09
+  promotions:
+    chainwide_share: 0.38
+    type_weights:
+      PCT_OFF: 0.54
+      MULTIBUY: 0.18
+      CLEARANCE: 0.18
+      DIGITAL_COUPON: 0.10
+  inventory:
+    low_stock_share: 0.16
+    markdown_share: 0.12

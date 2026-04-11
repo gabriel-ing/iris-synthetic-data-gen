@@ -1,8 +1,8 @@
 # Supply Chain Synthetic Data Generator
 
-This package is the Supply Chain companion domain to the Financial Services generator.
+This package generates the Supply Chain demo dataset used by the root SyntheticDataGen module.
 
-## What it generates
+## Outputs
 
 - `dim_date.csv`
 - `dim_product.csv`
@@ -17,27 +17,49 @@ This package is the Supply Chain companion domain to the Financial Services gene
 - `inventory_snapshot_daily.csv`
 - `stock_count_event.csv`
 
-## Run
+## CSV Generation
 
-From `SupplyChain/python`:
-
-```bash
-c:/Users/ging/external_hackathon/synthetic_data_gen/.venv/Scripts/python.exe -m DataGen.main --config config/sample_config.yaml
-```
-
-## Test
-
-From `SupplyChain/python`:
+From `src/SupplyChain/python`:
 
 ```bash
-c:/Users/ging/external_hackathon/synthetic_data_gen/.venv/Scripts/python.exe -m pytest
+python -m DataGen.main --config config/sample_config.yaml
+python -m DataGen.main --config config/sample_config.yaml --scale-factor 2
 ```
 
-## Reuse Design
+The output directory is controlled by the YAML config.
 
-- Shared deterministic RNG namespace pattern (`DataGen/rng.py`).
-- Shared config merge + explicit/factor scale strategy (`DataGen/config.py`).
-- Domain-specific generators isolated in `DataGen/generators/`.
-- Validation and writer modules separated from generator logic.
+## Direct IRIS Insert
 
-This separation is intended to make packaging into an InterSystems Package Manager module straightforward once ObjectScript classes and loader scripts are finalized.
+From `src/SupplyChain/python`:
+
+```bash
+python -m DataGen.main_iris --config config/sample_config.yaml --package SupplyChain --clear-existing
+```
+
+Current `main_iris.py` options:
+
+- `--config`
+- `--package` with default `SupplyChain`
+- `--clear-existing`
+- `--commit-every`
+- `--scale-factor`
+
+## Tests
+
+From `src/SupplyChain/python`:
+
+```bash
+python -m pytest
+```
+
+## Through ZPM
+
+After installing the root module in IRIS:
+
+```objectscript
+do ##class(SyntheticDataGen.DataLoader).LoadData("SupplyChain")
+do ##class(SyntheticDataGen.DataLoader).LoadData("SupplyChain",2)
+do ##class(SyntheticDataGen.DataLoader).DeleteDataset("SupplyChain")
+```
+
+`SupplyChain.DimCustomer` is the lazy-compile sentinel class for this domain.

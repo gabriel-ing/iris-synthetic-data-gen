@@ -1,0 +1,1101 @@
+FeedbackId,FeedbackNumber,Ticket,Park,Ride,SubmittedAt,Channel,Rating,Sentiment,Topic,Summary,RequiresFollowUp
+1,FDB0000001,1281,3,,2026-05-07T05:00:00Z,EMAIL,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+2,FDB0000002,1899,5,55,2026-05-17T00:00:00Z,EMAIL,2,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+3,FDB0000003,3984,2,,2026-07-07T04:00:00Z,EMAIL,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+4,FDB0000004,3614,3,20,2026-06-20T18:45:00Z,EMAIL,5,NEUTRAL,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+5,FDB0000005,175,3,,2026-08-07T11:30:00Z,EMAIL,2,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+6,FDB0000006,3975,3,,2026-06-20T17:00:00Z,EMAIL,3,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,False
+7,FDB0000007,1172,6,,2026-06-13T15:00:00Z,MOBILE_SURVEY,3,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+8,FDB0000008,3752,6,,2026-06-24T14:30:00Z,KIOSK,1,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+9,FDB0000009,1038,3,,2026-07-02T21:00:00Z,CHATBOT,5,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+10,FDB0000010,3019,4,62,2026-05-26T23:00:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+11,FDB0000011,3576,6,52,2026-07-29T03:30:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+12,FDB0000012,2310,2,88,2026-07-15T23:45:00Z,EMAIL,5,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+13,FDB0000013,3872,3,,2026-05-03T20:15:00Z,SMS,2,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+14,FDB0000014,2773,4,77,2026-06-10T11:00:00Z,SMS,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+15,FDB0000015,2999,2,90,2026-07-09T13:30:00Z,MOBILE_SURVEY,5,NEUTRAL,WAIT_TIME,virtual queue timing was clearer than expected,False
+16,FDB0000016,1625,2,,2026-06-13T05:00:00Z,EMAIL,2,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,True
+17,FDB0000017,213,1,95,2026-05-13T01:00:00Z,CHATBOT,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+18,FDB0000018,2797,2,,2026-08-05T22:30:00Z,MOBILE_SURVEY,3,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,False
+19,FDB0000019,2917,3,,2026-05-28T09:15:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+20,FDB0000020,3649,2,,2026-07-18T18:45:00Z,EMAIL,3,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+21,FDB0000021,2879,5,,2026-05-25T01:00:00Z,MOBILE_SURVEY,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+22,FDB0000022,1616,5,,2026-07-14T06:00:00Z,EMAIL,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+23,FDB0000023,3496,3,82,2026-08-02T14:30:00Z,EMAIL,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+24,FDB0000024,577,3,57,2026-06-18T22:00:00Z,KIOSK,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+25,FDB0000025,404,3,,2026-07-10T19:45:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+26,FDB0000026,2483,5,,2026-05-22T19:00:00Z,EMAIL,4,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+27,FDB0000027,1167,3,78,2026-08-18T03:15:00Z,MOBILE_SURVEY,3,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+28,FDB0000028,2683,5,36,2026-06-29T12:30:00Z,EMAIL,5,NEUTRAL,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+29,FDB0000029,2456,1,,2026-05-03T09:00:00Z,KIOSK,3,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+30,FDB0000030,422,5,,2026-05-13T21:00:00Z,CHATBOT,2,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+31,FDB0000031,3119,3,97,2026-06-14T23:00:00Z,MOBILE_SURVEY,1,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+32,FDB0000032,2181,3,,2026-07-22T16:00:00Z,KIOSK,3,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+33,FDB0000033,2848,6,,2026-07-03T00:00:00Z,SMS,3,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,False
+34,FDB0000034,681,3,,2026-06-22T21:15:00Z,KIOSK,2,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,True
+35,FDB0000035,3983,6,14,2026-06-05T14:45:00Z,MOBILE_SURVEY,3,NEGATIVE,MASCOT_EXPERIENCE,the entertainment lineup was harder to find than expected,False
+36,FDB0000036,182,4,,2026-05-19T19:45:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+37,FDB0000037,3023,6,,2026-06-06T01:15:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+38,FDB0000038,203,3,96,2026-07-24T03:45:00Z,KIOSK,5,NEUTRAL,WAIT_TIME,staff kept the line moving and communicated well,False
+39,FDB0000039,3736,1,31,2026-05-17T20:30:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+40,FDB0000040,2025,3,,2026-07-13T15:45:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+41,FDB0000041,1129,5,36,2026-05-10T15:30:00Z,KIOSK,3,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+42,FDB0000042,899,3,72,2026-05-09T13:15:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+43,FDB0000043,1287,4,4,2026-08-19T06:30:00Z,EMAIL,2,NEGATIVE,MASCOT_EXPERIENCE,photo timing around the character greeting felt rushed,True
+44,FDB0000044,263,5,,2026-08-20T00:00:00Z,EMAIL,3,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+45,FDB0000045,4023,5,55,2026-07-14T18:15:00Z,KIOSK,2,NEGATIVE,MASCOT_EXPERIENCE,the mascot set ended abruptly and confused guests nearby,True
+46,FDB0000046,2368,4,,2026-07-07T05:30:00Z,MOBILE_SURVEY,5,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+47,FDB0000047,1561,2,29,2026-06-21T02:30:00Z,MOBILE_SURVEY,1,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+48,FDB0000048,3244,6,76,2026-08-12T02:00:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+49,FDB0000049,2577,2,,2026-06-06T14:45:00Z,SMS,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+50,FDB0000050,3940,6,23,2026-07-27T13:15:00Z,MOBILE_SURVEY,3,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+51,FDB0000051,2357,5,47,2026-06-04T19:15:00Z,KIOSK,2,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+52,FDB0000052,1315,3,,2026-07-11T19:15:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+53,FDB0000053,3367,3,78,2026-08-26T17:00:00Z,CHATBOT,3,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+54,FDB0000054,1207,3,,2026-07-23T08:45:00Z,EMAIL,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+55,FDB0000055,865,5,66,2026-07-18T16:00:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+56,FDB0000056,1376,5,15,2026-06-15T17:45:00Z,EMAIL,3,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+57,FDB0000057,3258,6,,2026-08-05T05:15:00Z,EMAIL,2,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+58,FDB0000058,3951,3,,2026-05-22T07:45:00Z,MOBILE_SURVEY,3,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+59,FDB0000059,2867,4,53,2026-05-09T06:15:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+60,FDB0000060,1571,3,82,2026-08-26T00:15:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+61,FDB0000061,1508,3,,2026-07-08T00:45:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+62,FDB0000062,953,5,,2026-07-01T12:45:00Z,SMS,5,NEUTRAL,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+63,FDB0000063,2186,1,,2026-06-15T23:30:00Z,MOBILE_SURVEY,3,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,False
+64,FDB0000064,3709,5,,2026-07-31T12:30:00Z,EMAIL,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+65,FDB0000065,3223,1,54,2026-06-18T01:00:00Z,EMAIL,5,NEUTRAL,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+66,FDB0000066,2455,3,72,2026-06-18T13:45:00Z,MOBILE_SURVEY,5,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+67,FDB0000067,2720,3,39,2026-07-23T10:15:00Z,KIOSK,2,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+68,FDB0000068,3085,2,,2026-07-29T00:00:00Z,MOBILE_SURVEY,5,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+69,FDB0000069,1316,5,112,2026-08-06T22:00:00Z,EMAIL,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+70,FDB0000070,2109,5,112,2026-06-26T21:45:00Z,CHATBOT,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+71,FDB0000071,2705,6,,2026-08-25T10:15:00Z,KIOSK,2,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,True
+72,FDB0000072,819,3,100,2026-08-19T12:45:00Z,EMAIL,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+73,FDB0000073,1850,4,19,2026-08-13T00:45:00Z,KIOSK,2,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+74,FDB0000074,3561,4,77,2026-08-22T05:00:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+75,FDB0000075,1708,2,12,2026-07-09T08:30:00Z,EMAIL,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+76,FDB0000076,3808,5,,2026-07-26T12:15:00Z,MOBILE_SURVEY,5,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+77,FDB0000077,2168,4,,2026-06-09T18:15:00Z,EMAIL,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+78,FDB0000078,2874,1,,2026-05-23T09:00:00Z,KIOSK,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+79,FDB0000079,6,5,,2026-07-12T08:45:00Z,CHATBOT,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+80,FDB0000080,562,4,,2026-06-18T19:00:00Z,SMS,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+81,FDB0000081,263,5,109,2026-08-19T17:45:00Z,CHATBOT,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+82,FDB0000082,2812,4,,2026-05-04T03:45:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+83,FDB0000083,2041,6,,2026-06-17T16:00:00Z,EMAIL,3,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+84,FDB0000084,1676,3,,2026-06-13T19:45:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+85,FDB0000085,31,1,71,2026-06-19T13:00:00Z,CHATBOT,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+86,FDB0000086,3887,5,,2026-06-09T22:45:00Z,KIOSK,3,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+87,FDB0000087,1918,1,26,2026-08-19T16:30:00Z,KIOSK,3,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+88,FDB0000088,4013,1,,2026-06-14T01:00:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+89,FDB0000089,3601,3,42,2026-05-22T08:00:00Z,EMAIL,4,NEUTRAL,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+90,FDB0000090,1943,5,,2026-06-04T16:00:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,False
+91,FDB0000091,3374,5,,2026-05-04T21:00:00Z,EMAIL,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+92,FDB0000092,2716,1,,2026-07-12T09:00:00Z,SMS,3,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,False
+93,FDB0000093,860,3,,2026-05-26T17:15:00Z,CHATBOT,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+94,FDB0000094,1021,2,,2026-06-18T17:45:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+95,FDB0000095,1522,4,,2026-07-05T02:30:00Z,MOBILE_SURVEY,5,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+96,FDB0000096,427,1,54,2026-06-11T06:15:00Z,KIOSK,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+97,FDB0000097,3154,3,57,2026-08-15T01:15:00Z,EMAIL,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+98,FDB0000098,1570,1,,2026-07-27T17:45:00Z,KIOSK,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+99,FDB0000099,301,3,28,2026-07-26T11:30:00Z,SMS,3,NEUTRAL,WAIT_TIME,staff kept the line moving and communicated well,False
+100,FDB0000100,3664,5,,2026-05-24T13:30:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+101,FDB0000101,166,2,,2026-07-28T21:00:00Z,KIOSK,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+102,FDB0000102,1130,3,,2026-06-16T09:15:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+103,FDB0000103,2676,5,,2026-07-17T23:15:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+104,FDB0000104,4139,4,4,2026-07-17T19:00:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+105,FDB0000105,1245,6,101,2026-06-29T12:00:00Z,EMAIL,3,NEGATIVE,MASCOT_EXPERIENCE,the mascot set ended abruptly and confused guests nearby,False
+106,FDB0000106,956,1,33,2026-06-14T13:30:00Z,CHATBOT,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+107,FDB0000107,1521,3,39,2026-07-28T04:00:00Z,EMAIL,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+108,FDB0000108,1000,5,,2026-07-29T16:00:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+109,FDB0000109,768,2,,2026-06-05T14:30:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+110,FDB0000110,2321,2,16,2026-08-11T06:15:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+111,FDB0000111,2648,3,25,2026-06-12T09:30:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+112,FDB0000112,1886,2,80,2026-06-04T18:45:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+113,FDB0000113,3858,3,6,2026-07-01T19:15:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+114,FDB0000114,2902,2,91,2026-05-22T19:00:00Z,KIOSK,3,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+115,FDB0000115,3900,3,,2026-08-16T19:15:00Z,KIOSK,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+116,FDB0000116,3115,3,,2026-06-10T22:45:00Z,MOBILE_SURVEY,3,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+117,FDB0000117,3191,5,,2026-08-18T20:15:00Z,KIOSK,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+118,FDB0000118,3351,4,,2026-05-05T14:15:00Z,KIOSK,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+119,FDB0000119,59,3,,2026-06-19T20:30:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,True
+120,FDB0000120,1295,2,,2026-07-24T05:15:00Z,KIOSK,3,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+121,FDB0000121,3557,2,,2026-05-17T07:00:00Z,MOBILE_SURVEY,3,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+122,FDB0000122,3100,5,,2026-05-12T06:30:00Z,MOBILE_SURVEY,5,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+123,FDB0000123,2010,5,46,2026-08-23T14:00:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+124,FDB0000124,1070,1,,2026-08-01T22:30:00Z,SMS,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+125,FDB0000125,1592,1,,2026-07-25T14:15:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+126,FDB0000126,4048,3,20,2026-06-21T07:45:00Z,EMAIL,3,NEUTRAL,WAIT_TIME,staff kept the line moving and communicated well,False
+127,FDB0000127,3194,3,,2026-06-09T13:15:00Z,KIOSK,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+128,FDB0000128,2454,3,,2026-08-05T03:00:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+129,FDB0000129,2568,3,,2026-06-17T18:30:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+130,FDB0000130,1537,3,78,2026-06-03T07:00:00Z,MOBILE_SURVEY,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+131,FDB0000131,132,1,,2026-08-06T21:15:00Z,KIOSK,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+132,FDB0000132,3955,1,,2026-07-31T17:15:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+133,FDB0000133,3339,6,61,2026-08-22T01:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+134,FDB0000134,809,5,,2026-07-10T00:00:00Z,MOBILE_SURVEY,3,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,False
+135,FDB0000135,1735,2,27,2026-07-24T21:00:00Z,KIOSK,2,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,True
+136,FDB0000136,2073,3,,2026-06-03T13:15:00Z,SMS,2,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+137,FDB0000137,1001,3,,2026-06-08T10:30:00Z,MOBILE_SURVEY,3,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+138,FDB0000138,2893,5,,2026-06-06T16:00:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+139,FDB0000139,2649,3,,2026-08-29T22:00:00Z,SMS,3,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+140,FDB0000140,471,6,,2026-05-03T16:30:00Z,EMAIL,3,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,False
+141,FDB0000141,736,6,,2026-07-21T04:45:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+142,FDB0000142,100,3,82,2026-06-06T23:15:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+143,FDB0000143,4180,5,,2026-06-25T23:30:00Z,MOBILE_SURVEY,4,NEUTRAL,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+144,FDB0000144,3957,3,25,2026-05-31T11:30:00Z,EMAIL,1,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+145,FDB0000145,1903,2,,2026-07-24T07:45:00Z,KIOSK,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+146,FDB0000146,1988,3,8,2026-05-11T21:15:00Z,EMAIL,3,NEGATIVE,WAIT_TIME,wait time information changed too often in the app,False
+147,FDB0000147,2927,1,99,2026-05-07T20:30:00Z,MOBILE_SURVEY,5,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+148,FDB0000148,3320,5,,2026-07-13T17:30:00Z,EMAIL,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+149,FDB0000149,2546,1,,2026-06-12T14:45:00Z,EMAIL,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+150,FDB0000150,764,5,,2026-07-25T08:30:00Z,EMAIL,5,NEUTRAL,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+151,FDB0000151,1497,3,13,2026-05-06T00:45:00Z,SMS,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+152,FDB0000152,3715,5,,2026-05-19T17:00:00Z,KIOSK,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+153,FDB0000153,3388,2,,2026-08-17T08:30:00Z,KIOSK,2,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,True
+154,FDB0000154,1675,1,,2026-07-09T18:45:00Z,MOBILE_SURVEY,3,NEUTRAL,FOOD_SERVICE,the dining team handled dietary questions well,False
+155,FDB0000155,66,2,75,2026-05-27T23:45:00Z,MOBILE_SURVEY,1,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+156,FDB0000156,2070,6,,2026-05-09T03:00:00Z,EMAIL,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+157,FDB0000157,1189,2,58,2026-06-19T20:30:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+158,FDB0000158,2130,1,,2026-07-06T02:45:00Z,EMAIL,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+159,FDB0000159,62,3,,2026-05-28T00:15:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+160,FDB0000160,2634,3,,2026-05-22T18:45:00Z,KIOSK,3,NEUTRAL,CLEANLINESS,cleanup crews were visible without getting in the way,False
+161,FDB0000161,3132,5,9,2026-06-06T17:15:00Z,EMAIL,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+162,FDB0000162,2055,3,,2026-07-08T12:30:00Z,MOBILE_SURVEY,4,NEUTRAL,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+163,FDB0000163,2168,4,77,2026-06-09T21:30:00Z,MOBILE_SURVEY,1,NEGATIVE,MASCOT_EXPERIENCE,photo timing around the character greeting felt rushed,True
+164,FDB0000164,440,3,,2026-06-26T04:15:00Z,EMAIL,2,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+165,FDB0000165,1577,3,65,2026-08-08T14:45:00Z,SMS,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+166,FDB0000166,2488,5,109,2026-05-27T22:15:00Z,MOBILE_SURVEY,5,NEUTRAL,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+167,FDB0000167,3490,5,32,2026-07-12T05:15:00Z,EMAIL,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+168,FDB0000168,4047,5,46,2026-07-21T17:00:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+169,FDB0000169,2485,2,58,2026-08-11T10:15:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+170,FDB0000170,1266,2,,2026-05-16T20:30:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+171,FDB0000171,1898,3,40,2026-08-17T01:30:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+172,FDB0000172,4022,6,,2026-05-09T21:45:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+173,FDB0000173,264,2,,2026-06-19T22:30:00Z,KIOSK,2,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,True
+174,FDB0000174,2240,2,34,2026-05-19T02:15:00Z,MOBILE_SURVEY,4,NEUTRAL,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+175,FDB0000175,709,4,,2026-08-12T15:00:00Z,KIOSK,3,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+176,FDB0000176,658,2,,2026-07-04T02:30:00Z,KIOSK,5,NEUTRAL,CLEANLINESS,cleanup crews were visible without getting in the way,False
+177,FDB0000177,2865,6,,2026-05-25T21:45:00Z,KIOSK,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+178,FDB0000178,3139,5,36,2026-08-15T23:45:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+179,FDB0000179,459,3,72,2026-06-14T00:45:00Z,SMS,2,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+180,FDB0000180,376,5,,2026-08-28T13:45:00Z,EMAIL,3,NEUTRAL,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+181,FDB0000181,2104,4,53,2026-07-25T05:00:00Z,MOBILE_SURVEY,3,NEUTRAL,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+182,FDB0000182,775,6,,2026-07-14T21:30:00Z,EMAIL,3,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+183,FDB0000183,537,3,89,2026-06-03T13:15:00Z,SMS,4,NEUTRAL,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+184,FDB0000184,3177,5,47,2026-08-03T09:00:00Z,CHATBOT,1,NEGATIVE,MASCOT_EXPERIENCE,photo timing around the character greeting felt rushed,True
+185,FDB0000185,3150,5,,2026-06-02T07:45:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+186,FDB0000186,1944,5,45,2026-06-13T16:30:00Z,MOBILE_SURVEY,2,NEGATIVE,WAIT_TIME,wait time information changed too often in the app,True
+187,FDB0000187,785,6,64,2026-05-26T18:00:00Z,KIOSK,5,NEUTRAL,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+188,FDB0000188,2233,5,47,2026-05-18T04:30:00Z,SMS,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+189,FDB0000189,1578,6,64,2026-05-14T18:00:00Z,EMAIL,5,NEUTRAL,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+190,FDB0000190,301,3,,2026-07-26T07:30:00Z,EMAIL,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+191,FDB0000191,3273,5,,2026-07-16T08:15:00Z,CHATBOT,4,NEUTRAL,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+192,FDB0000192,2860,1,37,2026-07-28T17:30:00Z,EMAIL,2,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,True
+193,FDB0000193,1619,1,,2026-07-04T23:00:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+194,FDB0000194,2353,3,,2026-07-07T21:45:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+195,FDB0000195,354,5,,2026-07-22T06:00:00Z,KIOSK,5,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+196,FDB0000196,232,3,13,2026-07-15T06:00:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+197,FDB0000197,2222,3,,2026-06-18T14:45:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+198,FDB0000198,44,5,,2026-07-20T04:15:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+199,FDB0000199,943,5,,2026-08-12T06:30:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+200,FDB0000200,1687,3,57,2026-05-19T11:30:00Z,KIOSK,5,NEUTRAL,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+201,FDB0000201,3611,1,50,2026-06-30T17:15:00Z,KIOSK,2,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+202,FDB0000202,71,3,,2026-08-08T22:00:00Z,EMAIL,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+203,FDB0000203,817,2,80,2026-05-20T04:45:00Z,MOBILE_SURVEY,3,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+204,FDB0000204,142,1,71,2026-06-10T13:30:00Z,EMAIL,5,NEUTRAL,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+205,FDB0000205,3514,2,,2026-08-21T23:30:00Z,SMS,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+206,FDB0000206,1226,4,,2026-07-12T11:45:00Z,CHATBOT,3,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+207,FDB0000207,3100,5,,2026-05-12T19:15:00Z,MOBILE_SURVEY,1,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+208,FDB0000208,1571,3,,2026-08-26T23:00:00Z,MOBILE_SURVEY,3,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+209,FDB0000209,156,4,,2026-07-12T06:00:00Z,SMS,1,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+210,FDB0000210,3006,5,,2026-06-27T08:30:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+211,FDB0000211,3591,5,9,2026-06-28T14:45:00Z,KIOSK,4,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+212,FDB0000212,2080,3,,2026-06-29T14:00:00Z,EMAIL,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+213,FDB0000213,68,3,,2026-07-11T01:45:00Z,CHATBOT,4,NEUTRAL,VALUE,the ticket felt worth it once the add-ons were used,False
+214,FDB0000214,1551,4,,2026-05-29T04:45:00Z,CHATBOT,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+215,FDB0000215,2807,4,,2026-05-07T23:30:00Z,EMAIL,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+216,FDB0000216,990,2,34,2026-07-23T07:15:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+217,FDB0000217,3277,3,74,2026-07-08T02:30:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+218,FDB0000218,647,2,90,2026-08-11T20:15:00Z,SMS,2,NEGATIVE,ACCESSIBILITY,support was available but not communicated clearly enough,True
+219,FDB0000219,2243,5,9,2026-06-07T03:00:00Z,EMAIL,3,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,False
+220,FDB0000220,1795,3,111,2026-05-11T02:15:00Z,MOBILE_SURVEY,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+221,FDB0000221,1213,5,22,2026-07-11T14:45:00Z,MOBILE_SURVEY,5,NEUTRAL,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+222,FDB0000222,276,3,111,2026-07-09T10:45:00Z,MOBILE_SURVEY,5,NEUTRAL,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+223,FDB0000223,4193,1,,2026-08-25T08:15:00Z,EMAIL,2,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+224,FDB0000224,1037,1,33,2026-07-15T17:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+225,FDB0000225,487,2,91,2026-05-07T07:15:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+226,FDB0000226,2737,3,,2026-08-28T13:15:00Z,EMAIL,3,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+227,FDB0000227,2200,3,69,2026-06-17T06:45:00Z,MOBILE_SURVEY,3,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+228,FDB0000228,1765,3,40,2026-08-01T05:30:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+229,FDB0000229,307,6,14,2026-06-20T01:15:00Z,MOBILE_SURVEY,4,NEUTRAL,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+230,FDB0000230,2765,3,,2026-07-09T04:15:00Z,EMAIL,2,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,True
+231,FDB0000231,3269,5,,2026-05-22T03:45:00Z,EMAIL,4,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+232,FDB0000232,994,2,,2026-05-24T20:30:00Z,EMAIL,2,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+233,FDB0000233,2576,3,,2026-07-27T13:00:00Z,MOBILE_SURVEY,5,NEUTRAL,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+234,FDB0000234,1375,2,34,2026-08-25T19:30:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+235,FDB0000235,1813,6,14,2026-05-03T14:00:00Z,CHATBOT,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+236,FDB0000236,3056,5,,2026-05-09T09:15:00Z,KIOSK,2,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,True
+237,FDB0000237,544,3,8,2026-07-10T19:30:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+238,FDB0000238,468,2,,2026-06-23T05:45:00Z,EMAIL,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+239,FDB0000239,1170,6,,2026-06-15T19:30:00Z,SMS,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+240,FDB0000240,1533,5,22,2026-07-15T15:15:00Z,EMAIL,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+241,FDB0000241,323,3,97,2026-06-16T18:45:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+242,FDB0000242,2917,3,,2026-05-28T10:45:00Z,MOBILE_SURVEY,5,NEUTRAL,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+243,FDB0000243,1736,5,,2026-07-07T23:30:00Z,KIOSK,3,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,False
+244,FDB0000244,3124,3,72,2026-07-15T10:30:00Z,CHATBOT,2,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+245,FDB0000245,2029,3,,2026-07-20T00:00:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+246,FDB0000246,14,6,,2026-05-26T01:00:00Z,MOBILE_SURVEY,4,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+247,FDB0000247,3185,5,55,2026-07-16T04:45:00Z,MOBILE_SURVEY,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+248,FDB0000248,4025,3,89,2026-08-08T15:45:00Z,MOBILE_SURVEY,3,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+249,FDB0000249,1387,3,,2026-05-23T00:45:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+250,FDB0000250,2943,6,,2026-06-27T13:45:00Z,MOBILE_SURVEY,3,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+251,FDB0000251,1847,2,29,2026-07-05T18:15:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+252,FDB0000252,2549,4,,2026-06-26T05:45:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+253,FDB0000253,724,2,,2026-07-08T21:00:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+254,FDB0000254,3793,1,,2026-08-28T21:15:00Z,EMAIL,3,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+255,FDB0000255,4138,3,,2026-08-11T19:15:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+256,FDB0000256,259,3,,2026-08-03T20:15:00Z,MOBILE_SURVEY,3,NEUTRAL,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+257,FDB0000257,585,4,,2026-08-11T14:45:00Z,MOBILE_SURVEY,4,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+258,FDB0000258,453,6,,2026-06-30T01:15:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+259,FDB0000259,2743,3,6,2026-06-27T03:30:00Z,MOBILE_SURVEY,5,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+260,FDB0000260,1917,1,,2026-05-22T21:00:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+261,FDB0000261,4084,3,20,2026-06-21T02:45:00Z,EMAIL,3,NEGATIVE,MASCOT_EXPERIENCE,the entertainment lineup was harder to find than expected,False
+262,FDB0000262,2301,3,,2026-06-11T03:45:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+263,FDB0000263,4029,1,31,2026-05-14T05:15:00Z,CHATBOT,2,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,True
+264,FDB0000264,3280,1,,2026-07-27T23:00:00Z,CHATBOT,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+265,FDB0000265,101,3,,2026-08-24T16:15:00Z,KIOSK,2,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+266,FDB0000266,1778,1,,2026-06-16T22:30:00Z,EMAIL,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+267,FDB0000267,1619,1,,2026-07-05T05:30:00Z,SMS,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+268,FDB0000268,3091,3,,2026-08-28T20:30:00Z,EMAIL,3,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,False
+269,FDB0000269,3146,3,,2026-08-11T11:45:00Z,KIOSK,2,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,True
+270,FDB0000270,3378,3,89,2026-05-24T11:15:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+271,FDB0000271,2600,3,93,2026-07-26T21:45:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+272,FDB0000272,1738,5,,2026-08-17T14:30:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+273,FDB0000273,687,1,,2026-08-13T07:15:00Z,KIOSK,1,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,True
+274,FDB0000274,52,3,98,2026-06-16T11:15:00Z,KIOSK,4,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+275,FDB0000275,3339,6,87,2026-08-21T23:00:00Z,MOBILE_SURVEY,2,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+276,FDB0000276,4194,1,,2026-07-09T19:45:00Z,KIOSK,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+277,FDB0000277,3846,5,,2026-06-09T17:45:00Z,MOBILE_SURVEY,4,NEUTRAL,CLEANLINESS,cleanup crews were visible without getting in the way,False
+278,FDB0000278,3405,5,45,2026-08-26T18:15:00Z,MOBILE_SURVEY,2,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+279,FDB0000279,1750,5,55,2026-07-29T00:45:00Z,SMS,2,NEGATIVE,WAIT_TIME,wait time information changed too often in the app,True
+280,FDB0000280,1292,3,,2026-07-20T02:00:00Z,MOBILE_SURVEY,3,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+281,FDB0000281,3709,5,,2026-07-31T19:45:00Z,CHATBOT,3,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+282,FDB0000282,1364,3,,2026-05-29T06:45:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+283,FDB0000283,2379,5,,2026-06-05T09:00:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+284,FDB0000284,2266,3,93,2026-05-25T15:00:00Z,SMS,3,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+285,FDB0000285,2921,1,,2026-05-30T17:00:00Z,MOBILE_SURVEY,1,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+286,FDB0000286,2634,3,44,2026-05-22T03:00:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+287,FDB0000287,613,5,47,2026-06-11T17:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+288,FDB0000288,2524,3,39,2026-07-07T10:45:00Z,KIOSK,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+289,FDB0000289,52,3,69,2026-06-16T11:30:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+290,FDB0000290,3863,1,,2026-07-13T13:45:00Z,KIOSK,1,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+291,FDB0000291,1205,6,94,2026-08-26T10:30:00Z,CHATBOT,1,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+292,FDB0000292,2590,6,,2026-07-20T15:15:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+293,FDB0000293,3187,4,,2026-08-23T08:00:00Z,MOBILE_SURVEY,3,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+294,FDB0000294,2041,6,87,2026-06-17T23:30:00Z,EMAIL,3,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+295,FDB0000295,2531,3,,2026-06-21T05:15:00Z,CHATBOT,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+296,FDB0000296,1368,6,,2026-07-22T07:15:00Z,KIOSK,5,NEUTRAL,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+297,FDB0000297,1036,6,101,2026-07-26T14:45:00Z,KIOSK,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+298,FDB0000298,1751,1,59,2026-08-19T22:30:00Z,KIOSK,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+299,FDB0000299,3315,5,,2026-07-17T10:45:00Z,CHATBOT,3,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,False
+300,FDB0000300,3790,5,49,2026-06-08T23:00:00Z,MOBILE_SURVEY,2,NEGATIVE,MASCOT_EXPERIENCE,the mascot set ended abruptly and confused guests nearby,True
+301,FDB0000301,64,5,45,2026-05-06T14:45:00Z,SMS,4,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+302,FDB0000302,923,5,,2026-08-29T16:00:00Z,CHATBOT,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+303,FDB0000303,924,5,,2026-08-19T20:15:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+304,FDB0000304,3432,3,57,2026-05-10T06:30:00Z,MOBILE_SURVEY,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+305,FDB0000305,2556,3,,2026-06-01T18:00:00Z,MOBILE_SURVEY,5,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+306,FDB0000306,1663,3,13,2026-05-27T17:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+307,FDB0000307,138,3,,2026-07-13T19:45:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+308,FDB0000308,599,3,6,2026-07-22T19:00:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+309,FDB0000309,4004,5,66,2026-06-13T04:45:00Z,KIOSK,4,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+310,FDB0000310,653,4,53,2026-07-14T04:00:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+311,FDB0000311,600,4,,2026-06-18T09:30:00Z,KIOSK,5,NEUTRAL,FOOD_SERVICE,the dining team handled dietary questions well,False
+312,FDB0000312,117,3,,2026-05-03T02:15:00Z,SMS,3,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+313,FDB0000313,2037,6,,2026-06-10T16:00:00Z,EMAIL,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+314,FDB0000314,1716,5,55,2026-06-08T09:00:00Z,MOBILE_SURVEY,3,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+315,FDB0000315,3364,6,,2026-05-06T22:15:00Z,KIOSK,5,NEUTRAL,VALUE,the mix of rides and entertainment justified the price,False
+316,FDB0000316,213,1,103,2026-05-12T00:30:00Z,EMAIL,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+317,FDB0000317,2032,3,,2026-06-11T14:00:00Z,CHATBOT,4,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+318,FDB0000318,1329,5,,2026-07-16T16:00:00Z,MOBILE_SURVEY,4,NEUTRAL,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+319,FDB0000319,1939,2,,2026-05-17T14:30:00Z,SMS,1,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+320,FDB0000320,2109,5,36,2026-06-28T04:30:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+321,FDB0000321,1634,3,,2026-05-26T02:15:00Z,SMS,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+322,FDB0000322,2028,6,11,2026-08-22T00:45:00Z,MOBILE_SURVEY,3,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+323,FDB0000323,2419,5,,2026-08-17T14:00:00Z,KIOSK,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+324,FDB0000324,3079,2,75,2026-05-07T04:15:00Z,KIOSK,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+325,FDB0000325,3883,1,,2026-08-22T09:30:00Z,CHATBOT,5,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+326,FDB0000326,1833,1,,2026-05-17T13:15:00Z,EMAIL,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+327,FDB0000327,4182,6,,2026-07-14T23:30:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+328,FDB0000328,3708,1,,2026-08-22T17:45:00Z,EMAIL,3,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+329,FDB0000329,4001,5,55,2026-05-24T13:45:00Z,MOBILE_SURVEY,3,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+330,FDB0000330,3335,3,,2026-06-24T03:30:00Z,KIOSK,3,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+331,FDB0000331,319,2,,2026-06-16T23:00:00Z,CHATBOT,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+332,FDB0000332,2509,3,39,2026-07-29T22:15:00Z,CHATBOT,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+333,FDB0000333,2692,3,,2026-07-28T15:00:00Z,MOBILE_SURVEY,2,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+334,FDB0000334,1932,2,17,2026-08-09T05:15:00Z,CHATBOT,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+335,FDB0000335,1779,1,,2026-05-21T17:00:00Z,MOBILE_SURVEY,3,NEUTRAL,FOOD_SERVICE,the dining team handled dietary questions well,False
+336,FDB0000336,3230,4,56,2026-07-11T03:30:00Z,KIOSK,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+337,FDB0000337,947,2,,2026-07-29T00:45:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+338,FDB0000338,890,1,33,2026-07-01T01:30:00Z,SMS,3,NEGATIVE,MASCOT_EXPERIENCE,the entertainment lineup was harder to find than expected,False
+339,FDB0000339,626,2,,2026-07-19T16:30:00Z,SMS,3,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+340,FDB0000340,2053,3,44,2026-08-13T19:15:00Z,CHATBOT,4,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+341,FDB0000341,4027,2,,2026-05-08T20:15:00Z,SMS,3,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+342,FDB0000342,3096,5,18,2026-07-06T17:15:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+343,FDB0000343,3135,5,,2026-06-26T12:30:00Z,CHATBOT,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+344,FDB0000344,2878,5,112,2026-06-23T11:15:00Z,KIOSK,1,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+345,FDB0000345,3177,5,22,2026-08-03T20:00:00Z,KIOSK,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+346,FDB0000346,1327,5,,2026-05-23T21:15:00Z,EMAIL,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+347,FDB0000347,3273,5,,2026-07-16T11:15:00Z,CHATBOT,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+348,FDB0000348,3377,3,,2026-08-24T17:30:00Z,KIOSK,1,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+349,FDB0000349,640,4,30,2026-07-13T11:30:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+350,FDB0000350,191,1,,2026-05-23T10:15:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+351,FDB0000351,305,5,,2026-05-20T14:45:00Z,MOBILE_SURVEY,4,NEUTRAL,FOOD_SERVICE,the dining team handled dietary questions well,False
+352,FDB0000352,467,6,,2026-06-05T17:00:00Z,KIOSK,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+353,FDB0000353,2586,2,,2026-07-09T18:00:00Z,MOBILE_SURVEY,5,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+354,FDB0000354,3834,6,52,2026-05-03T17:00:00Z,CHATBOT,4,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+355,FDB0000355,2258,5,18,2026-06-24T13:15:00Z,MOBILE_SURVEY,3,NEUTRAL,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+356,FDB0000356,3106,2,83,2026-07-02T12:15:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+357,FDB0000357,2392,1,26,2026-06-23T05:30:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+358,FDB0000358,734,3,3,2026-05-14T17:45:00Z,MOBILE_SURVEY,1,NEGATIVE,MASCOT_EXPERIENCE,the entertainment lineup was harder to find than expected,True
+359,FDB0000359,952,2,12,2026-07-04T12:00:00Z,CHATBOT,4,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+360,FDB0000360,3767,4,4,2026-05-19T16:00:00Z,KIOSK,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+361,FDB0000361,1068,2,91,2026-08-15T14:15:00Z,EMAIL,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+362,FDB0000362,300,1,,2026-06-24T21:00:00Z,KIOSK,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+363,FDB0000363,4058,3,70,2026-06-05T15:30:00Z,CHATBOT,4,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+364,FDB0000364,850,3,41,2026-08-10T12:15:00Z,EMAIL,4,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+365,FDB0000365,1427,1,92,2026-08-25T07:00:00Z,EMAIL,3,NEGATIVE,MASCOT_EXPERIENCE,the mascot set ended abruptly and confused guests nearby,False
+366,FDB0000366,1092,5,,2026-05-10T13:00:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+367,FDB0000367,1815,3,,2026-08-20T11:15:00Z,KIOSK,4,NEUTRAL,FOOD_SERVICE,the dining team handled dietary questions well,False
+368,FDB0000368,3565,2,,2026-07-11T20:45:00Z,EMAIL,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+369,FDB0000369,76,5,,2026-07-10T23:15:00Z,SMS,3,NEUTRAL,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+370,FDB0000370,72,1,99,2026-07-18T04:45:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+371,FDB0000371,1336,3,6,2026-07-31T03:15:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+372,FDB0000372,1190,3,57,2026-07-22T19:00:00Z,CHATBOT,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+373,FDB0000373,1621,5,66,2026-07-25T15:00:00Z,CHATBOT,2,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+374,FDB0000374,4091,3,8,2026-05-16T19:30:00Z,EMAIL,3,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+375,FDB0000375,8,2,,2026-05-16T03:00:00Z,EMAIL,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+376,FDB0000376,2713,3,98,2026-07-19T21:00:00Z,MOBILE_SURVEY,3,NEUTRAL,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+377,FDB0000377,3366,3,,2026-08-16T00:30:00Z,EMAIL,5,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+378,FDB0000378,2086,5,,2026-06-22T22:45:00Z,EMAIL,3,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+379,FDB0000379,238,3,,2026-06-16T08:30:00Z,MOBILE_SURVEY,5,NEUTRAL,VALUE,mobile offers made the day feel better priced,False
+380,FDB0000380,253,2,17,2026-05-03T19:15:00Z,SMS,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+381,FDB0000381,3472,4,,2026-06-08T00:00:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+382,FDB0000382,496,6,81,2026-08-11T10:45:00Z,MOBILE_SURVEY,5,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+383,FDB0000383,2003,1,92,2026-06-12T16:00:00Z,KIOSK,5,NEUTRAL,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+384,FDB0000384,1288,3,25,2026-06-30T20:45:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+385,FDB0000385,1391,5,15,2026-05-12T01:45:00Z,MOBILE_SURVEY,3,NEUTRAL,WAIT_TIME,staff kept the line moving and communicated well,False
+386,FDB0000386,1602,3,25,2026-05-07T11:30:00Z,MOBILE_SURVEY,3,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+387,FDB0000387,1714,5,,2026-05-20T00:15:00Z,MOBILE_SURVEY,4,NEUTRAL,VALUE,the ticket felt worth it once the add-ons were used,False
+388,FDB0000388,181,3,69,2026-05-02T22:45:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+389,FDB0000389,3461,1,37,2026-08-27T09:00:00Z,CHATBOT,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+390,FDB0000390,193,3,107,2026-08-27T20:00:00Z,SMS,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+391,FDB0000391,3429,1,,2026-07-09T04:30:00Z,MOBILE_SURVEY,3,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+392,FDB0000392,2392,1,,2026-06-23T02:45:00Z,KIOSK,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+393,FDB0000393,1952,3,3,2026-06-13T09:15:00Z,MOBILE_SURVEY,3,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+394,FDB0000394,1837,3,,2026-08-01T11:45:00Z,CHATBOT,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+395,FDB0000395,1701,2,,2026-08-19T00:30:00Z,EMAIL,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+396,FDB0000396,2240,2,,2026-05-18T19:00:00Z,KIOSK,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+397,FDB0000397,3673,5,15,2026-05-12T05:30:00Z,KIOSK,4,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+398,FDB0000398,3212,4,67,2026-07-14T05:15:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+399,FDB0000399,2329,3,,2026-05-31T11:15:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,True
+400,FDB0000400,3959,2,2,2026-05-22T18:30:00Z,EMAIL,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+401,FDB0000401,1953,3,79,2026-06-08T08:30:00Z,CHATBOT,4,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+402,FDB0000402,1648,3,,2026-07-18T19:45:00Z,SMS,3,NEUTRAL,VALUE,the mix of rides and entertainment justified the price,False
+403,FDB0000403,586,3,,2026-06-15T12:15:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+404,FDB0000404,1136,6,,2026-08-28T06:45:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,False
+405,FDB0000405,1141,5,,2026-06-12T23:00:00Z,KIOSK,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+406,FDB0000406,2260,1,,2026-08-01T13:30:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+407,FDB0000407,2529,2,90,2026-07-23T20:30:00Z,SMS,4,NEUTRAL,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+408,FDB0000408,251,4,,2026-08-07T02:15:00Z,EMAIL,2,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,True
+409,FDB0000409,2484,3,48,2026-08-23T17:45:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+410,FDB0000410,2738,3,,2026-07-06T21:00:00Z,EMAIL,4,NEUTRAL,VALUE,the mix of rides and entertainment justified the price,False
+411,FDB0000411,3705,1,59,2026-07-07T17:00:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+412,FDB0000412,1136,6,52,2026-08-27T11:00:00Z,EMAIL,3,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+413,FDB0000413,1365,3,3,2026-07-31T21:45:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+414,FDB0000414,1908,4,56,2026-05-31T03:45:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+415,FDB0000415,4113,3,93,2026-08-19T17:00:00Z,MOBILE_SURVEY,3,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+416,FDB0000416,1258,5,,2026-06-06T11:00:00Z,SMS,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+417,FDB0000417,3194,3,,2026-06-09T21:00:00Z,EMAIL,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+418,FDB0000418,417,3,,2026-06-26T03:15:00Z,SMS,1,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,True
+419,FDB0000419,550,6,23,2026-06-08T14:30:00Z,SMS,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+420,FDB0000420,554,5,36,2026-06-24T08:30:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+421,FDB0000421,1457,6,94,2026-06-05T06:15:00Z,MOBILE_SURVEY,4,NEUTRAL,WAIT_TIME,staff kept the line moving and communicated well,False
+422,FDB0000422,3269,5,,2026-05-21T19:00:00Z,MOBILE_SURVEY,3,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+423,FDB0000423,349,1,,2026-07-24T11:45:00Z,KIOSK,5,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+424,FDB0000424,2094,6,,2026-06-29T10:15:00Z,MOBILE_SURVEY,3,NEUTRAL,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+425,FDB0000425,400,3,107,2026-06-09T21:45:00Z,MOBILE_SURVEY,2,NEGATIVE,ACCESSIBILITY,support was available but not communicated clearly enough,True
+426,FDB0000426,1662,2,,2026-08-23T08:00:00Z,KIOSK,3,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,False
+427,FDB0000427,756,6,52,2026-07-07T18:45:00Z,KIOSK,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+428,FDB0000428,997,2,,2026-07-12T19:15:00Z,EMAIL,5,NEUTRAL,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+429,FDB0000429,200,5,,2026-07-15T00:45:00Z,KIOSK,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+430,FDB0000430,1370,5,,2026-06-06T16:30:00Z,SMS,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+431,FDB0000431,998,3,1,2026-07-27T14:30:00Z,KIOSK,2,NEGATIVE,MASCOT_EXPERIENCE,the mascot set ended abruptly and confused guests nearby,True
+432,FDB0000432,1557,1,26,2026-08-04T18:15:00Z,CHATBOT,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+433,FDB0000433,779,5,,2026-08-19T18:45:00Z,SMS,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+434,FDB0000434,2620,5,,2026-05-23T22:45:00Z,EMAIL,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+435,FDB0000435,3056,5,66,2026-05-08T17:45:00Z,KIOSK,5,NEUTRAL,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+436,FDB0000436,1003,1,,2026-08-01T17:30:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,False
+437,FDB0000437,2272,3,,2026-05-20T07:30:00Z,MOBILE_SURVEY,5,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+438,FDB0000438,3107,1,,2026-06-26T10:15:00Z,SMS,3,NEUTRAL,VALUE,the ticket felt worth it once the add-ons were used,False
+439,FDB0000439,2072,1,,2026-07-18T19:45:00Z,CHATBOT,3,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+440,FDB0000440,4144,5,47,2026-08-03T23:45:00Z,SMS,2,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+441,FDB0000441,467,6,,2026-06-06T03:15:00Z,KIOSK,4,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+442,FDB0000442,2724,3,107,2026-06-10T15:15:00Z,MOBILE_SURVEY,4,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+443,FDB0000443,3565,2,,2026-07-11T20:30:00Z,EMAIL,5,NEUTRAL,CLEANLINESS,cleanup crews were visible without getting in the way,False
+444,FDB0000444,1982,2,,2026-08-12T18:30:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+445,FDB0000445,1671,5,9,2026-06-15T06:00:00Z,CHATBOT,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+446,FDB0000446,1014,6,81,2026-06-01T21:00:00Z,KIOSK,3,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+447,FDB0000447,1265,3,,2026-08-05T09:00:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+448,FDB0000448,1892,6,,2026-05-13T19:00:00Z,MOBILE_SURVEY,3,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+449,FDB0000449,259,3,28,2026-08-04T07:00:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+450,FDB0000450,1592,1,54,2026-07-25T15:15:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+451,FDB0000451,2097,6,,2026-06-23T08:15:00Z,KIOSK,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+452,FDB0000452,3186,3,,2026-06-28T01:15:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+453,FDB0000453,2907,5,,2026-08-07T08:30:00Z,MOBILE_SURVEY,4,NEUTRAL,VALUE,the ticket felt worth it once the add-ons were used,False
+454,FDB0000454,3030,3,98,2026-07-09T12:00:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+455,FDB0000455,3304,2,,2026-05-07T16:00:00Z,MOBILE_SURVEY,3,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+456,FDB0000456,497,3,,2026-07-29T11:30:00Z,EMAIL,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+457,FDB0000457,4104,6,,2026-07-25T03:00:00Z,SMS,3,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+458,FDB0000458,3894,2,,2026-06-16T17:45:00Z,EMAIL,3,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+459,FDB0000459,625,3,41,2026-05-12T22:15:00Z,KIOSK,3,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+460,FDB0000460,2116,3,,2026-05-03T17:15:00Z,MOBILE_SURVEY,3,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+461,FDB0000461,1802,6,,2026-07-09T11:15:00Z,EMAIL,3,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,False
+462,FDB0000462,3870,6,,2026-05-26T21:45:00Z,KIOSK,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+463,FDB0000463,1210,2,,2026-06-30T18:15:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+464,FDB0000464,1064,2,,2026-08-25T01:15:00Z,MOBILE_SURVEY,4,NEUTRAL,VALUE,the ticket felt worth it once the add-ons were used,False
+465,FDB0000465,3037,3,,2026-08-06T19:45:00Z,EMAIL,3,NEUTRAL,CLEANLINESS,cleanup crews were visible without getting in the way,False
+466,FDB0000466,4164,5,,2026-08-01T18:00:00Z,EMAIL,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+467,FDB0000467,2067,6,68,2026-07-10T00:45:00Z,MOBILE_SURVEY,3,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+468,FDB0000468,2975,3,,2026-08-25T09:30:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+469,FDB0000469,1243,3,,2026-06-17T23:15:00Z,KIOSK,3,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,False
+470,FDB0000470,1687,3,57,2026-05-19T10:00:00Z,KIOSK,5,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+471,FDB0000471,1394,6,,2026-07-11T10:30:00Z,SMS,3,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+472,FDB0000472,3137,5,112,2026-07-21T13:45:00Z,SMS,3,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+473,FDB0000473,946,1,,2026-06-10T15:00:00Z,EMAIL,2,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+474,FDB0000474,788,5,,2026-08-08T13:45:00Z,EMAIL,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+475,FDB0000475,3963,4,30,2026-07-13T03:15:00Z,KIOSK,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+476,FDB0000476,1498,2,58,2026-08-28T00:30:00Z,CHATBOT,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+477,FDB0000477,3876,3,,2026-07-20T07:45:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+478,FDB0000478,1221,5,,2026-06-03T09:00:00Z,SMS,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+479,FDB0000479,1672,5,,2026-08-05T20:30:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+480,FDB0000480,3807,3,,2026-05-21T03:15:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+481,FDB0000481,1145,1,,2026-07-11T19:45:00Z,MOBILE_SURVEY,2,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+482,FDB0000482,1131,6,81,2026-08-08T14:00:00Z,MOBILE_SURVEY,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+483,FDB0000483,3657,6,,2026-08-21T18:15:00Z,SMS,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+484,FDB0000484,3622,3,39,2026-08-26T21:00:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+485,FDB0000485,2029,3,,2026-07-19T19:30:00Z,KIOSK,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+486,FDB0000486,2813,1,103,2026-07-13T04:15:00Z,MOBILE_SURVEY,5,NEUTRAL,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+487,FDB0000487,2945,6,,2026-05-19T02:00:00Z,MOBILE_SURVEY,3,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+488,FDB0000488,2758,4,,2026-05-30T15:45:00Z,MOBILE_SURVEY,1,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+489,FDB0000489,1454,1,,2026-08-08T14:45:00Z,MOBILE_SURVEY,5,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+490,FDB0000490,3218,2,,2026-05-11T13:30:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+491,FDB0000491,1900,1,,2026-05-12T15:00:00Z,CHATBOT,4,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+492,FDB0000492,2737,3,,2026-08-28T04:00:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+493,FDB0000493,2453,3,,2026-08-26T12:45:00Z,EMAIL,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+494,FDB0000494,1530,5,,2026-08-20T20:15:00Z,SMS,3,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+495,FDB0000495,317,1,,2026-07-15T10:15:00Z,CHATBOT,4,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+496,FDB0000496,1888,3,,2026-07-16T09:00:00Z,EMAIL,4,NEUTRAL,CLEANLINESS,cleanup crews were visible without getting in the way,False
+497,FDB0000497,368,1,31,2026-07-23T09:00:00Z,MOBILE_SURVEY,3,NEGATIVE,ACCESSIBILITY,support was available but not communicated clearly enough,True
+498,FDB0000498,1056,4,77,2026-08-02T12:15:00Z,MOBILE_SURVEY,5,NEUTRAL,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+499,FDB0000499,2060,1,,2026-05-27T19:00:00Z,KIOSK,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+500,FDB0000500,2484,3,,2026-08-24T09:45:00Z,EMAIL,4,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+501,FDB0000501,2408,3,,2026-07-05T15:00:00Z,KIOSK,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+502,FDB0000502,1272,3,,2026-07-23T06:45:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+503,FDB0000503,883,3,,2026-06-27T11:00:00Z,EMAIL,5,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+504,FDB0000504,607,1,,2026-07-10T04:45:00Z,MOBILE_SURVEY,4,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+505,FDB0000505,912,2,,2026-06-22T08:15:00Z,EMAIL,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+506,FDB0000506,2866,2,88,2026-07-12T16:00:00Z,MOBILE_SURVEY,1,NEGATIVE,MASCOT_EXPERIENCE,the mascot set ended abruptly and confused guests nearby,True
+507,FDB0000507,3631,3,65,2026-07-08T09:00:00Z,CHATBOT,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+508,FDB0000508,379,1,26,2026-05-24T03:00:00Z,EMAIL,2,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+509,FDB0000509,2118,1,84,2026-05-04T16:30:00Z,KIOSK,4,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+510,FDB0000510,1570,1,31,2026-07-27T16:00:00Z,EMAIL,3,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+511,FDB0000511,1120,4,62,2026-08-11T15:45:00Z,CHATBOT,5,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+512,FDB0000512,3108,4,,2026-06-23T20:15:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+513,FDB0000513,3796,3,57,2026-06-09T20:15:00Z,KIOSK,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+514,FDB0000514,1813,6,,2026-05-03T20:15:00Z,EMAIL,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+515,FDB0000515,67,4,53,2026-06-07T05:30:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+516,FDB0000516,121,1,,2026-05-03T19:30:00Z,SMS,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+517,FDB0000517,1477,3,,2026-07-23T21:30:00Z,CHATBOT,1,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+518,FDB0000518,2190,5,,2026-07-14T00:15:00Z,CHATBOT,5,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+519,FDB0000519,2262,1,99,2026-07-05T19:30:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+520,FDB0000520,78,2,88,2026-06-26T18:30:00Z,MOBILE_SURVEY,1,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+521,FDB0000521,2184,3,,2026-06-07T03:15:00Z,MOBILE_SURVEY,1,NEGATIVE,STAFF_FRIENDLINESS,it took too long to find someone who could help,True
+522,FDB0000522,241,3,70,2026-05-27T22:30:00Z,KIOSK,5,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+523,FDB0000523,1587,1,43,2026-07-10T00:00:00Z,EMAIL,3,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+524,FDB0000524,2299,5,,2026-05-15T10:45:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+525,FDB0000525,730,3,,2026-05-03T14:00:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+526,FDB0000526,2003,1,50,2026-06-13T16:45:00Z,EMAIL,2,NEGATIVE,MASCOT_EXPERIENCE,the mascot set ended abruptly and confused guests nearby,True
+527,FDB0000527,3921,3,,2026-05-15T22:00:00Z,EMAIL,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+528,FDB0000528,1193,5,,2026-05-29T09:45:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,True
+529,FDB0000529,2217,5,,2026-05-07T06:00:00Z,CHATBOT,5,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+530,FDB0000530,2737,3,,2026-08-27T11:15:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+531,FDB0000531,421,5,9,2026-07-30T02:00:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+532,FDB0000532,4134,3,48,2026-06-10T19:30:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+533,FDB0000533,3612,5,15,2026-06-11T23:15:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+534,FDB0000534,1955,1,50,2026-05-26T00:15:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+535,FDB0000535,1880,1,59,2026-08-16T13:45:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+536,FDB0000536,129,5,,2026-06-23T23:15:00Z,SMS,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+537,FDB0000537,2203,1,,2026-08-11T09:15:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+538,FDB0000538,3193,5,15,2026-06-12T22:45:00Z,EMAIL,4,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+539,FDB0000539,4004,5,,2026-06-12T19:15:00Z,EMAIL,1,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+540,FDB0000540,2459,6,,2026-07-30T03:30:00Z,KIOSK,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+541,FDB0000541,3429,1,,2026-07-09T16:00:00Z,MOBILE_SURVEY,1,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+542,FDB0000542,308,1,,2026-08-15T22:15:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,False
+543,FDB0000543,485,5,,2026-06-16T17:30:00Z,MOBILE_SURVEY,3,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+544,FDB0000544,553,5,,2026-06-17T23:00:00Z,KIOSK,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+545,FDB0000545,3922,3,,2026-08-10T17:15:00Z,EMAIL,1,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+546,FDB0000546,363,3,74,2026-07-04T14:45:00Z,MOBILE_SURVEY,5,NEUTRAL,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+547,FDB0000547,2055,3,,2026-07-08T02:30:00Z,EMAIL,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+548,FDB0000548,2057,4,,2026-08-28T05:15:00Z,MOBILE_SURVEY,3,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+549,FDB0000549,626,2,2,2026-07-20T00:15:00Z,EMAIL,3,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+550,FDB0000550,3925,3,108,2026-07-28T14:30:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+551,FDB0000551,752,3,,2026-07-27T01:45:00Z,MOBILE_SURVEY,3,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,False
+552,FDB0000552,214,3,57,2026-06-11T22:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+553,FDB0000553,1703,6,76,2026-06-22T07:30:00Z,MOBILE_SURVEY,2,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+554,FDB0000554,2484,3,6,2026-08-24T01:15:00Z,MOBILE_SURVEY,3,NEUTRAL,WAIT_TIME,virtual queue timing was clearer than expected,False
+555,FDB0000555,1361,1,5,2026-06-01T17:00:00Z,MOBILE_SURVEY,3,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+556,FDB0000556,3452,3,69,2026-08-06T02:15:00Z,KIOSK,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+557,FDB0000557,3816,1,,2026-08-14T17:15:00Z,MOBILE_SURVEY,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+558,FDB0000558,1900,1,,2026-05-11T11:30:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+559,FDB0000559,1152,2,27,2026-08-07T14:45:00Z,CHATBOT,5,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+560,FDB0000560,651,3,1,2026-08-14T16:45:00Z,MOBILE_SURVEY,3,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+561,FDB0000561,434,5,112,2026-08-13T17:00:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+562,FDB0000562,3654,1,,2026-05-30T01:00:00Z,KIOSK,3,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,False
+563,FDB0000563,3823,5,,2026-06-18T02:30:00Z,EMAIL,3,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,False
+564,FDB0000564,3785,6,21,2026-06-21T21:45:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+565,FDB0000565,3325,6,60,2026-05-24T00:00:00Z,KIOSK,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+566,FDB0000566,1241,2,29,2026-06-21T21:15:00Z,CHATBOT,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+567,FDB0000567,4047,5,112,2026-07-20T09:30:00Z,MOBILE_SURVEY,1,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+568,FDB0000568,1804,3,,2026-06-02T02:45:00Z,CHATBOT,5,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+569,FDB0000569,1279,1,,2026-07-20T16:15:00Z,EMAIL,5,NEUTRAL,FOOD_SERVICE,the dining team handled dietary questions well,False
+570,FDB0000570,1706,2,,2026-05-03T00:30:00Z,SMS,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+571,FDB0000571,1728,6,,2026-07-20T17:45:00Z,CHATBOT,4,NEUTRAL,VALUE,the mix of rides and entertainment justified the price,False
+572,FDB0000572,1648,3,63,2026-07-18T03:15:00Z,EMAIL,3,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+573,FDB0000573,2412,1,5,2026-08-29T11:15:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+574,FDB0000574,2573,6,14,2026-08-14T08:45:00Z,EMAIL,3,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+575,FDB0000575,2952,3,,2026-07-17T15:30:00Z,MOBILE_SURVEY,3,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+576,FDB0000576,3586,5,9,2026-06-23T23:15:00Z,EMAIL,2,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+577,FDB0000577,709,4,,2026-08-13T05:45:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+578,FDB0000578,15,3,,2026-08-19T17:30:00Z,EMAIL,3,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+579,FDB0000579,2204,3,,2026-07-30T02:15:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+580,FDB0000580,426,1,43,2026-08-05T14:15:00Z,EMAIL,1,NEGATIVE,MASCOT_EXPERIENCE,photo timing around the character greeting felt rushed,True
+581,FDB0000581,3545,3,,2026-06-20T05:30:00Z,EMAIL,4,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+582,FDB0000582,978,3,96,2026-07-06T04:15:00Z,CHATBOT,3,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+583,FDB0000583,1870,1,,2026-06-21T14:45:00Z,EMAIL,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+584,FDB0000584,3247,6,,2026-06-26T17:30:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+585,FDB0000585,2432,4,,2026-05-02T13:45:00Z,MOBILE_SURVEY,4,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+586,FDB0000586,804,6,,2026-08-12T12:00:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+587,FDB0000587,3780,1,,2026-08-14T19:00:00Z,MOBILE_SURVEY,3,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+588,FDB0000588,313,1,26,2026-07-30T18:00:00Z,MOBILE_SURVEY,5,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+589,FDB0000589,3476,2,,2026-07-06T12:15:00Z,KIOSK,2,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+590,FDB0000590,496,6,52,2026-08-11T16:45:00Z,MOBILE_SURVEY,3,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,False
+591,FDB0000591,2985,1,59,2026-07-16T19:45:00Z,SMS,3,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+592,FDB0000592,150,3,,2026-07-03T14:15:00Z,SMS,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+593,FDB0000593,1746,3,89,2026-07-07T04:00:00Z,KIOSK,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+594,FDB0000594,1587,1,,2026-07-09T19:15:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+595,FDB0000595,1739,2,88,2026-05-19T19:00:00Z,KIOSK,2,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+596,FDB0000596,574,5,,2026-06-01T10:30:00Z,KIOSK,2,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,True
+597,FDB0000597,3832,3,102,2026-07-17T23:00:00Z,KIOSK,3,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+598,FDB0000598,1395,3,69,2026-05-11T12:15:00Z,MOBILE_SURVEY,3,NEGATIVE,WAIT_TIME,wait time information changed too often in the app,False
+599,FDB0000599,554,5,47,2026-06-24T23:45:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+600,FDB0000600,1977,2,58,2026-07-21T11:30:00Z,EMAIL,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+601,FDB0000601,3548,5,,2026-05-31T12:00:00Z,SMS,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+602,FDB0000602,3037,3,,2026-08-06T23:00:00Z,EMAIL,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+603,FDB0000603,2851,5,,2026-05-11T07:00:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+604,FDB0000604,373,1,,2026-05-02T01:15:00Z,KIOSK,3,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+605,FDB0000605,4128,3,,2026-05-23T04:45:00Z,EMAIL,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+606,FDB0000606,3174,6,14,2026-06-19T02:00:00Z,CHATBOT,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+607,FDB0000607,3430,6,,2026-06-24T13:45:00Z,MOBILE_SURVEY,5,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+608,FDB0000608,1017,6,,2026-06-07T13:45:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+609,FDB0000609,1650,5,,2026-07-17T19:15:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+610,FDB0000610,507,6,,2026-06-22T03:15:00Z,CHATBOT,3,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+611,FDB0000611,2543,6,,2026-08-06T22:00:00Z,EMAIL,3,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+612,FDB0000612,3232,2,,2026-07-24T23:15:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+613,FDB0000613,1920,2,,2026-05-09T18:15:00Z,SMS,3,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,False
+614,FDB0000614,1187,5,,2026-06-15T01:30:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+615,FDB0000615,821,3,,2026-08-17T18:00:00Z,EMAIL,4,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+616,FDB0000616,1303,5,,2026-08-28T11:45:00Z,EMAIL,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+617,FDB0000617,2877,1,,2026-06-14T13:45:00Z,KIOSK,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+618,FDB0000618,1182,2,12,2026-07-18T01:00:00Z,MOBILE_SURVEY,3,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+619,FDB0000619,2838,2,58,2026-08-19T16:00:00Z,KIOSK,3,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+620,FDB0000620,1648,3,6,2026-07-18T00:30:00Z,EMAIL,4,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+621,FDB0000621,2650,5,,2026-07-27T05:00:00Z,CHATBOT,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+622,FDB0000622,172,5,22,2026-06-05T15:00:00Z,CHATBOT,2,NEGATIVE,MASCOT_EXPERIENCE,the entertainment lineup was harder to find than expected,True
+623,FDB0000623,22,5,,2026-05-14T23:00:00Z,KIOSK,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+624,FDB0000624,3926,1,,2026-05-27T22:30:00Z,CHATBOT,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+625,FDB0000625,3533,3,20,2026-08-17T16:45:00Z,MOBILE_SURVEY,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+626,FDB0000626,76,5,45,2026-07-10T17:45:00Z,CHATBOT,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+627,FDB0000627,443,5,,2026-06-03T19:45:00Z,MOBILE_SURVEY,1,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+628,FDB0000628,3433,5,46,2026-07-09T22:30:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+629,FDB0000629,2939,1,,2026-05-15T14:00:00Z,KIOSK,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+630,FDB0000630,3445,5,22,2026-06-02T22:15:00Z,KIOSK,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+631,FDB0000631,3072,1,84,2026-08-08T12:45:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+632,FDB0000632,4138,3,,2026-08-13T03:15:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+633,FDB0000633,3000,2,90,2026-05-22T20:30:00Z,KIOSK,4,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+634,FDB0000634,372,3,,2026-05-26T01:30:00Z,EMAIL,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+635,FDB0000635,140,5,47,2026-07-21T21:30:00Z,MOBILE_SURVEY,2,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,True
+636,FDB0000636,3983,6,,2026-06-04T16:00:00Z,KIOSK,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+637,FDB0000637,3915,2,,2026-06-02T23:30:00Z,MOBILE_SURVEY,3,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+638,FDB0000638,2036,2,106,2026-06-29T14:30:00Z,KIOSK,3,NEUTRAL,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+639,FDB0000639,923,5,,2026-08-28T19:00:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+640,FDB0000640,346,3,,2026-08-15T14:45:00Z,MOBILE_SURVEY,3,NEUTRAL,CLEANLINESS,cleanup crews were visible without getting in the way,False
+641,FDB0000641,3727,3,,2026-05-02T11:00:00Z,EMAIL,2,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+642,FDB0000642,1642,5,45,2026-05-19T10:45:00Z,EMAIL,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+643,FDB0000643,1841,4,56,2026-08-20T19:45:00Z,EMAIL,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+644,FDB0000644,1663,3,6,2026-05-27T21:00:00Z,EMAIL,3,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+645,FDB0000645,1992,4,19,2026-08-14T11:30:00Z,SMS,3,NEUTRAL,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+646,FDB0000646,704,1,,2026-07-09T14:15:00Z,EMAIL,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+647,FDB0000647,114,6,,2026-05-30T13:45:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+648,FDB0000648,1151,5,,2026-07-06T19:30:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+649,FDB0000649,3537,6,21,2026-07-30T20:00:00Z,CHATBOT,3,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+650,FDB0000650,1970,3,,2026-07-21T11:30:00Z,MOBILE_SURVEY,3,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,False
+651,FDB0000651,3442,2,,2026-07-02T22:45:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+652,FDB0000652,828,1,54,2026-05-06T11:00:00Z,EMAIL,3,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+653,FDB0000653,3307,3,39,2026-07-08T04:45:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+654,FDB0000654,322,3,,2026-06-18T07:15:00Z,EMAIL,3,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+655,FDB0000655,1930,2,80,2026-06-24T09:45:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+656,FDB0000656,2831,4,67,2026-07-14T06:15:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+657,FDB0000657,2042,2,27,2026-06-30T06:30:00Z,KIOSK,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+658,FDB0000658,2705,6,110,2026-08-25T06:15:00Z,EMAIL,4,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+659,FDB0000659,590,2,12,2026-06-10T19:30:00Z,MOBILE_SURVEY,4,NEUTRAL,WAIT_TIME,staff kept the line moving and communicated well,False
+660,FDB0000660,3476,2,88,2026-07-06T05:00:00Z,KIOSK,3,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+661,FDB0000661,2173,6,10,2026-08-26T08:15:00Z,KIOSK,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+662,FDB0000662,534,6,,2026-06-18T15:45:00Z,EMAIL,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+663,FDB0000663,3030,3,7,2026-07-09T09:45:00Z,CHATBOT,3,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+664,FDB0000664,163,3,,2026-05-02T07:15:00Z,MOBILE_SURVEY,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+665,FDB0000665,1268,1,71,2026-07-21T05:45:00Z,EMAIL,3,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+666,FDB0000666,3205,6,,2026-08-28T23:45:00Z,EMAIL,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+667,FDB0000667,1596,5,46,2026-07-04T22:15:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+668,FDB0000668,531,1,,2026-07-21T23:00:00Z,KIOSK,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+669,FDB0000669,1931,2,,2026-05-29T17:30:00Z,MOBILE_SURVEY,1,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,True
+670,FDB0000670,2331,5,,2026-05-03T20:30:00Z,MOBILE_SURVEY,4,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+671,FDB0000671,2160,3,,2026-06-04T04:00:00Z,EMAIL,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+672,FDB0000672,570,3,108,2026-08-07T21:45:00Z,KIOSK,4,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+673,FDB0000673,2653,1,,2026-07-04T17:15:00Z,KIOSK,3,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+674,FDB0000674,2780,1,33,2026-06-01T20:30:00Z,MOBILE_SURVEY,4,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+675,FDB0000675,1292,3,108,2026-07-20T13:15:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+676,FDB0000676,2406,2,86,2026-08-08T18:45:00Z,SMS,1,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+677,FDB0000677,1366,1,103,2026-08-08T15:30:00Z,MOBILE_SURVEY,2,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,True
+678,FDB0000678,2162,6,11,2026-08-10T16:45:00Z,EMAIL,1,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+679,FDB0000679,579,6,64,2026-08-23T22:15:00Z,EMAIL,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+680,FDB0000680,1718,5,45,2026-06-16T16:45:00Z,MOBILE_SURVEY,4,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+681,FDB0000681,2369,2,,2026-06-21T07:30:00Z,EMAIL,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+682,FDB0000682,1013,2,,2026-08-14T18:30:00Z,MOBILE_SURVEY,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+683,FDB0000683,4118,5,,2026-08-03T13:30:00Z,KIOSK,2,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+684,FDB0000684,727,1,,2026-05-04T10:00:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,False
+685,FDB0000685,1612,2,,2026-07-10T21:30:00Z,SMS,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+686,FDB0000686,1329,5,9,2026-07-17T03:45:00Z,KIOSK,2,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+687,FDB0000687,2563,6,,2026-08-03T06:00:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+688,FDB0000688,297,2,90,2026-07-23T16:45:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+689,FDB0000689,3379,3,,2026-07-07T07:30:00Z,KIOSK,5,NEUTRAL,VALUE,mobile offers made the day feel better priced,False
+690,FDB0000690,2790,1,73,2026-07-17T18:45:00Z,SMS,2,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+691,FDB0000691,3575,1,103,2026-05-14T15:00:00Z,KIOSK,4,NEUTRAL,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+692,FDB0000692,1892,6,68,2026-05-13T10:00:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+693,FDB0000693,679,3,63,2026-05-07T05:00:00Z,KIOSK,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+694,FDB0000694,2241,3,107,2026-07-29T22:15:00Z,EMAIL,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+695,FDB0000695,3610,3,,2026-06-20T00:00:00Z,KIOSK,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+696,FDB0000696,1769,3,97,2026-08-24T21:45:00Z,SMS,1,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+697,FDB0000697,4169,3,,2026-07-16T01:45:00Z,CHATBOT,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+698,FDB0000698,3995,5,55,2026-08-16T23:15:00Z,CHATBOT,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+699,FDB0000699,96,2,,2026-05-18T04:45:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+700,FDB0000700,453,6,,2026-06-30T18:15:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+701,FDB0000701,2587,4,,2026-08-01T03:00:00Z,KIOSK,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+702,FDB0000702,630,3,,2026-05-26T03:00:00Z,EMAIL,5,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+703,FDB0000703,2102,5,,2026-05-16T14:15:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+704,FDB0000704,704,1,103,2026-07-09T18:30:00Z,KIOSK,2,NEGATIVE,MASCOT_EXPERIENCE,photo timing around the character greeting felt rushed,True
+705,FDB0000705,265,3,41,2026-06-25T04:15:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+706,FDB0000706,3566,2,83,2026-08-19T07:45:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+707,FDB0000707,822,6,61,2026-05-27T12:15:00Z,EMAIL,4,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+708,FDB0000708,2241,3,69,2026-07-29T17:30:00Z,KIOSK,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+709,FDB0000709,1383,1,,2026-08-16T15:15:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+710,FDB0000710,2160,3,39,2026-06-04T23:45:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+711,FDB0000711,2636,2,,2026-06-18T02:00:00Z,EMAIL,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+712,FDB0000712,3859,1,59,2026-08-12T02:45:00Z,EMAIL,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+713,FDB0000713,2924,3,,2026-05-05T06:00:00Z,MOBILE_SURVEY,5,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+714,FDB0000714,1927,5,,2026-07-19T21:45:00Z,KIOSK,3,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+715,FDB0000715,2188,1,99,2026-07-29T20:00:00Z,CHATBOT,3,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+716,FDB0000716,3682,1,37,2026-05-25T22:45:00Z,MOBILE_SURVEY,4,NEUTRAL,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+717,FDB0000717,3296,2,91,2026-07-06T12:15:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+718,FDB0000718,2717,5,49,2026-05-13T01:30:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+719,FDB0000719,1465,3,,2026-07-27T15:30:00Z,SMS,3,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+720,FDB0000720,3981,5,,2026-08-26T17:15:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+721,FDB0000721,38,2,,2026-06-22T17:00:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+722,FDB0000722,1713,1,26,2026-05-25T18:00:00Z,MOBILE_SURVEY,2,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,True
+723,FDB0000723,1364,3,,2026-05-29T07:15:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,False
+724,FDB0000724,1161,3,,2026-06-07T02:00:00Z,MOBILE_SURVEY,1,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,True
+725,FDB0000725,2563,6,11,2026-08-03T23:00:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+726,FDB0000726,1724,3,,2026-05-16T03:15:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+727,FDB0000727,3981,5,47,2026-08-25T17:15:00Z,KIOSK,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+728,FDB0000728,691,6,76,2026-06-02T02:00:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+729,FDB0000729,234,2,,2026-05-20T03:30:00Z,KIOSK,3,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+730,FDB0000730,2155,2,58,2026-06-01T14:45:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+731,FDB0000731,3965,2,,2026-08-21T22:30:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+732,FDB0000732,3482,3,39,2026-07-06T11:00:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+733,FDB0000733,2139,2,83,2026-08-16T18:30:00Z,MOBILE_SURVEY,3,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,False
+734,FDB0000734,1297,5,112,2026-07-14T04:15:00Z,EMAIL,3,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+735,FDB0000735,3942,1,92,2026-08-28T00:00:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+736,FDB0000736,4133,2,,2026-07-07T17:30:00Z,EMAIL,3,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+737,FDB0000737,2383,5,9,2026-06-05T16:00:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+738,FDB0000738,3213,6,,2026-08-28T11:45:00Z,CHATBOT,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+739,FDB0000739,1739,2,,2026-05-19T03:15:00Z,EMAIL,3,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+740,FDB0000740,2541,5,112,2026-05-30T10:30:00Z,KIOSK,5,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+741,FDB0000741,1439,3,98,2026-07-09T09:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+742,FDB0000742,2267,4,,2026-08-25T22:45:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+743,FDB0000743,366,4,,2026-06-30T07:30:00Z,MOBILE_SURVEY,1,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+744,FDB0000744,289,2,,2026-08-05T03:15:00Z,MOBILE_SURVEY,3,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+745,FDB0000745,3490,5,,2026-07-13T00:15:00Z,SMS,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+746,FDB0000746,3321,1,,2026-07-23T07:30:00Z,KIOSK,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+747,FDB0000747,40,5,,2026-06-12T14:00:00Z,KIOSK,3,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+748,FDB0000748,4108,5,66,2026-05-17T23:45:00Z,KIOSK,2,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+749,FDB0000749,970,6,,2026-05-09T12:45:00Z,KIOSK,5,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+750,FDB0000750,2817,2,,2026-06-10T19:00:00Z,KIOSK,3,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+751,FDB0000751,1269,1,,2026-08-22T22:15:00Z,EMAIL,2,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,True
+752,FDB0000752,1256,4,30,2026-08-14T15:00:00Z,MOBILE_SURVEY,2,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+753,FDB0000753,771,2,29,2026-07-08T09:45:00Z,EMAIL,3,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+754,FDB0000754,2208,2,,2026-07-05T01:30:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+755,FDB0000755,3515,2,,2026-05-30T02:00:00Z,SMS,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+756,FDB0000756,3775,1,43,2026-05-28T03:00:00Z,MOBILE_SURVEY,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+757,FDB0000757,3082,3,100,2026-07-06T11:45:00Z,SMS,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+758,FDB0000758,3072,1,,2026-08-07T15:45:00Z,CHATBOT,3,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+759,FDB0000759,3745,1,54,2026-08-28T14:15:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+760,FDB0000760,2983,3,,2026-06-08T06:30:00Z,EMAIL,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+761,FDB0000761,2748,3,,2026-07-26T01:15:00Z,MOBILE_SURVEY,5,NEUTRAL,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+762,FDB0000762,610,2,16,2026-08-04T19:30:00Z,KIOSK,3,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+763,FDB0000763,1202,6,21,2026-05-30T16:45:00Z,CHATBOT,4,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+764,FDB0000764,2322,3,57,2026-06-08T13:00:00Z,EMAIL,3,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+765,FDB0000765,2935,1,,2026-07-13T22:15:00Z,SMS,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+766,FDB0000766,3107,1,,2026-06-26T16:30:00Z,SMS,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+767,FDB0000767,3291,3,44,2026-07-20T22:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+768,FDB0000768,2275,5,55,2026-07-17T02:30:00Z,KIOSK,3,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+769,FDB0000769,100,3,,2026-06-07T09:15:00Z,MOBILE_SURVEY,3,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+770,FDB0000770,2104,4,,2026-07-25T07:00:00Z,MOBILE_SURVEY,1,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+771,FDB0000771,2633,3,,2026-08-15T12:00:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+772,FDB0000772,431,4,,2026-08-02T00:45:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+773,FDB0000773,4128,3,25,2026-05-23T09:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+774,FDB0000774,2044,5,47,2026-05-22T20:00:00Z,SMS,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+775,FDB0000775,1385,1,,2026-06-05T20:45:00Z,MOBILE_SURVEY,3,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+776,FDB0000776,1313,5,,2026-05-09T11:45:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+777,FDB0000777,1078,5,32,2026-06-26T08:00:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+778,FDB0000778,3669,6,11,2026-07-14T02:45:00Z,CHATBOT,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+779,FDB0000779,2353,3,,2026-07-06T18:30:00Z,EMAIL,3,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+780,FDB0000780,1872,6,,2026-08-16T13:30:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+781,FDB0000781,3282,3,,2026-07-08T15:30:00Z,KIOSK,1,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+782,FDB0000782,1376,5,45,2026-06-16T16:45:00Z,EMAIL,5,NEUTRAL,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+783,FDB0000783,2197,4,67,2026-07-12T18:15:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+784,FDB0000784,2154,3,79,2026-07-08T23:45:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+785,FDB0000785,961,1,,2026-07-16T19:45:00Z,SMS,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+786,FDB0000786,2832,2,,2026-06-27T16:15:00Z,EMAIL,5,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+787,FDB0000787,2760,5,15,2026-06-02T16:15:00Z,KIOSK,4,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+788,FDB0000788,936,2,104,2026-08-17T13:45:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+789,FDB0000789,37,1,,2026-07-05T21:30:00Z,MOBILE_SURVEY,3,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+790,FDB0000790,1791,3,,2026-08-26T20:15:00Z,CHATBOT,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+791,FDB0000791,2539,1,37,2026-06-20T15:30:00Z,CHATBOT,1,NEGATIVE,MASCOT_EXPERIENCE,photo timing around the character greeting felt rushed,True
+792,FDB0000792,2387,5,,2026-07-01T07:15:00Z,EMAIL,3,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+793,FDB0000793,605,1,,2026-06-12T01:30:00Z,CHATBOT,5,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+794,FDB0000794,4063,2,,2026-05-18T22:15:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+795,FDB0000795,266,2,,2026-05-22T09:45:00Z,KIOSK,5,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+796,FDB0000796,382,2,38,2026-07-27T23:30:00Z,KIOSK,5,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+797,FDB0000797,3707,1,,2026-05-27T21:15:00Z,KIOSK,3,NEUTRAL,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+798,FDB0000798,3538,3,,2026-06-27T04:45:00Z,KIOSK,1,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+799,FDB0000799,2733,2,83,2026-08-29T01:15:00Z,KIOSK,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+800,FDB0000800,1702,6,,2026-08-09T00:45:00Z,MOBILE_SURVEY,4,NEUTRAL,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+801,FDB0000801,3367,3,98,2026-08-27T20:45:00Z,SMS,5,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+802,FDB0000802,3626,5,,2026-05-11T04:30:00Z,MOBILE_SURVEY,3,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,False
+803,FDB0000803,1656,5,,2026-08-16T11:30:00Z,SMS,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+804,FDB0000804,1389,4,77,2026-05-09T05:30:00Z,KIOSK,4,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+805,FDB0000805,2071,1,24,2026-05-05T04:00:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+806,FDB0000806,167,2,,2026-05-28T11:30:00Z,MOBILE_SURVEY,1,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,True
+807,FDB0000807,1668,1,50,2026-07-22T22:30:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+808,FDB0000808,347,1,84,2026-06-10T18:45:00Z,EMAIL,3,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+809,FDB0000809,345,4,,2026-06-03T15:00:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+810,FDB0000810,3525,6,,2026-08-16T07:45:00Z,EMAIL,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+811,FDB0000811,2317,5,,2026-08-11T20:00:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+812,FDB0000812,385,5,45,2026-05-19T01:15:00Z,EMAIL,5,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+813,FDB0000813,3482,3,,2026-07-07T04:45:00Z,EMAIL,5,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+814,FDB0000814,2540,3,57,2026-06-05T22:45:00Z,MOBILE_SURVEY,3,NEGATIVE,ACCESSIBILITY,support was available but not communicated clearly enough,True
+815,FDB0000815,3813,3,,2026-06-20T12:30:00Z,SMS,3,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+816,FDB0000816,2517,6,85,2026-05-10T21:15:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+817,FDB0000817,1813,6,,2026-05-04T06:30:00Z,MOBILE_SURVEY,3,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+818,FDB0000818,3789,3,42,2026-06-09T23:45:00Z,SMS,4,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+819,FDB0000819,3827,5,109,2026-05-13T11:00:00Z,KIOSK,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+820,FDB0000820,3099,3,107,2026-06-01T13:45:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+821,FDB0000821,2776,5,9,2026-08-23T20:30:00Z,EMAIL,3,NEGATIVE,WAIT_TIME,wait time information changed too often in the app,False
+822,FDB0000822,277,6,10,2026-07-30T19:45:00Z,KIOSK,4,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+823,FDB0000823,1551,4,,2026-05-28T10:45:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+824,FDB0000824,1403,3,65,2026-05-18T05:00:00Z,MOBILE_SURVEY,3,NEUTRAL,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+825,FDB0000825,3391,6,,2026-06-25T22:30:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,True
+826,FDB0000826,473,3,,2026-06-10T21:45:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+827,FDB0000827,2450,4,67,2026-08-03T23:45:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+828,FDB0000828,3570,3,100,2026-05-11T07:00:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+829,FDB0000829,3581,3,41,2026-08-27T20:30:00Z,MOBILE_SURVEY,1,NEGATIVE,MASCOT_EXPERIENCE,the mascot set ended abruptly and confused guests nearby,True
+830,FDB0000830,1361,1,,2026-06-01T12:00:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+831,FDB0000831,1635,2,,2026-08-27T22:00:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+832,FDB0000832,1641,1,37,2026-08-03T08:15:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+833,FDB0000833,3402,3,97,2026-06-28T15:00:00Z,KIOSK,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+834,FDB0000834,4096,3,69,2026-07-05T15:15:00Z,MOBILE_SURVEY,3,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+835,FDB0000835,2657,5,,2026-06-01T19:30:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+836,FDB0000836,3973,3,3,2026-06-27T16:30:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+837,FDB0000837,3694,3,102,2026-05-07T04:00:00Z,SMS,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+838,FDB0000838,2320,5,,2026-05-02T08:15:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+839,FDB0000839,2438,4,62,2026-07-22T22:15:00Z,MOBILE_SURVEY,4,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+840,FDB0000840,3267,3,,2026-08-16T01:00:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+841,FDB0000841,1642,5,22,2026-05-19T12:45:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+842,FDB0000842,951,3,102,2026-05-08T16:15:00Z,EMAIL,4,NEUTRAL,WAIT_TIME,virtual queue timing was clearer than expected,False
+843,FDB0000843,1082,6,,2026-06-25T18:30:00Z,EMAIL,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+844,FDB0000844,3131,2,38,2026-07-31T18:45:00Z,SMS,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+845,FDB0000845,3511,5,,2026-06-11T17:15:00Z,MOBILE_SURVEY,3,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,False
+846,FDB0000846,1721,4,62,2026-08-08T08:00:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+847,FDB0000847,2618,1,24,2026-05-29T18:45:00Z,KIOSK,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+848,FDB0000848,2042,2,,2026-06-30T19:30:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+849,FDB0000849,187,6,87,2026-08-13T18:15:00Z,EMAIL,4,NEUTRAL,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+850,FDB0000850,1255,3,,2026-08-20T18:45:00Z,KIOSK,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+851,FDB0000851,1986,1,,2026-08-10T12:15:00Z,KIOSK,3,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+852,FDB0000852,305,5,112,2026-05-20T19:30:00Z,EMAIL,2,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,True
+853,FDB0000853,1502,1,,2026-08-03T20:45:00Z,MOBILE_SURVEY,3,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+854,FDB0000854,2634,3,,2026-05-22T13:45:00Z,KIOSK,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+855,FDB0000855,2973,2,,2026-05-27T04:15:00Z,EMAIL,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+856,FDB0000856,3246,6,,2026-06-05T14:45:00Z,MOBILE_SURVEY,5,NEUTRAL,VALUE,the mix of rides and entertainment justified the price,False
+857,FDB0000857,2331,5,15,2026-05-04T00:00:00Z,KIOSK,3,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+858,FDB0000858,826,6,52,2026-05-20T03:00:00Z,KIOSK,2,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+859,FDB0000859,3218,2,,2026-05-10T17:15:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,True
+860,FDB0000860,1247,3,,2026-05-24T16:30:00Z,MOBILE_SURVEY,3,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,False
+861,FDB0000861,1877,4,62,2026-05-08T01:45:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+862,FDB0000862,2691,5,,2026-05-23T15:15:00Z,EMAIL,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+863,FDB0000863,1063,1,24,2026-08-19T07:45:00Z,SMS,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+864,FDB0000864,3455,3,,2026-08-11T23:15:00Z,KIOSK,4,NEUTRAL,VALUE,mobile offers made the day feel better priced,False
+865,FDB0000865,2099,5,,2026-05-10T22:00:00Z,KIOSK,3,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+866,FDB0000866,2350,1,,2026-05-29T14:45:00Z,KIOSK,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+867,FDB0000867,3519,3,79,2026-07-21T00:45:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+868,FDB0000868,1334,5,36,2026-05-06T19:45:00Z,EMAIL,3,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+869,FDB0000869,546,5,112,2026-06-06T04:45:00Z,MOBILE_SURVEY,5,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+870,FDB0000870,1307,5,47,2026-07-30T20:45:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+871,FDB0000871,2471,3,105,2026-08-26T23:15:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+872,FDB0000872,3778,3,48,2026-07-22T15:45:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+873,FDB0000873,3044,5,,2026-08-18T11:00:00Z,KIOSK,3,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+874,FDB0000874,2305,1,,2026-06-07T09:30:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+875,FDB0000875,2955,1,33,2026-06-14T09:30:00Z,CHATBOT,5,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+876,FDB0000876,288,5,46,2026-05-02T22:45:00Z,KIOSK,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+877,FDB0000877,750,5,36,2026-08-12T21:15:00Z,EMAIL,4,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+878,FDB0000878,22,5,,2026-05-14T01:45:00Z,KIOSK,5,NEUTRAL,VALUE,the ticket felt worth it once the add-ons were used,False
+879,FDB0000879,602,1,59,2026-06-05T23:30:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+880,FDB0000880,1244,3,78,2026-06-22T01:15:00Z,CHATBOT,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+881,FDB0000881,1356,2,106,2026-06-12T08:15:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+882,FDB0000882,1090,1,,2026-08-21T16:30:00Z,MOBILE_SURVEY,3,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,False
+883,FDB0000883,562,4,56,2026-06-18T15:30:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+884,FDB0000884,3506,5,,2026-06-22T19:45:00Z,EMAIL,4,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+885,FDB0000885,1029,5,,2026-08-08T03:00:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+886,FDB0000886,3881,3,,2026-06-08T00:30:00Z,CHATBOT,3,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+887,FDB0000887,1212,1,,2026-05-10T17:00:00Z,MOBILE_SURVEY,3,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+888,FDB0000888,1946,5,45,2026-06-18T21:30:00Z,EMAIL,5,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+889,FDB0000889,1117,5,55,2026-07-01T14:00:00Z,KIOSK,3,NEUTRAL,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+890,FDB0000890,1518,1,24,2026-06-28T22:15:00Z,CHATBOT,3,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+891,FDB0000891,1305,3,8,2026-05-01T21:30:00Z,CHATBOT,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+892,FDB0000892,2013,5,15,2026-07-21T20:15:00Z,MOBILE_SURVEY,3,NEUTRAL,WAIT_TIME,virtual queue timing was clearer than expected,False
+893,FDB0000893,3131,2,16,2026-07-30T17:00:00Z,MOBILE_SURVEY,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+894,FDB0000894,3215,6,110,2026-08-19T12:15:00Z,MOBILE_SURVEY,4,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+895,FDB0000895,502,5,,2026-05-27T17:15:00Z,MOBILE_SURVEY,3,NEGATIVE,VALUE,premium access pricing was hard to justify,True
+896,FDB0000896,2779,2,,2026-05-24T15:30:00Z,CHATBOT,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+897,FDB0000897,3927,1,,2026-06-06T18:30:00Z,MOBILE_SURVEY,3,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,False
+898,FDB0000898,3953,3,,2026-07-22T00:00:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+899,FDB0000899,2349,3,3,2026-06-02T17:15:00Z,EMAIL,3,NEUTRAL,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+900,FDB0000900,2770,3,,2026-06-19T09:00:00Z,KIOSK,3,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+901,FDB0000901,3426,6,64,2026-06-26T02:00:00Z,EMAIL,3,NEGATIVE,WAIT_TIME,wait time information changed too often in the app,False
+902,FDB0000902,546,5,,2026-06-05T08:45:00Z,MOBILE_SURVEY,4,NEUTRAL,VALUE,the mix of rides and entertainment justified the price,False
+903,FDB0000903,347,1,,2026-06-10T16:00:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+904,FDB0000904,390,3,35,2026-07-28T14:45:00Z,EMAIL,3,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+905,FDB0000905,608,3,,2026-06-09T00:45:00Z,MOBILE_SURVEY,4,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+906,FDB0000906,1011,3,,2026-07-06T16:30:00Z,EMAIL,5,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+907,FDB0000907,421,5,9,2026-07-30T09:30:00Z,MOBILE_SURVEY,4,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+908,FDB0000908,132,1,,2026-08-07T00:00:00Z,KIOSK,4,NEUTRAL,VALUE,the mix of rides and entertainment justified the price,False
+909,FDB0000909,1746,3,,2026-07-07T12:30:00Z,MOBILE_SURVEY,3,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+910,FDB0000910,531,1,,2026-07-21T06:30:00Z,EMAIL,3,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+911,FDB0000911,1218,3,,2026-05-08T17:15:00Z,KIOSK,3,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,False
+912,FDB0000912,890,1,33,2026-06-30T16:00:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+913,FDB0000913,994,2,17,2026-05-24T14:30:00Z,MOBILE_SURVEY,4,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+914,FDB0000914,1221,5,,2026-06-02T13:45:00Z,SMS,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+915,FDB0000915,2697,1,84,2026-07-12T05:30:00Z,MOBILE_SURVEY,2,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+916,FDB0000916,2483,5,,2026-05-21T17:00:00Z,KIOSK,2,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+917,FDB0000917,2106,2,90,2026-07-23T16:45:00Z,SMS,1,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+918,FDB0000918,906,4,,2026-07-16T13:00:00Z,MOBILE_SURVEY,4,NEUTRAL,VALUE,mobile offers made the day feel better priced,False
+919,FDB0000919,297,2,16,2026-07-24T18:30:00Z,KIOSK,5,NEUTRAL,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+920,FDB0000920,1470,3,,2026-05-14T00:00:00Z,MOBILE_SURVEY,2,NEGATIVE,STAFF_FRIENDLINESS,staff instructions were inconsistent at the ride entrance,True
+921,FDB0000921,1518,1,99,2026-06-29T23:45:00Z,EMAIL,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+922,FDB0000922,3867,3,,2026-07-07T16:45:00Z,KIOSK,2,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,True
+923,FDB0000923,1963,3,102,2026-07-20T01:15:00Z,MOBILE_SURVEY,5,NEUTRAL,WAIT_TIME,virtual queue timing was clearer than expected,False
+924,FDB0000924,595,6,,2026-05-04T17:15:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+925,FDB0000925,1204,3,57,2026-05-24T18:00:00Z,KIOSK,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+926,FDB0000926,3454,2,,2026-06-14T17:45:00Z,EMAIL,3,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+927,FDB0000927,1232,2,27,2026-08-16T11:15:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+928,FDB0000928,2806,5,46,2026-06-02T12:00:00Z,MOBILE_SURVEY,2,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+929,FDB0000929,2442,2,,2026-07-18T03:00:00Z,MOBILE_SURVEY,5,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+930,FDB0000930,4069,5,109,2026-06-29T10:30:00Z,KIOSK,2,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+931,FDB0000931,3566,2,,2026-08-19T07:30:00Z,SMS,4,NEUTRAL,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+932,FDB0000932,2189,2,,2026-05-19T18:45:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+933,FDB0000933,2107,6,,2026-08-28T12:45:00Z,SMS,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+934,FDB0000934,2537,1,103,2026-08-18T13:15:00Z,KIOSK,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+935,FDB0000935,674,4,53,2026-06-04T13:00:00Z,SMS,2,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+936,FDB0000936,498,1,,2026-08-14T22:30:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+937,FDB0000937,3271,4,,2026-06-02T03:00:00Z,KIOSK,5,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+938,FDB0000938,4161,1,24,2026-05-11T21:45:00Z,KIOSK,3,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+939,FDB0000939,231,1,71,2026-07-27T23:00:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+940,FDB0000940,1913,1,,2026-08-15T03:45:00Z,MOBILE_SURVEY,4,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+941,FDB0000941,222,6,64,2026-08-15T16:45:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+942,FDB0000942,1631,1,33,2026-07-01T23:30:00Z,SMS,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+943,FDB0000943,2044,5,109,2026-05-22T20:00:00Z,SMS,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+944,FDB0000944,486,2,12,2026-06-12T15:00:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+945,FDB0000945,3941,1,5,2026-05-31T16:45:00Z,KIOSK,2,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+946,FDB0000946,1389,4,,2026-05-09T16:45:00Z,SMS,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+947,FDB0000947,858,2,91,2026-07-22T14:15:00Z,EMAIL,2,NEGATIVE,ACCESSIBILITY,support was available but not communicated clearly enough,True
+948,FDB0000948,1630,3,42,2026-06-19T10:45:00Z,EMAIL,5,NEUTRAL,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+949,FDB0000949,2750,6,68,2026-05-26T00:45:00Z,MOBILE_SURVEY,1,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+950,FDB0000950,3279,3,,2026-05-02T13:45:00Z,MOBILE_SURVEY,3,NEUTRAL,FOOD_SERVICE,the dining team handled dietary questions well,False
+951,FDB0000951,3316,2,104,2026-05-16T05:30:00Z,EMAIL,1,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+952,FDB0000952,3622,3,70,2026-08-25T19:15:00Z,CHATBOT,5,NEUTRAL,WAIT_TIME,virtual queue timing was clearer than expected,False
+953,FDB0000953,1271,5,,2026-07-04T22:30:00Z,KIOSK,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+954,FDB0000954,1090,1,,2026-08-22T06:30:00Z,CHATBOT,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+955,FDB0000955,3952,6,101,2026-05-04T09:00:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+956,FDB0000956,1039,1,26,2026-07-28T16:30:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+957,FDB0000957,2722,3,,2026-08-11T12:45:00Z,SMS,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+958,FDB0000958,3093,6,,2026-06-11T19:45:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,cleanup crews were visible without getting in the way,False
+959,FDB0000959,2653,1,,2026-07-05T07:30:00Z,CHATBOT,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+960,FDB0000960,1564,5,18,2026-07-04T07:00:00Z,SMS,3,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+961,FDB0000961,1343,2,106,2026-07-03T12:30:00Z,MOBILE_SURVEY,1,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,True
+962,FDB0000962,3009,6,,2026-06-27T10:45:00Z,CHATBOT,5,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+963,FDB0000963,2309,4,30,2026-05-29T20:00:00Z,MOBILE_SURVEY,2,NEGATIVE,WAIT_TIME,wait time information changed too often in the app,True
+964,FDB0000964,2676,5,18,2026-07-18T01:00:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+965,FDB0000965,4118,5,,2026-08-04T16:00:00Z,EMAIL,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+966,FDB0000966,1419,5,22,2026-06-04T03:15:00Z,CHATBOT,3,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+967,FDB0000967,1349,6,,2026-05-02T09:15:00Z,EMAIL,1,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+968,FDB0000968,2280,1,,2026-08-27T10:15:00Z,SMS,4,NEUTRAL,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+969,FDB0000969,3406,1,37,2026-07-08T15:45:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+970,FDB0000970,3969,3,6,2026-08-23T09:00:00Z,MOBILE_SURVEY,4,NEUTRAL,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+971,FDB0000971,209,1,,2026-08-20T02:00:00Z,MOBILE_SURVEY,1,NEGATIVE,VALUE,the experience felt expensive once extras were added,True
+972,FDB0000972,177,5,45,2026-07-05T11:30:00Z,KIOSK,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+973,FDB0000973,1319,5,,2026-06-30T19:30:00Z,SMS,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+974,FDB0000974,4018,2,,2026-07-30T09:15:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,restroom upkeep fell behind the crowd volume,True
+975,FDB0000975,1875,1,,2026-08-06T08:15:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+976,FDB0000976,556,3,79,2026-07-29T22:45:00Z,EMAIL,3,NEUTRAL,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+977,FDB0000977,1718,5,,2026-06-17T18:45:00Z,MOBILE_SURVEY,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+978,FDB0000978,1011,3,97,2026-07-06T17:45:00Z,CHATBOT,5,POSITIVE,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+979,FDB0000979,2229,1,71,2026-06-29T21:15:00Z,CHATBOT,3,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+980,FDB0000980,1578,6,,2026-05-15T11:15:00Z,MOBILE_SURVEY,2,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,True
+981,FDB0000981,3114,5,66,2026-06-02T23:30:00Z,EMAIL,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+982,FDB0000982,2430,6,,2026-08-15T10:00:00Z,KIOSK,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+983,FDB0000983,3429,1,,2026-07-09T03:30:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+984,FDB0000984,1188,1,59,2026-06-19T04:00:00Z,KIOSK,4,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+985,FDB0000985,3721,1,,2026-06-23T14:15:00Z,MOBILE_SURVEY,3,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,False
+986,FDB0000986,1899,5,66,2026-05-16T22:15:00Z,EMAIL,3,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+987,FDB0000987,3764,3,,2026-06-01T05:00:00Z,CHATBOT,5,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+988,FDB0000988,637,4,67,2026-08-28T19:30:00Z,SMS,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+989,FDB0000989,1800,3,108,2026-06-12T10:45:00Z,MOBILE_SURVEY,5,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+990,FDB0000990,437,3,,2026-08-06T06:45:00Z,MOBILE_SURVEY,3,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+991,FDB0000991,3698,2,,2026-06-23T19:30:00Z,EMAIL,4,NEUTRAL,VALUE,mobile offers made the day feel better priced,False
+992,FDB0000992,802,3,,2026-05-05T21:30:00Z,SMS,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+993,FDB0000993,3303,3,72,2026-07-07T05:45:00Z,MOBILE_SURVEY,5,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+994,FDB0000994,1217,1,,2026-07-04T00:00:00Z,EMAIL,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+995,FDB0000995,931,1,,2026-06-15T04:45:00Z,KIOSK,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+996,FDB0000996,2002,2,,2026-07-30T09:45:00Z,MOBILE_SURVEY,5,POSITIVE,VALUE,mobile offers made the day feel better priced,False
+997,FDB0000997,264,2,106,2026-06-19T19:15:00Z,MOBILE_SURVEY,3,NEUTRAL,WAIT_TIME,virtual queue timing was clearer than expected,False
+998,FDB0000998,1797,2,12,2026-07-31T17:00:00Z,MOBILE_SURVEY,5,POSITIVE,RIDE_DOWNTIME,the team explained the delay clearly and offered alternatives,False
+999,FDB0000999,1543,3,25,2026-07-16T17:45:00Z,KIOSK,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+1000,FDB0001000,3984,2,,2026-07-06T03:30:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+1001,FDB0001001,3034,3,6,2026-08-15T09:45:00Z,SMS,5,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+1002,FDB0001002,1178,1,,2026-06-29T03:00:00Z,EMAIL,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+1003,FDB0001003,18,3,,2026-06-27T08:00:00Z,KIOSK,5,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+1004,FDB0001004,222,6,87,2026-08-15T08:00:00Z,MOBILE_SURVEY,2,NEGATIVE,ACCESSIBILITY,the process required too many separate explanations,True
+1005,FDB0001005,1047,5,109,2026-05-23T03:15:00Z,MOBILE_SURVEY,3,NEUTRAL,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+1006,FDB0001006,2887,4,19,2026-05-31T10:00:00Z,SMS,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+1007,FDB0001007,1250,1,,2026-08-21T02:30:00Z,KIOSK,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+1008,FDB0001008,1602,3,25,2026-05-07T16:00:00Z,KIOSK,4,POSITIVE,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+1009,FDB0001009,1650,5,,2026-07-18T04:15:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,False
+1010,FDB0001010,624,2,,2026-08-03T01:00:00Z,MOBILE_SURVEY,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+1011,FDB0001011,1407,5,,2026-07-26T09:15:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+1012,FDB0001012,1138,3,,2026-05-09T23:00:00Z,EMAIL,3,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+1013,FDB0001013,1460,5,66,2026-05-23T23:45:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+1014,FDB0001014,700,1,73,2026-05-10T18:30:00Z,KIOSK,3,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+1015,FDB0001015,2689,3,,2026-07-08T14:00:00Z,KIOSK,5,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+1016,FDB0001016,2899,3,98,2026-06-30T12:15:00Z,EMAIL,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+1017,FDB0001017,997,2,,2026-07-12T16:45:00Z,SMS,5,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+1018,FDB0001018,1349,6,52,2026-05-01T23:30:00Z,KIOSK,3,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+1019,FDB0001019,4133,2,104,2026-07-07T00:30:00Z,KIOSK,1,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+1020,FDB0001020,2722,3,,2026-08-11T06:15:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+1021,FDB0001021,3751,3,,2026-06-05T00:45:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+1022,FDB0001022,293,5,55,2026-05-08T09:00:00Z,SMS,5,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+1023,FDB0001023,363,3,,2026-07-05T23:15:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+1024,FDB0001024,2658,6,87,2026-07-06T22:30:00Z,EMAIL,2,NEGATIVE,ACCESSIBILITY,accessibility steps changed between attractions,True
+1025,FDB0001025,3454,2,,2026-06-14T11:30:00Z,MOBILE_SURVEY,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+1026,FDB0001026,3730,5,,2026-07-04T10:45:00Z,EMAIL,3,POSITIVE,VALUE,the ticket felt worth it once the add-ons were used,False
+1027,FDB0001027,3853,3,41,2026-06-09T01:15:00Z,MOBILE_SURVEY,3,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+1028,FDB0001028,1304,1,,2026-06-23T11:45:00Z,MOBILE_SURVEY,5,NEUTRAL,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+1029,FDB0001029,117,3,63,2026-05-02T08:45:00Z,MOBILE_SURVEY,4,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+1030,FDB0001030,1626,3,41,2026-05-21T13:00:00Z,SMS,1,NEGATIVE,ACCESSIBILITY,support was available but not communicated clearly enough,True
+1031,FDB0001031,67,4,,2026-06-07T13:15:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+1032,FDB0001032,3737,6,,2026-08-20T02:45:00Z,KIOSK,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+1033,FDB0001033,55,5,,2026-06-28T18:00:00Z,MOBILE_SURVEY,3,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+1034,FDB0001034,990,2,,2026-07-23T23:15:00Z,KIOSK,4,POSITIVE,CLEANLINESS,the park looked polished even during the afternoon rush,False
+1035,FDB0001035,340,5,32,2026-05-11T23:45:00Z,MOBILE_SURVEY,3,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+1036,FDB0001036,3140,1,,2026-05-17T16:30:00Z,SMS,5,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+1037,FDB0001037,2049,6,21,2026-08-27T02:15:00Z,SMS,5,NEUTRAL,ACCESSIBILITY,support options made the visit much easier to manage,False
+1038,FDB0001038,2572,3,,2026-08-20T04:45:00Z,CHATBOT,4,POSITIVE,STAFF_FRIENDLINESS,staff handled questions quickly and stayed upbeat,False
+1039,FDB0001039,490,1,33,2026-07-06T14:30:00Z,MOBILE_SURVEY,3,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+1040,FDB0001040,3752,6,,2026-06-24T18:00:00Z,KIOSK,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+1041,FDB0001041,1335,3,,2026-07-01T03:30:00Z,MOBILE_SURVEY,4,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+1042,FDB0001042,3709,5,,2026-07-30T13:30:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,the dining line and order handoff felt disorganized,False
+1043,FDB0001043,387,5,112,2026-07-08T23:00:00Z,EMAIL,4,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+1044,FDB0001044,17,5,36,2026-07-21T15:30:00Z,MOBILE_SURVEY,4,POSITIVE,WAIT_TIME,staff kept the line moving and communicated well,False
+1045,FDB0001045,1933,3,,2026-06-28T15:45:00Z,MOBILE_SURVEY,2,NEGATIVE,VALUE,food and add-ons pushed the visit above expectations,True
+1046,FDB0001046,513,3,,2026-08-03T15:00:00Z,CHATBOT,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+1047,FDB0001047,344,6,60,2026-06-21T19:45:00Z,SMS,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+1048,FDB0001048,650,1,,2026-08-16T19:00:00Z,EMAIL,5,NEUTRAL,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+1049,FDB0001049,3127,1,5,2026-05-12T07:00:00Z,MOBILE_SURVEY,3,NEGATIVE,WAIT_TIME,the queue moved slowly and updates were inconsistent,False
+1050,FDB0001050,3851,3,,2026-05-23T00:00:00Z,SMS,2,NEGATIVE,STAFF_FRIENDLINESS,the response at the counter felt rushed and impersonal,True
+1051,FDB0001051,660,3,,2026-06-28T17:30:00Z,SMS,3,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+1052,FDB0001052,1531,3,,2026-06-06T18:00:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+1053,FDB0001053,3093,6,101,2026-06-11T08:00:00Z,SMS,5,POSITIVE,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+1054,FDB0001054,2223,3,,2026-08-22T07:00:00Z,MOBILE_SURVEY,4,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+1055,FDB0001055,3567,6,11,2026-05-21T08:00:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+1056,FDB0001056,3844,2,80,2026-05-08T02:30:00Z,SMS,5,NEUTRAL,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+1057,FDB0001057,3316,2,,2026-05-16T12:30:00Z,MOBILE_SURVEY,2,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,True
+1058,FDB0001058,1405,6,,2026-08-20T17:30:00Z,SMS,3,NEUTRAL,CLEANLINESS,the park looked polished even during the afternoon rush,False
+1059,FDB0001059,255,1,54,2026-07-05T02:30:00Z,MOBILE_SURVEY,4,POSITIVE,MASCOT_EXPERIENCE,the entertainment team kept the atmosphere lively,False
+1060,FDB0001060,3720,5,,2026-05-17T13:45:00Z,MOBILE_SURVEY,5,POSITIVE,CLEANLINESS,restrooms and public walkways stayed clean all day,False
+1061,FDB0001061,1320,5,32,2026-07-19T03:15:00Z,EMAIL,4,POSITIVE,WAIT_TIME,virtual queue timing was clearer than expected,False
+1062,FDB0001062,656,5,,2026-05-14T12:00:00Z,MOBILE_SURVEY,4,POSITIVE,FOOD_SERVICE,mobile ordering pickup was faster than expected,False
+1063,FDB0001063,3861,3,97,2026-05-03T21:30:00Z,SMS,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+1064,FDB0001064,4141,5,,2026-07-16T22:15:00Z,EMAIL,3,NEGATIVE,CLEANLINESS,tables and walkways stayed messy during peak lunch time,False
+1065,FDB0001065,1936,3,,2026-05-11T02:00:00Z,CHATBOT,4,NEUTRAL,VALUE,mobile offers made the day feel better priced,False
+1066,FDB0001066,1476,2,88,2026-08-11T13:00:00Z,EMAIL,3,NEGATIVE,ACCESSIBILITY,support was available but not communicated clearly enough,True
+1067,FDB0001067,1666,4,53,2026-07-15T13:00:00Z,KIOSK,5,POSITIVE,RIDE_DOWNTIME,recovery options made the outage less frustrating,False
+1068,FDB0001068,1651,1,,2026-08-10T19:45:00Z,KIOSK,4,POSITIVE,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+1069,FDB0001069,1128,5,15,2026-07-18T01:15:00Z,EMAIL,3,NEGATIVE,RIDE_DOWNTIME,the ride went down with very little communication,True
+1070,FDB0001070,2097,6,10,2026-06-23T02:45:00Z,SMS,4,POSITIVE,ACCESSIBILITY,alternate entrance handling was smooth and well staffed,False
+1071,FDB0001071,1220,5,,2026-07-30T06:45:00Z,MOBILE_SURVEY,4,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+1072,FDB0001072,1875,1,,2026-08-06T03:15:00Z,MOBILE_SURVEY,5,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+1073,FDB0001073,15,3,,2026-08-18T23:00:00Z,MOBILE_SURVEY,4,NEUTRAL,FOOD_SERVICE,food service stayed efficient even during a busy window,False
+1074,FDB0001074,3192,6,,2026-07-27T19:00:00Z,MOBILE_SURVEY,3,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,False
+1075,FDB0001075,1131,6,14,2026-08-09T00:45:00Z,MOBILE_SURVEY,2,NEGATIVE,RIDE_DOWNTIME,multiple closures made the headline attraction hard to enjoy,True
+1076,FDB0001076,3739,5,,2026-06-24T01:00:00Z,SMS,2,NEGATIVE,FOOD_SERVICE,food pickup lagged behind the quoted collection time,True
+1077,FDB0001077,1776,3,69,2026-08-08T21:30:00Z,MOBILE_SURVEY,1,NEGATIVE,WAIT_TIME,line management felt confusing during the busiest hour,True
+1078,FDB0001078,2622,5,,2026-07-26T20:45:00Z,MOBILE_SURVEY,3,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False
+1079,FDB0001079,1043,3,,2026-08-07T02:30:00Z,MOBILE_SURVEY,4,NEUTRAL,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+1080,FDB0001080,3934,6,81,2026-07-22T15:15:00Z,MOBILE_SURVEY,5,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+1081,FDB0001081,464,3,13,2026-08-15T12:15:00Z,EMAIL,2,NEGATIVE,RIDE_DOWNTIME,downtime disrupted the visit more than expected,True
+1082,FDB0001082,2045,3,100,2026-07-27T18:45:00Z,MOBILE_SURVEY,3,POSITIVE,WAIT_TIME,posted wait times stayed close to the actual experience,False
+1083,FDB0001083,1893,5,36,2026-05-17T08:45:00Z,EMAIL,4,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+1084,FDB0001084,2094,6,94,2026-06-30T00:45:00Z,EMAIL,5,NEUTRAL,RIDE_DOWNTIME,staff kept the downtime announcement short and well managed,False
+1085,FDB0001085,1138,3,48,2026-05-09T19:30:00Z,MOBILE_SURVEY,3,POSITIVE,ACCESSIBILITY,support options made the visit much easier to manage,False
+1086,FDB0001086,573,1,33,2026-05-18T19:30:00Z,MOBILE_SURVEY,3,POSITIVE,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+1087,FDB0001087,2103,6,,2026-07-16T18:00:00Z,KIOSK,2,NEGATIVE,CLEANLINESS,trash overflow was noticeable in one of the busiest zones,True
+1088,FDB0001088,1389,4,4,2026-05-08T15:45:00Z,EMAIL,3,NEGATIVE,ACCESSIBILITY,support was available but not communicated clearly enough,True
+1089,FDB0001089,1827,6,,2026-07-11T05:30:00Z,MOBILE_SURVEY,4,POSITIVE,STAFF_FRIENDLINESS,guest services solved a problem without a long escalation,False
+1090,FDB0001090,821,3,35,2026-08-18T09:15:00Z,MOBILE_SURVEY,4,NEUTRAL,MASCOT_EXPERIENCE,the character interaction felt organized and memorable,False
+1091,FDB0001091,1582,3,,2026-06-12T10:45:00Z,KIOSK,5,POSITIVE,VALUE,the mix of rides and entertainment justified the price,False
+1092,FDB0001092,1358,3,41,2026-05-14T01:00:00Z,KIOSK,3,NEUTRAL,WAIT_TIME,posted wait times stayed close to the actual experience,False
+1093,FDB0001093,1875,1,,2026-08-06T15:15:00Z,EMAIL,4,POSITIVE,STAFF_FRIENDLINESS,"operators were calm, friendly, and clear with instructions",False
+1094,FDB0001094,4132,1,,2026-07-03T22:30:00Z,SMS,2,NEGATIVE,FOOD_SERVICE,menu communication around allergens could be clearer,True
+1095,FDB0001095,1094,2,12,2026-05-13T02:15:00Z,EMAIL,5,NEUTRAL,MASCOT_EXPERIENCE,mascot timing and photo flow worked really well,False
+1096,FDB0001096,1579,6,,2026-06-21T14:45:00Z,KIOSK,5,NEUTRAL,VALUE,the mix of rides and entertainment justified the price,False
+1097,FDB0001097,32,3,100,2026-05-30T01:30:00Z,MOBILE_SURVEY,4,NEUTRAL,ACCESSIBILITY,accessibility staff explained the process clearly and respectfully,False
+1098,FDB0001098,783,6,,2026-08-20T03:30:00Z,MOBILE_SURVEY,3,NEUTRAL,CLEANLINESS,cleanup crews were visible without getting in the way,False
+1099,FDB0001099,2381,2,,2026-07-20T13:30:00Z,SMS,5,NEUTRAL,FOOD_SERVICE,the dining team handled dietary questions well,False
+1100,FDB0001100,1490,3,,2026-08-14T09:00:00Z,KIOSK,5,POSITIVE,FOOD_SERVICE,the dining team handled dietary questions well,False

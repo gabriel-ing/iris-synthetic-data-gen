@@ -1,299 +1,143 @@
-# Synthetic Data Generator Architecture and Extension Guide
-
-## Purpose
-
-This project generates a deterministic synthetic financial-services dataset and supports two loading patterns for InterSystems IRIS:
-
-- CSV-first pipeline (`python -m synthetic_data_gen.main`)
-- Direct insert pipeline with embedded Python (`python -m synthetic_data_gen.main_iris`)
-
-It is designed to preserve relational integrity and temporal consistency while remaining configurable and reproducible.
-
-## High-Level Data Model
-
-Current domain tables/classes:
-
-- `Customers`
-- `Cards` -> references `Customers` via `Customer`
-- `Merchants`
-- `Transactions` -> references `Cards` via `Card`, `Merchants` via `Merchant`
-- `Disputes` -> references `Transactions` via `Transactions`
-
-Current IRIS persistent classes are in `src/Finance/*.cls`.
-
-## End-to-End Pipeline
-
-Generation order and why:
-
-1. Merchants: needed for transaction merchant sampling
-2. Customers: needed for card assignment and customer behavior signals
-3. Cards: needed for transaction card sampling and temporal constraints
-4. Transactions: main fact table generated across the configured time window
-5. Edge cases: controlled post-processing to inject demo scenarios
-6. Disputes: generated from transaction outcomes and risk signals
-7. Validation: integrity, temporal checks, count checks, realism checks
-8. Output:
-   - `main.py`: writes CSV files
-   - `main_iris.py`: inserts directly into IRIS
-
-## Module-by-Module Reference
-
-### Core orchestration
-
-- `synthetic_data_gen/main.py`
-  - CSV mode entrypoint
-  - Calls generator sequence, validation, summary, and writer
-- `synthetic_data_gen/main_iris.py`
-  - Direct-to-IRIS entrypoint
-  - Calls generator sequence and validation, then executes prepared SQL inserts directly with `iris.sql.prepare(...).execute(...)`
-
-### Configuration and reproducibility
-
-- `synthetic_data_gen/config.py`
-  - Loads YAML config
-  - Deep-merges defaults with user config
-  - Resolves counts via either:
-    - explicit counts (`scale.mode = explicit`)
-    - factor mode (`scale.mode = factor`)
-- `synthetic_data_gen/rng.py`
-  - Deterministic seed derivation by namespace (`sub_seed`)
-  - Ensures each table generator gets stable RNG streams
-
-### Table generators
-
-- `synthetic_data_gen/generators/merchants.py`
-  - Category/risk assignment from weighted distributions
-  - Popularity skew via Pareto
-  - Synthetic company names via Faker
-  - Country distribution with USA as primary
-- `synthetic_data_gen/generators/customers.py`
-  - Segment assignment and risk-score distributions
-  - `State` is US-state based
-  - Includes behavior multipliers used downstream
-- `synthetic_data_gen/generators/cards.py`
-  - Card allocation to customers with realistic skew
-  - Card open/close status and temporal fields
-- `synthetic_data_gen/generators/transactions.py`
-  - Daily/chunked generation logic over time window
-  - Card and merchant weighted sampling
-  - Amount model by merchant category
-  - Declines/refunds/reversals, fraud flags
-  - Enforces card temporal validity (`OpenedAt` / `ClosedAt`)
-- `synthetic_data_gen/generators/disputes.py`
-  - Weighted sampling from transactions
-  - Uses channel/segment/merchant risk effects
-  - Ensures dispute timing follows transaction posting
-
-### Post-processing and quality
-
-- `synthetic_data_gen/edge_cases.py`
-  - Optional deterministic edge-case injection:
-    - customers with no cards
-    - cards with only declines
-    - blocked cards
-    - fraud bursts
-- `synthetic_data_gen/validate.py`
-  - FK checks
-  - temporal checks
-  - configured-count checks
-  - soft realism checks
-
-### Writers and loaders
-
-- `synthetic_data_gen/writer.py`
-  - CSV writing
-  - optional day partitioning for transactions
-- `scripts/load_csv_to_iris.py`
-  - DB-API style IRIS loader from generated CSVs
-  - clear DDL section
-  - chunked `executemany` inserts
-
-## Current Output Schemas
-
-### `customers.csv`
-
-- `CustomerId`
-- `CreatedAt`
-- `Status`
-- `Segment`
-- `RiskScore`
-- `State`
-- `SegmentTxnMultiplier`
-- `SegmentAmountMultiplier`
-- `SegmentEcomMultiplier`
-- `SegmentDeclineMultiplier`
-- `SegmentDisputeMultiplier`
-
-### `cards.csv`
-
-- `CardId`
-- `Customer` (reference value to `Customers.CustomerId`)
-- `CardType`
-- `Status`
-- `OpenedAt`
-- `ClosedAt`
-- `CardToken`
-- `CreditLimit`
+# SyntheticDataGen Architecture
 
-### `merchants.csv`
+## Current Purpose
 
-- `MerchantId`
-- `MerchantName`
-- `Category`
-- `RiskTier`
-- `PopularityWeight`
-- `Country`
-
-### `transactions.csv`
-
-- `TransactionId`
-- `Card` (reference value to `Cards.CardId`)
-- `Merchant` (reference value to `Merchants.MerchantId`)
-- `AuthAt`
-- `PostedAt`
-- `Amount`
-- `Currency`
-- `Channel`
-- `EntryMode`
-- `CardPresent`
-- `Status`
-- `DeclineReason`
-- `IsFraud`
-
-### `disputes.csv`
-
-- `DisputeId`
-- `Transactions` (reference value to `Transactions.TransactionId`)
-- `OpenedAt`
-- `ResolvedAt`
-- `ReasonCode`
-- `State`
-- `Outcome`
-- `DisputedAmount`
-
-## IRIS Integration Modes
-
-### Mode A: CSV then load
-
-1. Generate CSVs with `main.py`
-2. Load with `scripts/load_csv_to_iris.py`
-
-Best for:
-
-- Auditable intermediate artifacts
-- Re-running load without regeneration
-- Data inspection/debugging
-
-### Mode B: Direct insert (no CSV)
-
-Use `main_iris.py` from an environment with IRIS Python available.
-
-Best for:
-
-- Fast iterative generation-to-database workflows
-- Reduced disk I/O for large runs
-
-## How IRIS class references are populated
-
-Reference properties are inserted as referenced object IDs in SQL:
-
-- `Cards.Customer` expects `Customers.CustomerId`
-- `Transactions.Card` expects `Cards.CardId`
-- `Transactions.Merchant` expects `Merchants.MerchantId`
-- `Disputes.Transactions` expects `Transactions.TransactionId`
-
-Arrow-notation query example:
-
-```sql
-SELECT TOP 20
-  t.TransactionId,
-  t.Card->Customer->Segment AS CustomerSegment,
-  t.Merchant->MerchantName AS MerchantName,
-  t.Amount
-FROM Finance.Transactions t;
-```
-
-## Testing Strategy
-
-Tests live in `tests/`:
-
-- `test_config.py`: config resolution (explicit and factor modes)
-- `test_generation.py`: deterministic generation and validation checks
-- `test_writer.py`: partitioned transaction writing
-- `test_cli.py`: CLI smoke test and output creation
-
-Run with:
-
-```bash
-.venv/Scripts/python.exe -m pytest
-```
-
-## What Is Reusable For Other Sectors
-
-This project is intentionally split so only domain-specific layers need replacement.
-
-### Reuse directly (high value, low change)
-
-- `synthetic_data_gen/config.py`
-  - config loading and scale derivation
-- `synthetic_data_gen/rng.py`
-  - deterministic sub-seeding pattern
-- `synthetic_data_gen/writer.py`
-  - CSV and partition writing primitives
-- `synthetic_data_gen/validate.py` (structure)
-  - reuse validation pattern; adapt business rules
-- `synthetic_data_gen/main.py` and `synthetic_data_gen/main_iris.py` (orchestration skeleton)
-  - preserve pipeline shape and swap generators
-- `scripts/load_csv_to_iris.py` (loading pattern)
-  - keep chunked loading framework; replace DDL and column mappings
-- test harness in `tests/conftest.py`
-  - reusable assembly and fixture approach
-
-### Replace per domain (sector-specific)
-
-- `synthetic_data_gen/generators/*.py`
-  - these encode financial semantics and should be rewritten for healthcare, telecom, retail, manufacturing, etc.
-- `src/Finance/*.cls`
-  - replace class definitions with your target sector schema
-- edge-case scenarios in `edge_cases.py`
-  - replace with domain-specific events (for example outages, claims spikes, shipment exceptions)
-- realism checks in `validate.py`
-  - tune to sector-specific quality metrics
-
-## Template For New Sector Adaptation
-
-Recommended approach:
-
-1. Copy current package to a new domain package (for example `synthetic_data_gen_healthcare`).
-2. Keep `config.py`, `rng.py`, `writer.py`, and orchestration files as baseline.
-3. Design new entity graph and referential edges first.
-4. Implement generators in topological order (dimensions before facts).
-5. Add edge-case injector relevant to the new domain.
-6. Update validation rules with domain invariants.
-7. Update IRIS classes (`src/<domain>/*.cls`) and loader DDL/mapping.
-8. Add/adjust tests:
-   - deterministic outputs
-   - FK integrity
-   - temporal/business-rule invariants
-   - loader smoke checks
-
-## Practical Extension Tips
-
-- Keep IDs as integer keys for performance and deterministic joins.
-- Keep business distributions in config so they are tunable without code changes.
-- Derive one RNG stream per table/module to avoid accidental coupling.
-- Avoid writing giant in-memory fact tables for large scale; use chunk/day partitions.
-- Validate early and fail fast before attempting database load.
-
-## Known Current Constraints
-
-- The `main_iris.py` direct mode assumes target IRIS classes/tables already exist.
-- Realism warning thresholds are soft checks, not strict blockers.
-- `State` in `customers.csv` is currently sampled from a representative subset of US state codes.
-
-## Suggested Next Improvements
-
-- Make country/state distributions configurable in YAML.
-- Add optional index creation step after load for large query workloads.
-- Add a generic plugin interface for domain generators.
-- Add formal schema versioning in config and emitted metadata.
+This repository currently implements four synthetic data domains for InterSystems IRIS:
+
+- Financial Services
+- Supply Chain
+- Retail
+- Theme Park Management
+
+The repo combines:
+- Python generators for CSV output and direct IRIS insert
+- ObjectScript persistent classes for each domain
+- one shared ZPM/ObjectScript loader, `SyntheticDataGen.DataLoader`
+
+## Workspace Architecture
+
+- `module.xml`
+  - defines the root ZPM package
+  - copies domain Python and ObjectScript assets into `${libdir}SyntheticDataGen/`
+  - compiles only `SyntheticDataGen.DataLoader`
+
+- `src/SyntheticDataGen/DataLoader.cls`
+  - persists the install root
+  - lazily compiles dataset classes by domain
+  - dispatches embedded Python loads into the installed domain package
+  - clears rows and optionally deletes compiled packages via `DeleteDataset()`
+
+- `src/FinancialServices/`
+  - Python generator and direct IRIS loader
+  - ObjectScript classes in package `Finance`
+  - CSV-to-IRIS helper script under `python/scripts/load_csv_to_iris.py`
+
+- `src/SupplyChain/`
+  - Python generator and direct IRIS loader
+  - ObjectScript classes in package `SupplyChain`
+
+- `src/Retail/`
+  - Python generator and direct IRIS loader
+  - ObjectScript classes in package `Retail`
+
+- `src/ThemePark/`
+  - Python generator and direct IRIS loader
+  - ObjectScript classes in package `ThemePark`
+
+## Domain Map
+
+### Financial Services
+
+- Package: `Finance`
+- Python root: `src/FinancialServices/python/DataGen`
+- Outputs: `customers`, `cards`, `merchants`, `transactions`, `disputes`
+- Extra modules: `edge_cases.py`, `scripts/load_csv_to_iris.py`
+- Lazy-compile sentinel: `Finance.Customers`
+
+### Supply Chain
+
+- Package: `SupplyChain`
+- Python root: `src/SupplyChain/python/DataGen`
+- Outputs: `dim_date`, `dim_product`, `dim_location`, `dim_supplier`, `dim_customer`, `product_supplier`, `sales_order_line`, `purchase_order_line`, `shipment_line`, `inventory_movement`, `inventory_snapshot_daily`, `stock_count_event`
+- Lazy-compile sentinel: `SupplyChain.DimCustomer`
+
+### Retail
+
+- Package: `Retail`
+- Python root: `src/Retail/python/DataGen`
+- Outputs: `calendar`, `roles`, `users`, `user_store_access`, `stores`, `products`, `supplier_product`, `promotions`, `purchase_orders`, `stock_transfers`, `sales_transactions`, `inventory_snapshot`
+- Lazy-compile sentinel: `Retail.Stores`
+
+### Theme Park Management
+
+- Package: `ThemePark`
+- Python root: `src/ThemePark/python/DataGen`
+- Outputs: `parks`, `zones`, `rides`, `ride_maintenance`, `employees`, `shifts`, `guests`, `tickets`, `incidents`, `feedback`
+- Lazy-compile sentinel: `ThemePark.Parks`
+
+## Shared Domain Pattern
+
+Each domain currently follows the same basic structure:
+
+- `DataGen/config.py`
+- `DataGen/rng.py`
+- `DataGen/writer.py`
+- `DataGen/validate.py`
+- `DataGen/main.py`
+- `DataGen/main_iris.py`
+- `DataGen/generators/`
+- `tests/`
+
+This keeps the repo consistent even though each domain has different tables and generation logic.
+
+## Current Load Flows
+
+### Flow 1: Local CSV Generation
+
+1. Run `python -m DataGen.main --config ...`
+2. Load YAML config and optional scale-factor override
+3. Generate domain tables in domain-specific order
+4. Run validation
+5. Write CSVs to the configured output path
+6. Print a run summary
+
+### Flow 2: Direct IRIS Insert
+
+1. Run `python -m DataGen.main_iris --config ... --package <Package>`
+2. Optionally clear existing rows in child-first order
+3. Generate data in memory
+4. Insert rows into IRIS using embedded Python
+5. Commit in batches using `--commit-every`
+
+### Flow 3: ZPM Install Plus DataLoader
+
+1. `zpm "install SyntheticDataGen"`
+2. `PersistInstallRoot()` stores the installed asset root
+3. `EnsureDatasetClasses(dataset)` loads the installed ObjectScript source tree only when the sentinel class is missing
+4. `LoadData(dataset, ...)` inserts the installed domain Python path into `sys.path`, deletes cached `DataGen` modules, imports `DataGen.main_iris`, and calls the domain loader
+5. `DeleteDataset(dataset, deleteClasses=1)` clears rows and optionally deletes the compiled domain package
+
+## DataLoader Responsibilities
+
+Current responsibilities in `src/SyntheticDataGen/DataLoader.cls`:
+
+- resolve and persist the installed asset root
+- validate dataset names and sentinel classes
+- lazy-load ObjectScript classes from installed asset directories
+- clear Python module cache before switching domains that share the `DataGen` top-level package name
+- pass runtime scale-factor and config overrides into the embedded Python loader
+- provide dataset cleanup through `DeleteDataset()`
+
+## Current Testing Layout
+
+- `src/<Domain>/tests/`: domain-specific unit and CLI coverage
+- `tests/test_zpm_packaging.py`: root packaging test covering install-root persistence and lazy compilation
+
+The packaging test validates that a fresh install starts without domain classes compiled, then confirms that `LoadData()` compiles only the requested domain.
+
+## Current Constraints
+
+- Only Financial Services currently includes a CSV-to-IRIS utility script.
+- The shared top-level Python package name is `DataGen` in all domains, so module-cache invalidation is required between loads.
+- `LoadData()` uses positional order `dataset, scaleFactor, configPath, clearExisting`.
+- `EnsureDatasetClasses()` currently uses `$system.OBJ.LoadDir(...)`, which works but produces a deprecation warning during validation.

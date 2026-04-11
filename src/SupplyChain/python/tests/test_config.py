@@ -64,3 +64,33 @@ def test_factor_counts_are_resolved(tmp_path):
     assert resolved["sales_order_lines"] == 21
     assert resolved["purchase_order_lines"] == 24
     assert resolved["stock_count_events"] == 27
+
+
+def test_scale_factor_override_multiplies_configured_counts(tmp_path):
+    cfg = {
+        "scale": {
+            "mode": "explicit",
+            "counts": {
+                "products": 10,
+                "locations": 11,
+                "suppliers": 12,
+                "customers": 13,
+                "product_suppliers": 14,
+                "sales_order_lines": 15,
+                "purchase_order_lines": 16,
+                "stock_count_events": 17,
+            },
+        },
+    }
+    path = write_config(tmp_path, cfg)
+    loaded = load_config(path, scale_factor_override=3)
+
+    resolved = loaded["resolved_counts"]
+    assert resolved["products"] == 30
+    assert resolved["locations"] == 33
+    assert resolved["suppliers"] == 36
+    assert resolved["customers"] == 39
+    assert resolved["product_suppliers"] == 42
+    assert resolved["sales_order_lines"] == 45
+    assert resolved["purchase_order_lines"] == 48
+    assert resolved["stock_count_events"] == 51
