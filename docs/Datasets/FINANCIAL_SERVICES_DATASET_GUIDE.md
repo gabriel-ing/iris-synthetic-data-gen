@@ -4,7 +4,7 @@ This guide describes the current Financial Services dataset in this repository: 
 
 ## Overview
 
-The Financial Services domain models a card-payment ecosystem with customers, cards, merchants, transactions, and disputes. It is designed for fraud, risk, payments, and chargeback demos rather than for core banking or full account-ledger simulations.
+The Financial Services domain models a card-payment ecosystem with customers, accounts, cards, merchants, transactions, and disputes. It is designed for fraud, risk, payments, and chargeback demos rather than for core banking or full account-ledger simulations.
 
 Current package and entrypoints:
 
@@ -16,6 +16,7 @@ Current package and entrypoints:
 Current generated outputs:
 
 - `customers.csv`
+- `accounts.csv`
 - `cards.csv`
 - `merchants.csv`
 - `transactions.csv`
@@ -26,7 +27,8 @@ Current generated outputs:
 | Table | What it represents |
 | --- | --- |
 | `Customers` | The account-holder population. Each customer has a segment, lifecycle status, geographic attributes, and a risk score that affects transaction and dispute behavior. |
-| `Cards` | Payment cards tied to customers. Cards carry lifecycle fields such as opened/closed timestamps, credit limits, status, and tokenization-style identifiers for card-product demos. |
+| `Accounts` | The lightweight account layer between customers and cards. It adds account type, lifecycle timing, billing-cycle semantics, and autopay behavior without turning the dataset into a full core-banking ledger. |
+| `Cards` | Payment cards tied to customer-owned accounts. Cards carry lifecycle fields such as opened/closed timestamps, credit limits, status, and tokenization-style identifiers for card-product demos. |
 | `Merchants` | Merchants that accept card payments. They include category and risk-tier attributes that influence dispute and fraud behavior. |
 | `Transactions` | The core payment-event table. It records amount, timestamps, merchant, card, channel, entry mode, approval/decline state, and fraud indicators. |
 | `Disputes` | Post-transaction chargebacks and customer disputes. These rows link back to transactions and capture reason, current state, outcome, and resolution timing. |
@@ -58,9 +60,29 @@ Customer lifecycle status currently uses:
 - `ACTIVE`
 - `CLOSED`
 
+### Accounts
+
+Accounts add a small but important ownership layer between the customer and the card portfolio.
+
+Current account types include:
+
+- `DEPOSIT`
+- `REVOLVING_CREDIT`
+
+Current account statuses include:
+
+- `ACTIVE`
+- `CLOSED`
+
+Useful interpretation:
+
+- `REVOLVING_CREDIT` accounts are the natural home for billing-cycle and autopay-style demos.
+- `DEPOSIT` vs `REVOLVING_CREDIT` gives a more believable portfolio split than linking every card directly to a customer with no account context.
+- The current model intentionally keeps one account per customer, which improves realism without expanding into multi-account households or full checking-and-savings modeling.
+
 ### Cards
 
-Cards are instruments rather than standalone accounts. A customer may have multiple cards, and card lifecycle matters for fraud, authorization, and operational demos.
+Cards are instruments on top of the account layer rather than standalone accounts. A customer may have multiple cards on the same owning account, and card lifecycle matters for fraud, authorization, and operational demos.
 
 Current card statuses include:
 
@@ -72,6 +94,7 @@ Useful interpretation:
 
 - `BLOCKED` supports fraud-operations and card-control demos.
 - `CLOSED` supports portfolio attrition and lifecycle views.
+- Card-to-account linkage makes it possible to explain instrument-level behavior without losing the owning customer and account context.
 
 ### Merchants
 
@@ -272,6 +295,7 @@ If you want a quick first dashboard, these metrics usually tell the story fastes
 ## Useful Caveats And Suggestions
 
 - This is a payments dataset, not a full bank-account or general-ledger dataset.
+- The current account layer is intentionally lightweight: one account per customer, no full householding, and no balance ledger.
 - Disputes are post-transaction case records, so they are best used for operational and risk analysis rather than accounting close demos.
 - Fraud and dispute patterns are intentionally amplified enough to make demos readable; that is useful for presentations, but it should be stated if someone treats the output as production-like class imbalance.
 - `DeleteDataset("FinancialServices")` is useful before repeatable demos if you want a clean rerun.

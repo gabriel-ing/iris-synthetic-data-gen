@@ -257,6 +257,51 @@ def generate_products(config: dict, calendar: pd.DataFrame, rng: np.random.Gener
     )
 
 
+def generate_customers(config: dict, stores: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame:
+    count = int(config["resolved_counts"]["customers"])
+    store_ids = stores["StoreId"].to_numpy()
+    store_weights = np.where(stores["ActiveFlag"], 1.0, 0.45).astype(float)
+    store_weights = store_weights / store_weights.sum()
+    channels = list(config["behavior"]["sales"]["channel_weights"].keys())
+
+    segments = np.array(["BUDGET", "MAINSTREAM", "PREMIUM", "OCCASIONAL"], dtype=object)
+    segment_weights = np.array([0.28, 0.44, 0.16, 0.12], dtype=float)
+    loyalty_tiers = np.array(["NONE", "MEMBER", "PLUS", "VIP"], dtype=object)
+    loyalty_weights = {
+        "BUDGET": [0.52, 0.32, 0.12, 0.04],
+        "MAINSTREAM": [0.30, 0.42, 0.20, 0.08],
+        "PREMIUM": [0.12, 0.30, 0.34, 0.24],
+        "OCCASIONAL": [0.68, 0.22, 0.08, 0.02],
+    }
+    preferred_channel_weights = {
+        "BUDGET": [0.72, 0.08, 0.10, 0.10],
+        "MAINSTREAM": [0.62, 0.14, 0.14, 0.10],
+        "PREMIUM": [0.34, 0.22, 0.20, 0.24],
+        "OCCASIONAL": [0.78, 0.06, 0.08, 0.08],
+    }
+    start = pd.Timestamp(config["time"]["start_date"], tz="UTC")
+
+    chosen_segments = rng.choice(segments, size=count, p=segment_weights)
+    rows: list[dict[str, object]] = []
+    for customer_id in range(1, count + 1):
+        segment = str(chosen_segments[customer_id - 1])
+        join_at = start - pd.Timedelta(days=int(rng.integers(30, 960))) + pd.Timedelta(hours=int(rng.integers(0, 24)))
+        rows.append(
+            {
+                "CustomerId": customer_id,
+                "CustomerNumber": f"CUS{customer_id:08d}",
+                "Segment": segment,
+                "LoyaltyTier": str(rng.choice(loyalty_tiers, p=loyalty_weights[segment])),
+                "HomeStore": int(rng.choice(store_ids, p=store_weights)),
+                "PreferredChannel": str(rng.choice(channels, p=preferred_channel_weights[segment])),
+                "JoinDate": join_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "ActiveFlag": bool(rng.random() > 0.04),
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+
 def generate_users(config: dict, roles: pd.DataFrame, stores: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame:
     count = int(config["resolved_counts"]["users"])
     role_weights = config["behavior"]["access"]["role_weights"]

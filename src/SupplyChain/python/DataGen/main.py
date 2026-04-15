@@ -19,7 +19,9 @@ from DataGen.generators.inventory import (
     generate_stock_count_events,
 )
 from DataGen.generators.orders import (
+    generate_purchase_orders,
     generate_purchase_order_lines,
+    generate_sales_orders,
     generate_sales_order_lines,
     generate_shipment_lines,
 )
@@ -36,6 +38,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def _summary(
+    sales_orders: pd.DataFrame,
+    purchase_orders: pd.DataFrame,
     sales_order_lines: pd.DataFrame,
     purchase_order_lines: pd.DataFrame,
     shipment_lines: pd.DataFrame,
@@ -56,6 +60,8 @@ def _summary(
             "negative_available_snapshot_rate": round(neg_available, 4),
         },
         "counts": {
+            "sales_orders": len(sales_orders),
+            "purchase_orders": len(purchase_orders),
             "sales_order_lines": len(sales_order_lines),
             "purchase_order_lines": len(purchase_order_lines),
             "shipment_lines": len(shipment_lines),
@@ -95,6 +101,8 @@ def main() -> None:
         locations,
         make_rng(seed, "purchase_order_lines"),
     )
+    sales_orders = generate_sales_orders(sales_order_lines)
+    purchase_orders = generate_purchase_orders(purchase_order_lines)
     shipment_lines = generate_shipment_lines(
         config,
         dim_date,
@@ -134,6 +142,8 @@ def main() -> None:
         "dim_supplier": suppliers,
         "dim_customer": customers,
         "product_supplier": product_supplier,
+        "sales_orders": sales_orders,
+        "purchase_orders": purchase_orders,
         "sales_order_line": sales_order_lines,
         "purchase_order_line": purchase_order_lines,
         "shipment_line": shipment_lines,
@@ -152,6 +162,8 @@ def main() -> None:
         suppliers,
         customers,
         product_supplier,
+        sales_orders,
+        purchase_orders,
         sales_order_lines,
         purchase_order_lines,
         shipment_lines,
@@ -160,7 +172,7 @@ def main() -> None:
         stock_count_events,
     )
 
-    summary = _summary(sales_order_lines, purchase_order_lines, shipment_lines, inventory_snapshot_daily)
+    summary = _summary(sales_orders, purchase_orders, sales_order_lines, purchase_order_lines, shipment_lines, inventory_snapshot_daily)
     print("Validation checks passed:", len(validation.checks))
     if validation.warnings:
         print("Validation warnings:")

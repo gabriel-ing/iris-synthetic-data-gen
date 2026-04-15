@@ -35,6 +35,13 @@ def _clamp_date_id(values: np.ndarray, max_date_id: int) -> np.ndarray:
     return np.clip(values, 1, max_date_id)
 
 
+def _first_present(series: pd.Series):
+    present = series.dropna()
+    if len(present):
+        return present.iloc[0]
+    return pd.NA
+
+
 def generate_sales_order_lines(
     config: dict,
     dim_date: pd.DataFrame,
@@ -231,6 +238,85 @@ def generate_purchase_order_lines(
             "ActualLeadTimeDays": np.where(np.isnan(receipt_date), np.nan, np.maximum(0, receipt_date - order_date)),
         }
     )
+
+
+def generate_sales_orders(sales_order_lines: pd.DataFrame) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    for sales_order_id, frame in sales_order_lines.groupby("SalesOrderId", sort=True):
+        ordered_total = float(frame["OrderedQty"].sum())
+        shipped_total = float(frame["ShippedQty"].sum())
+        backordered_total = float(frame["BackorderedQty"].sum())
+        delivered_count = int(frame["ActualDeliveryDate"].notna().sum())
+        if frame["Status"].eq("Cancelled").all():
+            header_status = "Cancelled"
+        elif delivered_count == len(frame) and backordered_total <= 0:
+            header_status = "Delivered"
+        elif shipped_total >= ordered_total and delivered_count == 0:
+            header_status = "Shipped"
+        elif shipped_total > 0:
+            header_status = "PartShipped"
+        else:
+            header_status = "Open"
+
+        rows.append(
+            {
+                "SalesOrderId": str(sales_order_id),
+                "Customer": int(frame["Customer"].iloc[0]),
+                "ShipFromLocation": int(frame["ShipFromLocation"].iloc[0]),
+                "ShipToLocation": int(frame["ShipToLocation"].iloc[0]),
+                "OrderDate": int(frame["OrderDate"].min()),
+                "RequestedShipDate": int(frame["RequestedShipDate"].min()),
+                "PromisedDeliveryDate": int(frame["PromisedDeliveryDate"].max()),
+                "ActualDeliveryDate": _first_present(frame["ActualDeliveryDate"].sort_values(ascending=False)),
+                "Status": header_status,
+                "Channel": str(frame["Channel"].iloc[0]),
+                "OrderLineCount": int(len(frame)),
+                "OrderedQtyTotal": round(ordered_total, 2),
+                "ShippedQtyTotal": round(shipped_total, 2),
+                "BackorderedQtyTotal": round(backordered_total, 2),
+                "OrderValue": round(float((frame["OrderedQty"] * frame["UnitSellPrice"]).sum()), 2),
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+
+def generate_purchase_orders(purchase_order_lines: pd.DataFrame) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    for purchase_order_id, frame in purchase_order_lines.groupby("PurchaseOrderId", sort=True):
+        ordered_total = float(frame["OrderedQty"].sum())
+        received_total = float(frame["ReceivedQty"].sum())
+        if frame["Status"].eq("Cancelled").all():
+            header_status = "Cancelled"
+        elif received_total >= ordered_total and frame["ReceiptDate"].notna().all():
+            header_status = "Received"
+        elif received_total > 0:
+            header_status = "PartReceived"
+        else:
+            header_status = "Open"
+
+        expected_receipt = int(frame["ExpectedReceiptDate"].max())
+        receipt_date = _first_present(frame["ReceiptDate"].sort_values(ascending=False))
+        late_receipt = bool(pd.notna(receipt_date) and int(receipt_date) > expected_receipt)
+        rows.append(
+            {
+                "PurchaseOrderId": str(purchase_order_id),
+                "Supplier": int(frame["Supplier"].iloc[0]),
+                "ShipFromLocation": int(frame["ShipFromLocation"].iloc[0]),
+                "DeliverToLocation": int(frame["DeliverToLocation"].iloc[0]),
+                "OrderDate": int(frame["OrderDate"].min()),
+                "ExpectedReceiptDate": expected_receipt,
+                "ReceiptDate": receipt_date,
+                "Status": header_status,
+                "OrderLineCount": int(len(frame)),
+                "OrderedQtyTotal": round(ordered_total, 2),
+                "ReceivedQtyTotal": round(received_total, 2),
+                "OrderValue": round(float((frame["OrderedQty"] * frame["UnitPurchaseCost"]).sum()), 2),
+                "LateReceiptFlag": late_receipt,
+            }
+        )
+
+    return pd.DataFrame(rows)
 
 
 def _split_qty(total_qty: int, pieces: int, rng: np.random.Generator) -> np.ndarray:

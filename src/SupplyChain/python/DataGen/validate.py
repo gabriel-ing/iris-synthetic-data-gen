@@ -26,6 +26,8 @@ def validate_all(
     suppliers: pd.DataFrame,
     customers: pd.DataFrame,
     product_supplier: pd.DataFrame,
+    sales_orders: pd.DataFrame,
+    purchase_orders: pd.DataFrame,
     sales_order_lines: pd.DataFrame,
     purchase_order_lines: pd.DataFrame,
     shipment_lines: pd.DataFrame,
@@ -44,6 +46,13 @@ def validate_all(
 
     _assert(product_supplier["Product"].isin(product_ids).all(), "FK product_supplier.product valid", checks)
     _assert(product_supplier["Supplier"].isin(supplier_ids).all(), "FK product_supplier.supplier valid", checks)
+
+    _assert(sales_orders["Customer"].isin(customer_ids).all(), "FK sales_orders.customer valid", checks)
+    _assert(sales_orders["ShipFromLocation"].isin(location_ids).all(), "FK sales_orders.ship_from valid", checks)
+    _assert(sales_orders["ShipToLocation"].isin(location_ids).all(), "FK sales_orders.ship_to valid", checks)
+    _assert(purchase_orders["Supplier"].isin(supplier_ids).all(), "FK purchase_orders.supplier valid", checks)
+    _assert(purchase_orders["ShipFromLocation"].isin(location_ids).all(), "FK purchase_orders.ship_from valid", checks)
+    _assert(purchase_orders["DeliverToLocation"].isin(location_ids).all(), "FK purchase_orders.deliver_to valid", checks)
 
     _assert(sales_order_lines["Customer"].isin(customer_ids).all(), "FK sales_order.customer valid", checks)
     _assert(sales_order_lines["Product"].isin(product_ids).all(), "FK sales_order.product valid", checks)
@@ -87,9 +96,14 @@ def validate_all(
     _assert(len(locations) == int(resolved["locations"]), "Location count matches config", checks)
     _assert(len(suppliers) == int(resolved["suppliers"]), "Supplier count matches config", checks)
     _assert(len(customers) == int(resolved["customers"]), "Customer count matches config", checks)
+    _assert(len(sales_orders) == sales_order_lines["SalesOrderId"].nunique(), "Sales order header count matches line groups", checks)
+    _assert(len(purchase_orders) == purchase_order_lines["PurchaseOrderId"].nunique(), "Purchase order header count matches line groups", checks)
     _assert(len(sales_order_lines) == int(resolved["sales_order_lines"]), "Sales order line count matches config", checks)
     _assert(len(purchase_order_lines) == int(resolved["purchase_order_lines"]), "Purchase order line count matches config", checks)
     _assert(len(stock_count_events) == int(resolved["stock_count_events"]), "Stock count event count matches config", checks)
+
+    _assert(set(sales_order_lines["SalesOrderId"].astype(str)).issubset(set(sales_orders["SalesOrderId"].astype(str))), "Sales order lines map to header rows", checks)
+    _assert(set(purchase_order_lines["PurchaseOrderId"].astype(str)).issubset(set(purchase_orders["PurchaseOrderId"].astype(str))), "Purchase order lines map to header rows", checks)
 
     if len(inventory_snapshot_daily) == 0:
         warnings.append("Inventory snapshot is empty")

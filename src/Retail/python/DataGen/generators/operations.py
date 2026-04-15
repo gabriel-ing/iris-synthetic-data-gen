@@ -22,12 +22,28 @@ def _promo_lookup(promotions: pd.DataFrame) -> dict[int, list[dict[str, object]]
     return lookup
 
 
+def _basket_ids(count: int, rng: np.random.Generator) -> tuple[np.ndarray, np.ndarray]:
+    basket_numbers = np.empty(count, dtype=int)
+    line_numbers = np.empty(count, dtype=int)
+    current_basket = 700000
+    current_line = 1
+    for index in range(count):
+        if index == 0 or rng.random() < 0.64:
+            current_basket += 1
+            current_line = 1
+        basket_numbers[index] = current_basket
+        line_numbers[index] = current_line
+        current_line += 1
+    return basket_numbers, line_numbers
+
+
 def generate_sales_transactions(
     config: dict,
     calendar: pd.DataFrame,
     stores: pd.DataFrame,
     products: pd.DataFrame,
     promotions: pd.DataFrame,
+    customers: pd.DataFrame,
     rng: np.random.Generator,
 ) -> pd.DataFrame:
     count = int(config["resolved_counts"]["sales_transactions"])
@@ -35,6 +51,7 @@ def generate_sales_transactions(
     product_ids = products["ProductId"].to_numpy()
     product_lookup = products.set_index("ProductId")
     store_lookup = stores.set_index("StoreId")
+    customer_lookup = customers.set_index("CustomerId")
     promo_lookup = _promo_lookup(promotions)
 
     format_multiplier = {"FLAGSHIP": 1.45, "SUBURBAN": 1.05, "URBAN": 1.18, "OUTLET": 0.82}
@@ -52,9 +69,15 @@ def generate_sales_transactions(
     sales_cfg = config["behavior"]["sales"]
     channel_weights = sales_cfg["channel_weights"]
     channels = list(channel_weights.keys())
+    channel_prob = normalize_weights([channel_weights[name] for name in channels])
     return_rate = float(sales_cfg["return_rate"])
     stockout_rate = float(sales_cfg["stockout_rate"])
     promo_attach_rate = float(sales_cfg["promo_attach_rate"])
+    customer_ids = customers["CustomerId"].to_numpy()
+    customer_weight = np.where(customers["ActiveFlag"], 1.0, 0.3).astype(float)
+    customer_weight *= customers["Segment"].map({"BUDGET": 1.10, "MAINSTREAM": 1.00, "PREMIUM": 0.92, "OCCASIONAL": 0.58}).to_numpy(dtype=float)
+    customer_weight = normalize_weights(customer_weight)
+    basket_numbers, basket_line_numbers = _basket_ids(count, rng)
 
     dept_unit_mean = {
         "GROCERY": 2.6,
@@ -66,15 +89,43 @@ def generate_sales_transactions(
         "TOYS": 1.15,
     }
 
+    payment_method_weights = {
+        "INSTORE": (["CARD", "CASH", "MOBILE_WALLET", "GIFT_CARD"], [0.48, 0.24, 0.18, 0.10]),
+        "CLICK_COLLECT": (["CARD", "MOBILE_WALLET", "GIFT_CARD"], [0.58, 0.28, 0.14]),
+        "DELIVERY": (["CARD", "DIGITAL_WALLET", "BNPL"], [0.62, 0.20, 0.18]),
+        "SHIP_FROM_STORE": (["CARD", "DIGITAL_WALLET", "BNPL"], [0.60, 0.18, 0.22]),
+    }
+
     rows: list[dict[str, object]] = []
+    basket_customer = 0
+    basket_store = 0
+    basket_date = 0
+    basket_channel = ""
+    basket_payment = ""
     for sales_transaction_id in range(1, count + 1):
-        store_id = int(rng.choice(store_ids, p=store_weights))
+        if basket_line_numbers[sales_transaction_id - 1] == 1:
+            basket_customer = int(rng.choice(customer_ids, p=customer_weight))
+            customer = customer_lookup.loc[basket_customer]
+            basket_store = int(customer["HomeStore"]) if rng.random() < 0.68 else int(rng.choice(store_ids, p=store_weights))
+            preferred_channel = str(customer["PreferredChannel"])
+            blended = channel_prob.copy()
+            blended[channels.index(preferred_channel)] *= 1.55
+            basket_channel = str(rng.choice(channels, p=normalize_weights(blended)))
+            basket_date = int(rng.choice(date_ids, p=date_weights))
+            payment_options, payment_weights = payment_method_weights[basket_channel]
+            loyalty = str(customer["LoyaltyTier"])
+            adjusted_weights = np.array(payment_weights, dtype=float)
+            if loyalty in {"PLUS", "VIP"} and "DIGITAL_WALLET" in payment_options:
+                adjusted_weights[payment_options.index("DIGITAL_WALLET")] *= 1.35
+            basket_payment = str(rng.choice(payment_options, p=normalize_weights(adjusted_weights)))
+
+        store_id = basket_store
         product_id = int(rng.choice(product_ids, p=product_weights))
-        transaction_date = int(rng.choice(date_ids, p=date_weights))
+        transaction_date = basket_date
         product = product_lookup.loc[product_id]
         store = store_lookup.loc[store_id]
         department = str(product["Department"])
-        channel = str(rng.choice(channels, p=normalize_weights([channel_weights[name] for name in channels])))
+        channel = basket_channel
         fulfillment = {
             "INSTORE": "TAKEAWAY",
             "CLICK_COLLECT": "PICKUP",
@@ -117,10 +168,13 @@ def generate_sales_transactions(
             {
                 "SalesTransactionId": sales_transaction_id,
                 "TransactionNumber": f"TXN{sales_transaction_id:09d}",
+                "BasketNumber": f"BSK{basket_numbers[sales_transaction_id - 1]:09d}",
                 "TransactionDate": transaction_date,
                 "Store": store_id,
+                "Customer": basket_customer,
                 "Product": product_id,
                 "Channel": channel,
+                "PaymentMethod": basket_payment,
                 "Units": signed_units,
                 "GrossSalesAmount": signed_gross,
                 "DiscountAmount": signed_discount,

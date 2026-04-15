@@ -8,7 +8,7 @@ import pandas as pd
 
 from DataGen.config import load_config
 from DataGen.generators.dimensions import generate_employees, generate_guests, generate_parks, generate_rides, generate_zones
-from DataGen.generators.operations import generate_feedback, generate_incidents, generate_tickets
+from DataGen.generators.operations import generate_feedback, generate_incidents, generate_queue_snapshot, generate_tickets
 from DataGen.generators.staffing import generate_ride_maintenance, generate_shifts
 from DataGen.rng import make_rng
 from DataGen.validate import validate_all
@@ -93,9 +93,10 @@ def main(
     shifts = generate_shifts(config, parks, zones, rides, employees, make_rng(seed, "shifts"))
     tickets = generate_tickets(config, parks, guests, make_rng(seed, "tickets"))
     incidents = generate_incidents(config, parks, zones, rides, employees, tickets, make_rng(seed, "incidents"))
+    queue_snapshot = generate_queue_snapshot(config, parks, zones, rides, ride_maintenance, tickets, incidents, make_rng(seed, "queue_snapshot"))
     feedback = generate_feedback(config, parks, zones, rides, tickets, incidents, make_rng(seed, "feedback"))
 
-    validation = validate_all(config, parks, zones, rides, ride_maintenance, employees, shifts, guests, tickets, incidents, feedback)
+    validation = validate_all(config, parks, zones, rides, ride_maintenance, employees, shifts, guests, tickets, incidents, queue_snapshot, feedback)
     print("Validation checks passed:", len(validation.checks))
     if validation.warnings:
         print("Validation warnings:")
@@ -114,6 +115,7 @@ def main(
         "Zone": f"{package}.Zones",
         "Ride": f"{package}.Rides",
         "RideMaintenance": f"{package}.RideMaintenance",
+        "QueueSnapshot": f"{package}.QueueSnapshot",
         "Employee": f"{package}.Employees",
         "Shift": f"{package}.Shifts",
         "Guest": f"{package}.Guests",
@@ -126,6 +128,7 @@ def main(
         delete_order = [
             "Feedback",
             "Incident",
+            "QueueSnapshot",
             "RideMaintenance",
             "Shift",
             "Ticket",
@@ -185,6 +188,17 @@ def main(
         "DowntimeHours",
         "IssueSummary",
         "VendorName",
+    ]
+    queue_snapshot_cols = [
+        "SnapshotAt",
+        "Park",
+        "Ride",
+        "WaitMinutes",
+        "QueueLength",
+        "ThroughputPerHour",
+        "Status",
+        "FastAccessPressure",
+        "DowntimeHours",
     ]
     employee_cols = [
         "EmployeeNumber",
@@ -269,6 +283,7 @@ def main(
         tables["Employee"]: (employee_cols, _without_object_id(employees, "EmployeeId")),
         tables["Guest"]: (guest_cols, _without_object_id(guests, "GuestId")),
         tables["RideMaintenance"]: (maintenance_cols, _without_object_id(ride_maintenance, "RideMaintenanceId")),
+        tables["QueueSnapshot"]: (queue_snapshot_cols, _without_object_id(queue_snapshot, "QueueSnapshotId")),
         tables["Shift"]: (shift_cols, _without_object_id(shifts, "ShiftId")),
         tables["Ticket"]: (ticket_cols, _without_object_id(tickets, "TicketId")),
         tables["Incident"]: (incident_cols, _without_object_id(incidents, "IncidentId")),
@@ -279,6 +294,7 @@ def main(
         tables["Park"],
         tables["Zone"],
         tables["Ride"],
+        tables["QueueSnapshot"],
         tables["Employee"],
         tables["Guest"],
         tables["RideMaintenance"],

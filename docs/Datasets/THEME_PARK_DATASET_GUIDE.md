@@ -4,7 +4,7 @@ This guide describes the current Theme Park Management dataset in this repositor
 
 ## Overview
 
-The Theme Park domain models a chaotic amusement-park operation with attractions, staffing, maintenance, guests, tickets, incidents, and post-visit feedback. It is designed for operational-support, triage, scheduling, summarization, and service-recovery demos rather than for full ticketing or safety-system replication.
+The Theme Park domain models a chaotic amusement-park operation with attractions, staffing, maintenance, guests, tickets, queue telemetry, incidents, and post-visit feedback. It is designed for operational-support, triage, scheduling, summarization, and service-recovery demos rather than for full ticketing or safety-system replication.
 
 Current package and entrypoints:
 
@@ -23,6 +23,7 @@ Current generated outputs:
 - `shifts.csv`
 - `guests.csv`
 - `tickets.csv`
+- `queue_snapshot.csv`
 - `incidents.csv`
 - `feedback.csv`
 
@@ -38,6 +39,7 @@ Current generated outputs:
 | `Shifts` | Individual staffing assignments across parks, zones, and sometimes specific rides. |
 | `Guests` | Synthetic visitor profiles with segment, age band, party size, loyalty tier, and accessibility needs. |
 | `Tickets` | Visit-level ticket facts including ticket type, entry channel, paid amount, add-ons, and visit status. |
+| `QueueSnapshot` | A ride-day operational telemetry table estimating wait time, queue length, throughput, fast-access pressure, and closure or delay status. |
 | `Incidents` | Operational and guest-facing incidents such as outages, medical events, queue disruption, and weather delays. |
 | `Feedback` | Guest feedback tied to tickets and sometimes rides, with sentiment, topic, rating, and follow-up need. |
 
@@ -118,6 +120,22 @@ Useful interpretation:
 - `SHORT_HANDED` shifts are useful for staffing-assistant and redeployment workflows.
 - mascot-qualified employees support entertainment and costume-related operations examples.
 - home-zone plus park assignment keeps the staffing model coherent enough for operational filtering.
+
+### Queue Operations
+
+Queue telemetry adds a direct guest-experience operations layer that was previously only implied by incidents and ticket volume.
+
+Current queue snapshot statuses include:
+
+- `OPERATING`
+- `DELAYED`
+- `CLOSED`
+
+Useful interpretation:
+
+- `QueueSnapshot` rolls up ticket volume, ride capacity, maintenance downtime, and disruption incidents into a dashboard-friendly ride-day view.
+- `FastAccessPressure` is useful for premium-access and queue-fairness discussions.
+- `ThroughputPerHour`, `WaitMinutes`, and `QueueLength` make the dataset much more practical for live operations and guest-communications demos.
 
 ### Guests And Tickets
 
@@ -263,10 +281,11 @@ Focus on:
 
 Why it works:
 
-- `Tickets`, `Rides`, `RideMaintenance`, and `Shifts` give enough demand and capacity signals to support a reasonable operational forecast demo.
+- `Tickets`, `QueueSnapshot`, `Rides`, `RideMaintenance`, and `Shifts` give enough demand and capacity signals to support a reasonable operational forecast demo.
 
 ## Notes
 
 - The text fields for incidents and feedback are intentionally short and operational rather than narrative-heavy.
+- `QueueSnapshot` is a synthetic ride-day operational estimate, not minute-by-minute telemetry from a live queue-management system.
 - If you want more bespoke descriptions later, the easiest extension point is the phrase pools in `catalog.py` rather than the schema itself.
 - `DeleteDataset("ThemePark")` is useful before repeatable demos if you want a clean rerun.

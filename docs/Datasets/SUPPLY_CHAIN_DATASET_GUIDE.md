@@ -21,7 +21,9 @@ Current generated outputs:
 - `dim_supplier.csv`
 - `dim_customer.csv`
 - `product_supplier.csv`
+- `sales_orders.csv`
 - `sales_order_line.csv`
+- `purchase_orders.csv`
 - `purchase_order_line.csv`
 - `shipment_line.csv`
 - `inventory_movement.csv`
@@ -38,7 +40,9 @@ Current generated outputs:
 | `DimSupplier` | The supplier master with commercial and logistics attributes such as payment terms, incoterms, and preferred ship modes. |
 | `DimCustomer` | The buying population for outbound sales, including customer type, region, and commercial segment. |
 | `ProductSupplier` | The bridge between products and suppliers, including sourcing constraints such as MOQ and order multiples. |
+| `SalesOrders` | The customer-order header layer derived from line activity. It consolidates status, dates, quantities, and order value at document level. |
 | `SalesOrderLine` | Customer-demand lines with ordered, allocated, shipped, backordered, and delivered quantities. |
+| `PurchaseOrders` | The supplier-order header layer derived from line activity. It summarizes order status, order value, receipt timing, and late-receipt behavior. |
 | `PurchaseOrderLine` | Supplier-facing replenishment lines with open, partial-receipt, and received behavior. |
 | `ShipmentLine` | Physical fulfillment events moving product between origin and destination with carrier and service-level detail. |
 | `InventoryMovement` | The event ledger for receipts, shipments, transfers, and adjustments. |
@@ -147,22 +151,31 @@ Useful interpretation:
 - `Open` and `PartShipped` are useful for backlog views.
 - `Delivered` lets you measure service performance.
 - `B2B` order lines are useful for comparing consumer-style and account-style demand patterns.
+- The new `SalesOrders` header table is useful when you want one row per customer order instead of reconstructing documents from line-level data.
 
 ### Purchase Orders
 
-Purchase orders are supplier-facing replenishment lines with partial and late receipt behavior.
+Purchase orders now have both a header layer and a line layer, which makes the dataset easier to use for receipt, supplier, and inbound-control-tower demos.
 
-Current purchase order statuses include:
+Current purchase-order header statuses include:
 
 - `Open`
 - `PartReceived`
 - `Received`
 - `Cancelled`
 
+Current purchase-order line statuses include:
+
+- `Open`
+- `PartReceived`
+- `Closed`
+- `Cancelled`
+
 Useful interpretation:
 
 - partial receipts are useful for inbound planning demos.
 - late receipts are useful for supplier-performance and ETA-reliability views.
+- The header table adds `LateReceiptFlag`, total quantities, and order value so common KPIs do not require rebuilding documents from lines first.
 
 ### Shipments
 
@@ -321,6 +334,7 @@ If you want a quick first dashboard, these metrics usually tell the story fastes
 
 - `InventorySnapshotDaily` is the easiest place to start for dashboarding, but it is still synthetic state data and should not be treated as a perfect ledger reconstruction.
 - `InventoryMovement` is better when you want event-history storytelling or reconciliation logic.
+- `SalesOrders` and `PurchaseOrders` are derived header tables, so the line tables remain the source of truth for exact operational sequencing.
 - Delay reasons are intentionally readable for demos, which is useful for presentations and issue triage views.
 - Sample CSV artifacts under `src/SupplyChain/python/out_supply_chain/` are useful examples, but the ObjectScript classes and generators remain the source of truth.
 - If you want a short demo, anchor it around one business question: service performance, supplier performance, or inventory health.

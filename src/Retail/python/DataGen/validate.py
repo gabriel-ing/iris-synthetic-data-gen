@@ -22,6 +22,7 @@ def validate_all(
     config: dict,
     calendar: pd.DataFrame,
     roles: pd.DataFrame,
+    customers: pd.DataFrame,
     users: pd.DataFrame,
     user_store_access: pd.DataFrame,
     stores: pd.DataFrame,
@@ -39,6 +40,7 @@ def validate_all(
 
     _assert(len(calendar) == counts["days"], "calendar row count matches configured days", checks)
     _assert(len(roles) == counts["roles"], "role row count matches fixed role set", checks)
+    _assert(len(customers) == counts["customers"], "customer row count matches configuration", checks)
     _assert(len(users) == counts["users"], "user row count matches configuration", checks)
     _assert(len(stores) == counts["stores"], "store row count matches configuration", checks)
     _assert(len(products) == counts["products"], "product row count matches configuration", checks)
@@ -51,12 +53,14 @@ def validate_all(
 
     calendar_ids = set(calendar["CalendarId"].tolist())
     role_ids = set(roles["RoleId"].tolist())
+    customer_ids = set(customers["CustomerId"].tolist())
     user_ids = set(users["UserId"].tolist())
     store_ids = set(stores["StoreId"].tolist())
     product_ids = set(products["ProductId"].tolist())
     supplier_product_ids = set(supplier_products["SupplierProductId"].tolist())
     promotion_ids = set(promotions["PromotionId"].tolist())
 
+    _assert(set(customers["HomeStore"]).issubset(store_ids), "customers reference valid home stores", checks)
     _assert(set(users["RoleRef"]).issubset(role_ids), "users reference valid roles", checks)
     _assert(set(users["PrimaryStore"]).issubset(store_ids), "users reference valid primary stores", checks)
     _assert(set(user_store_access["UserRef"]).issubset(user_ids), "user_store_access references valid users", checks)
@@ -89,7 +93,10 @@ def validate_all(
 
     _assert(sales_transactions["TransactionDate"].isin(calendar["CalendarId"]).all(), "sales transactions reference calendar rows", checks)
     _assert(sales_transactions["Store"].isin(stores["StoreId"]).all(), "sales transactions reference valid stores", checks)
+    _assert(sales_transactions["Customer"].isin(customers["CustomerId"]).all(), "sales transactions reference valid customers", checks)
     _assert(sales_transactions["Product"].isin(products["ProductId"]).all(), "sales transactions reference valid products", checks)
+    _assert(sales_transactions["BasketNumber"].notna().all(), "sales transactions include basket numbers", checks)
+    _assert(sales_transactions["PaymentMethod"].notna().all(), "sales transactions include payment methods", checks)
     sales_promo = sales_transactions.loc[sales_transactions["Promotion"].notna()].copy()
     _assert(sales_promo["Promotion"].isin(promotions["PromotionId"]).all(), "sales transactions reference valid promotions when present", checks)
     if len(sales_promo):
@@ -130,5 +137,7 @@ def validate_all(
         warnings.append("Promotion attachment in sales is low; promo analysis may feel thin.")
     if float((inventory_snapshot["OnHandQty"] < inventory_snapshot["ReorderPointQty"]).mean()) < 0.05:
         warnings.append("Low-stock inventory states are rare; replenishment demos may have limited edge cases.")
+    if sales_transactions["BasketNumber"].nunique() >= len(sales_transactions):
+        warnings.append("Most baskets are single-line only; basket-level retail analysis may still feel flat.")
 
     return ValidationResult(ok=True, checks=checks, warnings=warnings)

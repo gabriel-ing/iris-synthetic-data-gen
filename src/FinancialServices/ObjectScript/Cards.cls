@@ -6,6 +6,8 @@ Property CardId As %Library.Integer(MAXVAL = 2147483647, MINVAL = -2147483648) [
 
 Property Customer As Finance.Customers;
 
+Property Account As Finance.Accounts;
+
 Property CardType As %Library.String(MAXLEN = 20) [ SqlColumnNumber = 4 ];
 
 Property Status As %Library.String(MAXLEN = 20) [ SqlColumnNumber = 5 ];
@@ -36,21 +38,24 @@ Storage Default
 <Value>Customer</Value>
 </Value>
 <Value name="3">
-<Value>CardType</Value>
+<Value>Account</Value>
 </Value>
 <Value name="4">
-<Value>Status</Value>
+<Value>CardType</Value>
 </Value>
 <Value name="5">
-<Value>OpenedAt</Value>
+<Value>Status</Value>
 </Value>
 <Value name="6">
-<Value>ClosedAt</Value>
+<Value>OpenedAt</Value>
 </Value>
 <Value name="7">
-<Value>CardToken</Value>
+<Value>ClosedAt</Value>
 </Value>
 <Value name="8">
+<Value>CardToken</Value>
+</Value>
+<Value name="9">
 <Value>CreditLimit</Value>
 </Value>
 </Data>

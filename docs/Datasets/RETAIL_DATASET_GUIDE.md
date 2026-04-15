@@ -4,7 +4,7 @@ This guide describes the current Retail dataset in this repository: what each ta
 
 ## Overview
 
-The Retail domain models a multi-store operation with stores, products, staff access, promotions, purchase orders, stock transfers, sales transactions, and inventory snapshots. It is designed for store-operations, merchandising, omnichannel, and promo-effectiveness demos rather than for full point-of-sale or ERP replication.
+The Retail domain models a multi-store operation with stores, customers, products, staff access, promotions, purchase orders, stock transfers, sales transactions, and inventory snapshots. It is designed for store-operations, merchandising, omnichannel, and promo-effectiveness demos rather than for full point-of-sale or ERP replication.
 
 Current package and entrypoints:
 
@@ -20,6 +20,7 @@ Current generated outputs:
 - `users.csv`
 - `user_store_access.csv`
 - `stores.csv`
+- `customers.csv`
 - `products.csv`
 - `supplier_product.csv`
 - `promotions.csv`
@@ -37,12 +38,13 @@ Current generated outputs:
 | `Users` | Store and business users who interact with the retail estate. |
 | `UserStoreAccess` | The access matrix showing which users can see which stores. |
 | `Stores` | The retail network, including format, geography, active flag, and basic physical characteristics. |
+| `Customers` | A lightweight shopper dimension with segment, loyalty tier, home store, preferred channel, and active flag so retail activity is not anonymous. |
 | `Products` | The merchandise master with department, category, brand, price, private-label flag, and lifecycle timing. |
 | `SupplierProduct` | The supplier-to-product bridge for sourcing and cost-oriented retail stories. |
 | `Promotions` | Promotion campaigns with type, discount semantics, time window, and scope. |
 | `PurchaseOrders` | Replenishment orders into the retail network. |
 | `StockTransfers` | Store-to-store or network transfer events for inventory balancing. |
-| `SalesTransactions` | The core sales fact table across stores and channels, including returns, discounts, gross/net amounts, and stockout flags. |
+| `SalesTransactions` | The core sales fact table across stores and channels, now with basket, customer, and payment context in addition to returns, discounts, gross/net amounts, and stockout flags. |
 | `InventorySnapshot` | Synthetic inventory-state rows used for stock, availability, and sell-through demos. |
 
 ## Current Value Semantics
@@ -95,6 +97,30 @@ Useful interpretation:
 - `FLAGSHIP` is useful for premium/high-volume demo stories.
 - `OUTLET` is useful for discount, clearance, and margin-pressure stories.
 - geography fields support regional rollups and district comparisons.
+
+### Customers
+
+Customers add a lightweight shopper layer so the dataset can support repeat-visit, loyalty, and basket-level analysis without pretending to be a full CRM platform.
+
+Current customer segments include:
+
+- `BUDGET`
+- `MAINSTREAM`
+- `PREMIUM`
+- `OCCASIONAL`
+
+Current loyalty tiers include:
+
+- `NONE`
+- `MEMBER`
+- `PLUS`
+- `VIP`
+
+Useful interpretation:
+
+- `PREMIUM` customers skew more toward higher loyalty and less store-only behavior.
+- `OCCASIONAL` customers are useful for churn-risk, low-frequency, and activation-style stories.
+- `HomeStore` and `PreferredChannel` make it possible to tell localized loyalty and omnichannel-adoption stories.
 
 ### Products
 
@@ -159,9 +185,21 @@ Current fulfillment semantics include:
 - `HOME_DELIVERY`
 - `SHIP_FROM_STORE`
 
+Current payment methods include channel-dependent values such as:
+
+- `CARD`
+- `CASH`
+- `MOBILE_WALLET`
+- `DIGITAL_WALLET`
+- `GIFT_CARD`
+- `BNPL`
+
 Useful interpretation:
 
 - the channel split is strong enough for omnichannel demos.
+- `BasketNumber` groups multiple line items into a more believable receipt or order shape than treating every row as a standalone basket.
+- customer-linked baskets support repeat-customer, loyalty, and preferred-channel analysis that was not possible with anonymous transactions alone.
+- payment-method mix gives the dataset a more realistic tender story for checkout and customer-preference demos.
 - return and stockout flags are already built in, so the dataset supports exception-style analysis well.
 - gross, net, discount, and COGS measures make margin storytelling straightforward.
 
@@ -288,6 +326,8 @@ If you want a quick first dashboard, these metrics usually tell the story fastes
 ## Useful Caveats And Suggestions
 
 - `InventorySnapshot` is synthetic state data, so it should be treated as dashboard-friendly inventory state rather than a guaranteed exact reconstruction from transactional events.
+- The customer model is intentionally lightweight and behavior-oriented, not a full identity, household, or marketing-consent model.
+- `BasketNumber` is a synthetic grouped shopping event, which is useful for analytics even though it is not a tender-level POS receipt reconstruction.
 - Return rows are intentionally useful for analytics because signed financial values flip direction when the return flag is present.
 - Promotions can be chain-wide or store-specific, which makes scope an important filter in demos.
 - Store format materially changes demand shape, so format is usually worth including in first-pass dashboards.

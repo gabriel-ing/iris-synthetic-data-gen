@@ -50,7 +50,7 @@ The repo combines:
 
 - Package: `Finance`
 - Python root: `src/FinancialServices/python/DataGen`
-- Outputs: `customers`, `cards`, `merchants`, `transactions`, `disputes`
+- Outputs: `accounts`, `customers`, `cards`, `merchants`, `transactions`, `disputes`
 - Extra modules: `edge_cases.py`, `scripts/load_csv_to_iris.py`
 - Lazy-compile sentinel: `Finance.Customers`
 
@@ -58,21 +58,21 @@ The repo combines:
 
 - Package: `SupplyChain`
 - Python root: `src/SupplyChain/python/DataGen`
-- Outputs: `dim_date`, `dim_product`, `dim_location`, `dim_supplier`, `dim_customer`, `product_supplier`, `sales_order_line`, `purchase_order_line`, `shipment_line`, `inventory_movement`, `inventory_snapshot_daily`, `stock_count_event`
+- Outputs: `dim_date`, `dim_product`, `dim_location`, `dim_supplier`, `dim_customer`, `product_supplier`, `sales_orders`, `purchase_orders`, `sales_order_line`, `purchase_order_line`, `shipment_line`, `inventory_movement`, `inventory_snapshot_daily`, `stock_count_event`
 - Lazy-compile sentinel: `SupplyChain.DimCustomer`
 
 ### Retail
 
 - Package: `Retail`
 - Python root: `src/Retail/python/DataGen`
-- Outputs: `calendar`, `roles`, `users`, `user_store_access`, `stores`, `products`, `supplier_product`, `promotions`, `purchase_orders`, `stock_transfers`, `sales_transactions`, `inventory_snapshot`
+- Outputs: `calendar`, `customers`, `roles`, `users`, `user_store_access`, `stores`, `products`, `supplier_product`, `promotions`, `purchase_orders`, `stock_transfers`, `sales_transactions`, `inventory_snapshot`
 - Lazy-compile sentinel: `Retail.Stores`
 
 ### Theme Park Management
 
 - Package: `ThemePark`
 - Python root: `src/ThemePark/python/DataGen`
-- Outputs: `parks`, `zones`, `rides`, `ride_maintenance`, `employees`, `shifts`, `guests`, `tickets`, `incidents`, `feedback`
+- Outputs: `parks`, `zones`, `rides`, `ride_maintenance`, `queue_snapshot`, `employees`, `shifts`, `guests`, `tickets`, `incidents`, `feedback`
 - Lazy-compile sentinel: `ThemePark.Parks`
 
 ## Shared Domain Pattern

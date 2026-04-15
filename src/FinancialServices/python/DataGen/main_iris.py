@@ -7,6 +7,7 @@ import pandas as pd
 
 from DataGen.config import load_config
 from DataGen.edge_cases import apply_edge_cases
+from DataGen.generators.accounts import generate_accounts
 from DataGen.generators.cards import generate_cards
 from DataGen.generators.customers import generate_customers
 from DataGen.generators.disputes import generate_disputes
@@ -17,6 +18,7 @@ from DataGen.validate import validate_all
 
 
 def _summary(
+    accounts: pd.DataFrame,
     customers: pd.DataFrame,
     cards: pd.DataFrame,
     merchants: pd.DataFrame,
@@ -38,6 +40,7 @@ def _summary(
     auth = pd.to_datetime(transactions["AuthAt"], utc=True)
     return {
         "counts": {
+            "accounts": len(accounts),
             "customers": len(customers),
             "cards": len(cards),
             "merchants": len(merchants),
@@ -133,7 +136,8 @@ def main(
 
     merchants = generate_merchants(config, make_rng(seed, "merchants"))
     customers = generate_customers(config, make_rng(seed, "customers"))
-    cards = generate_cards(config, customers, make_rng(seed, "cards"))
+    accounts = generate_accounts(config, customers, make_rng(seed, "accounts"))
+    cards = generate_cards(config, customers, accounts, make_rng(seed, "cards"))
     tx_frames = generate_transactions(
         config,
         customers,
@@ -159,7 +163,7 @@ def main(
         make_rng(seed, "disputes"),
     )
 
-    validation = validate_all(config, customers, cards, merchants, transactions, disputes)
+    validation = validate_all(config, accounts, customers, cards, merchants, transactions, disputes)
     print("Validation checks passed:", len(validation.checks))
     if validation.warnings:
         print("Validation warnings:")
@@ -174,6 +178,7 @@ def main(
         ) from exc
 
     pkg = package
+    table_accounts = f"{pkg}.Accounts"
     table_customers = f"{pkg}.Customers"
     table_merchants = f"{pkg}.Merchants"
     table_cards = f"{pkg}.Cards"
@@ -181,11 +186,21 @@ def main(
     table_disputes = f"{pkg}.Disputes"
 
     if clear_existing:
-        for table in [table_disputes, table_transactions, table_cards, table_merchants, table_customers]:
+        for table in [table_disputes, table_transactions, table_cards, table_accounts, table_merchants, table_customers]:
             _exec_sql(iris, f"DELETE FROM {table}")
             print(f"Cleared {table}")
         _exec_sql(iris, "COMMIT")
 
+    accounts_cols = [
+        "AccountNumber",
+        "Customer",
+        "AccountType",
+        "Status",
+        "OpenedAt",
+        "ClosedAt",
+        "BillingCycleDay",
+        "AutopayFlag",
+    ]
     customers_cols = [
         "CustomerId",
         "CreatedAt",
@@ -210,6 +225,7 @@ def main(
     cards_cols = [
         "CardId",
         "Customer",
+        "Account",
         "CardType",
         "Status",
         "OpenedAt",
@@ -245,6 +261,8 @@ def main(
 
     inserted_customers = _insert_df(iris, table_customers, customers_cols, customers, commit_every)
     print(f"Inserted {inserted_customers:,} rows into {table_customers}")
+    inserted_accounts = _insert_df(iris, table_accounts, accounts_cols, accounts, commit_every)
+    print(f"Inserted {inserted_accounts:,} rows into {table_accounts}")
     inserted_merchants = _insert_df(iris, table_merchants, merchants_cols, merchants, commit_every)
     print(f"Inserted {inserted_merchants:,} rows into {table_merchants}")
     inserted_cards = _insert_df(iris, table_cards, cards_cols, cards, commit_every)
@@ -260,7 +278,7 @@ def main(
     inserted_disputes = _insert_df(iris, table_disputes, disputes_cols, disputes, commit_every)
     print(f"Inserted {inserted_disputes:,} rows into {table_disputes}")
 
-    summary = _summary(customers, cards, merchants, transactions, disputes)
+    summary = _summary(accounts, customers, cards, merchants, transactions, disputes)
     print("Run summary:")
     for key, value in summary.items():
         print(f"{key}: {value}")

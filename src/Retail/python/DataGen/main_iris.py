@@ -9,6 +9,7 @@ import pandas as pd
 from DataGen.config import load_config
 from DataGen.generators.dimensions import (
     generate_calendar,
+    generate_customers,
     generate_products,
     generate_roles,
     generate_stores,
@@ -108,13 +109,14 @@ def main(
     roles = generate_roles()
     stores = generate_stores(config, make_rng(seed, "stores"))
     products = generate_products(config, calendar, make_rng(seed, "products"))
+    customers = generate_customers(config, stores, make_rng(seed, "customers"))
     users = generate_users(config, roles, stores, make_rng(seed, "users"))
     user_store_access = generate_user_store_access(config, users, stores, make_rng(seed, "user_store_access"))
     supplier_products = generate_supplier_product(config, products, make_rng(seed, "supplier_product"))
     promotions = generate_promotions(config, calendar, stores, products, make_rng(seed, "promotions"))
     purchase_orders = generate_purchase_orders(config, calendar, stores, supplier_products, make_rng(seed, "purchase_orders"))
     stock_transfers = generate_stock_transfers(config, calendar, stores, products, make_rng(seed, "stock_transfers"))
-    sales_transactions = generate_sales_transactions(config, calendar, stores, products, promotions, make_rng(seed, "sales_transactions"))
+    sales_transactions = generate_sales_transactions(config, calendar, stores, products, promotions, customers, make_rng(seed, "sales_transactions"))
     inventory_snapshot = generate_inventory_snapshot(
         config,
         calendar,
@@ -132,6 +134,7 @@ def main(
         config,
         calendar,
         roles,
+        customers,
         users,
         user_store_access,
         stores,
@@ -161,6 +164,7 @@ def main(
         "Role": f"{package}.Roles",
         "Store": f"{package}.Stores",
         "Product": f"{package}.Products",
+        "Customer": f"{package}.Customers",
         "User": f"{package}.Users",
         "UserStoreAccess": f"{package}.UserStoreAccess",
         "SupplierProduct": f"{package}.SupplierProduct",
@@ -181,6 +185,7 @@ def main(
             "SupplierProduct",
             "UserStoreAccess",
             "User",
+            "Customer",
             "Product",
             "Store",
             "Role",
@@ -253,6 +258,15 @@ def main(
         "CreatedAt",
         "ActiveFlag",
     ]
+    customer_cols = [
+        "CustomerNumber",
+        "Segment",
+        "LoyaltyTier",
+        "HomeStore",
+        "PreferredChannel",
+        "JoinDate",
+        "ActiveFlag",
+    ]
     user_store_access_cols = [
         "UserRef",
         "Store",
@@ -312,10 +326,13 @@ def main(
     ]
     sales_transaction_cols = [
         "TransactionNumber",
+        "BasketNumber",
         "TransactionDate",
         "Store",
+        "Customer",
         "Product",
         "Channel",
+        "PaymentMethod",
         "Units",
         "GrossSalesAmount",
         "DiscountAmount",
@@ -349,6 +366,7 @@ def main(
         "Role": _insert_df(iris, tables["Role"], role_cols, _without_object_id(roles, "RoleId"), commit_every),
         "Store": _insert_df(iris, tables["Store"], store_cols, _without_object_id(stores, "StoreId"), commit_every),
         "Product": _insert_df(iris, tables["Product"], product_cols, _without_object_id(products, "ProductId"), commit_every),
+        "Customer": _insert_df(iris, tables["Customer"], customer_cols, _without_object_id(customers, "CustomerId"), commit_every),
         "User": _insert_df(iris, tables["User"], user_cols, _without_object_id(users, "UserId"), commit_every),
         "UserStoreAccess": _insert_df(iris, tables["UserStoreAccess"], user_store_access_cols, _without_object_id(user_store_access, "UserStoreAccessId"), commit_every),
         "SupplierProduct": _insert_df(iris, tables["SupplierProduct"], supplier_product_cols, _without_object_id(supplier_products, "SupplierProductId"), commit_every),

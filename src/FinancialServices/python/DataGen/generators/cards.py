@@ -6,21 +6,26 @@ import numpy as np
 import pandas as pd
 
 
-def _allocate_cards_to_customers(rng, customer_ids: np.ndarray, card_count: int) -> np.ndarray:
-    multipliers = rng.choice([1, 2, 3, 4], size=len(customer_ids), p=[0.72, 0.20, 0.06, 0.02])
-    expanded = np.repeat(customer_ids, multipliers)
+def _allocate_cards_to_accounts(rng, account_ids: np.ndarray, card_count: int) -> np.ndarray:
+    multipliers = rng.choice([1, 2, 3, 4], size=len(account_ids), p=[0.72, 0.20, 0.06, 0.02])
+    expanded = np.repeat(account_ids, multipliers)
     rng.shuffle(expanded)
     if len(expanded) >= card_count:
         return expanded[:card_count]
-    fill = rng.choice(customer_ids, size=card_count - len(expanded), replace=True)
+    fill = rng.choice(account_ids, size=card_count - len(expanded), replace=True)
     return np.concatenate([expanded, fill])
 
 
-def generate_cards(config: dict, customers: pd.DataFrame, rng) -> pd.DataFrame:
+def generate_cards(config: dict, customers: pd.DataFrame, accounts: pd.DataFrame, rng) -> pd.DataFrame:
     count = config["resolved_counts"]["cards"]
     start_date = pd.Timestamp(config["time"]["start_date"], tz="UTC")
-    customer_ids = customers["CustomerId"].to_numpy()
-    assigned_customers = _allocate_cards_to_customers(rng, customer_ids, count)
+    account_ids = accounts["AccountId"].to_numpy()
+    assigned_accounts = _allocate_cards_to_accounts(rng, account_ids, count)
+    account_lookup = accounts.set_index("AccountId")[["Customer", "AccountType", "Status"]]
+    assigned_account_rows = account_lookup.loc[assigned_accounts]
+    assigned_customers = assigned_account_rows["Customer"].to_numpy(dtype=int)
+    account_types = assigned_account_rows["AccountType"].astype(str).to_numpy()
+    account_status = assigned_account_rows["Status"].astype(str).to_numpy()
 
     opened_days_before = rng.integers(1, 365 * 2, size=count)
     opened_seconds = rng.integers(0, 24 * 3600, size=count)
@@ -30,7 +35,8 @@ def generate_cards(config: dict, customers: pd.DataFrame, rng) -> pd.DataFrame:
     ]
 
     status = rng.choice(["ACTIVE", "BLOCKED", "CLOSED"], size=count, p=[0.90, 0.05, 0.05])
-    card_type = rng.choice(["DEBIT", "CREDIT"], size=count, p=[0.65, 0.35])
+    status = np.where(account_status == "CLOSED", "CLOSED", status)
+    card_type = np.where(account_types == "REVOLVING_CREDIT", "CREDIT", "DEBIT")
     closed_at: list[str | None] = []
     for i in range(count):
         if status[i] == "CLOSED":
@@ -52,6 +58,7 @@ def generate_cards(config: dict, customers: pd.DataFrame, rng) -> pd.DataFrame:
         {
             "CardId": range(1, count + 1),
             "Customer": assigned_customers,
+            "Account": assigned_accounts,
             "CardType": card_type,
             "Status": status,
             "OpenedAt": [x.isoformat() for x in opened_ts],

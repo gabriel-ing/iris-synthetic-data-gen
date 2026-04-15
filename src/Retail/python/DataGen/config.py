@@ -9,6 +9,7 @@ import yaml
 
 @dataclass(frozen=True)
 class Counts:
+    customers: int
     users: int
     stores: int
     products: int
@@ -167,6 +168,7 @@ def _derive_counts(config: dict[str, Any]) -> Counts:
         raise ValueError(f"Unsupported scale.mode: {mode}")
 
     return Counts(
+        customers=max(500, int(counts["sales_transactions"]) // 3),
         users=int(counts["users"]),
         stores=int(counts["stores"]),
         products=int(counts["products"]),
@@ -189,6 +191,7 @@ def load_config(config_path: str | Path, scale_factor_override: int | None = Non
     counts = _derive_counts(merged)
     merged["resolved_counts"] = {
         "days": int(merged["time"]["days"]),
+        "customers": counts.customers,
         "users": counts.users,
         "stores": counts.stores,
         "products": counts.products,

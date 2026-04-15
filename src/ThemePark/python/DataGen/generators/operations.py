@@ -156,6 +156,108 @@ def generate_incidents(
     return pd.DataFrame(rows)
 
 
+def generate_queue_snapshot(
+    config: dict,
+    parks: pd.DataFrame,
+    zones: pd.DataFrame,
+    rides: pd.DataFrame,
+    ride_maintenance: pd.DataFrame,
+    tickets: pd.DataFrame,
+    incidents: pd.DataFrame,
+    rng: np.random.Generator,
+) -> pd.DataFrame:
+    start_date = pd.Timestamp(config["time"]["start_date"], tz="UTC").normalize()
+    days = int(config["resolved_counts"]["days"])
+    visit_days = pd.date_range(start=start_date, periods=days, freq="D", tz="UTC")
+
+    zone_parks = zones.set_index("ZoneId")["Park"].to_dict()
+    ride_frame = rides[["RideId", "Zone", "CapacityPerHour", "Status", "ThrillLevel", "RideType"]].copy()
+    ride_frame["Park"] = ride_frame["Zone"].map(zone_parks)
+
+    active_tickets = tickets.loc[tickets["TicketStatus"].isin(["USED", "UPGRADED"])].copy()
+    active_tickets["VisitDay"] = pd.to_datetime(active_tickets["VisitDate"], utc=True).dt.strftime("%Y-%m-%d")
+    park_day_volume = active_tickets.groupby(["Park", "VisitDay"], observed=True).size().to_dict()
+    park_day_fast_access = active_tickets.groupby(["Park", "VisitDay"], observed=True)["FastAccessFlag"].mean().to_dict()
+
+    maintenance_events = ride_maintenance.copy()
+    maintenance_day = pd.to_datetime(
+        maintenance_events["ActualStart"].fillna(maintenance_events["ScheduledStart"]),
+        utc=True,
+    ).dt.strftime("%Y-%m-%d")
+    maintenance_events["QueueDay"] = maintenance_day
+    maintenance_hours = maintenance_events.groupby(["Ride", "QueueDay"], observed=True)["DowntimeHours"].sum().to_dict()
+
+    incident_events = incidents.loc[incidents["Ride"].notna()].copy()
+    incident_events["QueueDay"] = pd.to_datetime(incident_events["IncidentAt"], utc=True).dt.strftime("%Y-%m-%d")
+    incident_minutes = incident_events.groupby(["Ride", "QueueDay"], observed=True)["ImpactMinutes"].sum().to_dict()
+    disruption_events = incident_events.groupby(["Ride", "QueueDay"], observed=True).size().to_dict()
+
+    ride_type_boost = {
+        "COASTER": 1.18,
+        "DARK_RIDE": 0.92,
+        "DROP_TOWER": 1.05,
+        "FAMILY_FLAT": 0.88,
+        "LOG_FLUME": 1.04,
+        "SIMULATOR": 0.96,
+        "WATER_RIDE": 1.10,
+    }
+
+    rows: list[dict[str, object]] = []
+    queue_snapshot_id = 1
+    for ride in ride_frame.itertuples(index=False):
+        thrill_boost = 0.78 + (float(ride.ThrillLevel) * 0.08)
+        type_boost = ride_type_boost.get(str(ride.RideType), 1.0)
+        base_popularity = thrill_boost * type_boost
+        for day in visit_days:
+            day_key = day.strftime("%Y-%m-%d")
+            park_id = int(ride.Park)
+            park_volume = float(park_day_volume.get((park_id, day_key), 0))
+            fast_access_pressure = float(park_day_fast_access.get((park_id, day_key), 0.0))
+            downtime_hours = float(maintenance_hours.get((int(ride.RideId), day_key), 0.0))
+            downtime_hours += float(incident_minutes.get((int(ride.RideId), day_key), 0.0)) / 60.0
+            disruptions = int(disruption_events.get((int(ride.RideId), day_key), 0))
+
+            if str(ride.Status) in {"SEASONAL", "STANDBY"} and day.month not in {5, 6, 7, 8, 9}:
+                status = "CLOSED"
+            elif downtime_hours >= 9.0:
+                status = "CLOSED"
+            elif str(ride.Status) == "LIMITED_HOURS" or downtime_hours >= 1.5 or disruptions > 0:
+                status = "DELAYED"
+            else:
+                status = "OPERATING"
+
+            operating_hours = 0.0 if status == "CLOSED" else max(2.0, 10.0 - min(downtime_hours, 8.0))
+            demand = park_volume * base_popularity * rng.uniform(0.012, 0.035)
+            demand *= 1.0 + min(0.35, fast_access_pressure * 0.40)
+            hourly_capacity = float(ride.CapacityPerHour) * (0.82 if status == "DELAYED" else 1.0)
+            throughput_per_hour = 0 if status == "CLOSED" else int(max(0.0, min(hourly_capacity, demand / max(1.0, operating_hours))))
+            if status == "CLOSED":
+                wait_minutes = 0
+                queue_length = 0
+            else:
+                congestion = 0.0 if hourly_capacity <= 0 else max(0.0, demand / max(1.0, operating_hours) / hourly_capacity)
+                wait_minutes = int(np.clip(8 + congestion * 70 + fast_access_pressure * 20 + disruptions * 9, 5, 240))
+                queue_length = int(max(0, round(throughput_per_hour * wait_minutes / 60)))
+
+            rows.append(
+                {
+                    "QueueSnapshotId": queue_snapshot_id,
+                    "SnapshotAt": (day + pd.Timedelta(hours=14)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "Park": park_id,
+                    "Ride": int(ride.RideId),
+                    "WaitMinutes": wait_minutes,
+                    "QueueLength": queue_length,
+                    "ThroughputPerHour": throughput_per_hour,
+                    "Status": status,
+                    "FastAccessPressure": round(min(0.95, max(0.0, fast_access_pressure)), 4),
+                    "DowntimeHours": round(downtime_hours, 2),
+                }
+            )
+            queue_snapshot_id += 1
+
+    return pd.DataFrame(rows)
+
+
 def generate_feedback(
     config: dict,
     parks: pd.DataFrame,

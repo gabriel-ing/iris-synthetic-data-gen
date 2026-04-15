@@ -112,19 +112,19 @@ ClassMethod DeleteDataset(pDataset As %String, pDeleteClasses As %Integer = 1) A
     if pDataset = "FinancialServices" {
         set package = "Finance"
         set sentinelClass = "Finance.Customers"
-        set deleteOrder = "Finance.Disputes,Finance.Transactions,Finance.Cards,Finance.Merchants,Finance.Customers"
+        set deleteOrder = "Finance.Disputes,Finance.Transactions,Finance.Cards,Finance.Accounts,Finance.Merchants,Finance.Customers"
     } elseif pDataset = "SupplyChain" {
         set package = "SupplyChain"
         set sentinelClass = "SupplyChain.DimCustomer"
-        set deleteOrder = "SupplyChain.InventorySnapshotDaily,SupplyChain.InventoryMovement,SupplyChain.StockCountEvent,SupplyChain.ShipmentLine,SupplyChain.PurchaseOrderLine,SupplyChain.SalesOrderLine,SupplyChain.ProductSupplier,SupplyChain.DimCustomer,SupplyChain.DimSupplier,SupplyChain.DimLocation,SupplyChain.DimProduct,SupplyChain.DimDate"
+        set deleteOrder = "SupplyChain.InventorySnapshotDaily,SupplyChain.InventoryMovement,SupplyChain.StockCountEvent,SupplyChain.ShipmentLine,SupplyChain.PurchaseOrderLine,SupplyChain.SalesOrderLine,SupplyChain.PurchaseOrders,SupplyChain.SalesOrders,SupplyChain.ProductSupplier,SupplyChain.DimCustomer,SupplyChain.DimSupplier,SupplyChain.DimLocation,SupplyChain.DimProduct,SupplyChain.DimDate"
     } elseif pDataset = "Retail" {
         set package = "Retail"
         set sentinelClass = "Retail.Stores"
-        set deleteOrder = "Retail.InventorySnapshot,Retail.SalesTransactions,Retail.StockTransfers,Retail.PurchaseOrders,Retail.Promotions,Retail.SupplierProduct,Retail.UserStoreAccess,Retail.Users,Retail.Products,Retail.Stores,Retail.Roles,Retail.Calendar"
+        set deleteOrder = "Retail.InventorySnapshot,Retail.SalesTransactions,Retail.StockTransfers,Retail.PurchaseOrders,Retail.Promotions,Retail.SupplierProduct,Retail.UserStoreAccess,Retail.Users,Retail.Customers,Retail.Products,Retail.Stores,Retail.Roles,Retail.Calendar"
     } elseif pDataset = "ThemePark" {
         set package = "ThemePark"
         set sentinelClass = "ThemePark.Parks"
-        set deleteOrder = "ThemePark.Feedback,ThemePark.Incidents,ThemePark.RideMaintenance,ThemePark.Shifts,ThemePark.Tickets,ThemePark.Employees,ThemePark.Guests,ThemePark.Rides,ThemePark.Zones,ThemePark.Parks"
+        set deleteOrder = "ThemePark.Feedback,ThemePark.Incidents,ThemePark.QueueSnapshot,ThemePark.RideMaintenance,ThemePark.Shifts,ThemePark.Tickets,ThemePark.Employees,ThemePark.Guests,ThemePark.Rides,ThemePark.Zones,ThemePark.Parks"
     } else {
         quit $$$ERROR($$$GeneralError, "Invalid dataset. Must be 'FinancialServices', 'SupplyChain', 'Retail', or 'ThemePark'.")
     }

@@ -8,3 +8,4 @@ __pycache__
 *.pyd
 */__pycache__
 *.log
+**/out

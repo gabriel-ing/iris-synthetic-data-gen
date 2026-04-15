@@ -34,6 +34,7 @@ The root ZPM package installs a shared ObjectScript entrypoint, `SyntheticDataGe
 IRIS package: `Finance`
 
 Generated outputs:
+- `accounts.csv`
 - `customers.csv`
 - `cards.csv`
 - `merchants.csv`
@@ -45,6 +46,8 @@ Generated outputs:
 IRIS package: `SupplyChain`
 
 Generated outputs:
+- `sales_orders.csv`
+- `purchase_orders.csv`
 - `dim_date.csv`
 - `dim_product.csv`
 - `dim_location.csv`
@@ -63,6 +66,7 @@ Generated outputs:
 IRIS package: `Retail`
 
 Generated outputs:
+- `customers.csv`
 - `calendar.csv`
 - `roles.csv`
 - `users.csv`
@@ -81,6 +85,7 @@ Generated outputs:
 IRIS package: `ThemePark`
 
 Generated outputs:
+- `queue_snapshot.csv`
 - `parks.csv`
 - `zones.csv`
 - `rides.csv`

@@ -24,6 +24,8 @@ def apply_edge_cases(config: dict, customers: pd.DataFrame, cards: pd.DataFrame,
             allowed = customers.loc[~customers["CustomerId"].isin(no_card_customers), "CustomerId"].to_numpy()
             if len(allowed) > 0:
                 cards.loc[reassign_mask, "Customer"] = rng.choice(allowed, size=int(reassign_mask.sum()), replace=True)
+                if "Account" in cards.columns:
+                    cards.loc[reassign_mask, "Account"] = cards.loc[reassign_mask, "Customer"]
 
     # Cards with only declines
     n_only_declines = min(int(edge.get("cards_with_only_declines", 0)), cards["CardId"].nunique())

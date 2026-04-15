@@ -20,7 +20,9 @@ from DataGen.generators.inventory import (
     generate_stock_count_events,
 )
 from DataGen.generators.orders import (
+    generate_purchase_orders,
     generate_purchase_order_lines,
+    generate_sales_orders,
     generate_sales_order_lines,
     generate_shipment_lines,
 )
@@ -29,6 +31,8 @@ from DataGen.validate import validate_all
 
 
 def _summary(
+    sales_orders: pd.DataFrame,
+    purchase_orders: pd.DataFrame,
     sales_order_lines: pd.DataFrame,
     purchase_order_lines: pd.DataFrame,
     shipment_lines: pd.DataFrame,
@@ -49,6 +53,8 @@ def _summary(
             "negative_available_snapshot_rate": round(neg_available, 4),
         },
         "counts": {
+            "sales_orders": len(sales_orders),
+            "purchase_orders": len(purchase_orders),
             "sales_order_lines": len(sales_order_lines),
             "purchase_order_lines": len(purchase_order_lines),
             "shipment_lines": len(shipment_lines),
@@ -172,6 +178,8 @@ def main(
         locations,
         make_rng(seed, "purchase_order_lines"),
     )
+    sales_orders = generate_sales_orders(sales_order_lines)
+    purchase_orders = generate_purchase_orders(purchase_order_lines)
     shipment_lines = generate_shipment_lines(
         config,
         dim_date,
@@ -212,6 +220,8 @@ def main(
         suppliers,
         customers,
         product_supplier,
+        sales_orders,
+        purchase_orders,
         sales_order_lines,
         purchase_order_lines,
         shipment_lines,
@@ -240,6 +250,8 @@ def main(
         "DimSupplier": f"{pkg}.DimSupplier",
         "DimCustomer": f"{pkg}.DimCustomer",
         "ProductSupplier": f"{pkg}.ProductSupplier",
+        "SalesOrders": f"{pkg}.SalesOrders",
+        "PurchaseOrders": f"{pkg}.PurchaseOrders",
         "SalesOrderLine": f"{pkg}.SalesOrderLine",
         "PurchaseOrderLine": f"{pkg}.PurchaseOrderLine",
         "ShipmentLine": f"{pkg}.ShipmentLine",
@@ -257,6 +269,8 @@ def main(
             "ShipmentLine",
             "PurchaseOrderLine",
             "SalesOrderLine",
+            "PurchaseOrders",
+            "SalesOrders",
             "ProductSupplier",
             "DimCustomer",
             "DimSupplier",
@@ -339,6 +353,38 @@ def main(
         "UnitPurchaseCost",
         "Incoterm",
         "ShipMode",
+    ]
+    sales_order_cols = [
+        "SalesOrderId",
+        "Customer",
+        "ShipFromLocation",
+        "ShipToLocation",
+        "OrderDate",
+        "RequestedShipDate",
+        "PromisedDeliveryDate",
+        "ActualDeliveryDate",
+        "Status",
+        "Channel",
+        "OrderLineCount",
+        "OrderedQtyTotal",
+        "ShippedQtyTotal",
+        "BackorderedQtyTotal",
+        "OrderValue",
+    ]
+    purchase_order_cols = [
+        "PurchaseOrderId",
+        "Supplier",
+        "ShipFromLocation",
+        "DeliverToLocation",
+        "OrderDate",
+        "ExpectedReceiptDate",
+        "ReceiptDate",
+        "Status",
+        "OrderLineCount",
+        "OrderedQtyTotal",
+        "ReceivedQtyTotal",
+        "OrderValue",
+        "LateReceiptFlag",
     ]
     sales_order_line_cols = [
         "SalesOrderId",
@@ -474,6 +520,22 @@ def main(
     print(f"Inserted {inserted:,} rows into {tables['ProductSupplier']}")
     inserted = _insert_df(
         iris,
+        tables["SalesOrders"],
+        sales_order_cols,
+        sales_orders,
+        commit_every,
+    )
+    print(f"Inserted {inserted:,} rows into {tables['SalesOrders']}")
+    inserted = _insert_df(
+        iris,
+        tables["PurchaseOrders"],
+        purchase_order_cols,
+        purchase_orders,
+        commit_every,
+    )
+    print(f"Inserted {inserted:,} rows into {tables['PurchaseOrders']}")
+    inserted = _insert_df(
+        iris,
         tables["SalesOrderLine"],
         sales_order_line_cols,
         _without_object_id(sales_order_lines, "SalesOrderLineId"),
@@ -521,7 +583,7 @@ def main(
     )
     print(f"Inserted {inserted:,} rows into {tables['InventorySnapshotDaily']}")
 
-    summary = _summary(sales_order_lines, purchase_order_lines, shipment_lines, inventory_snapshot_daily)
+    summary = _summary(sales_orders, purchase_orders, sales_order_lines, purchase_order_lines, shipment_lines, inventory_snapshot_daily)
     print("Run summary:")
     for key, value in summary.items():
         print(f"{key}: {value}")

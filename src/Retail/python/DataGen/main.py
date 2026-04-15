@@ -5,6 +5,7 @@ import argparse
 from DataGen.config import load_config
 from DataGen.generators.dimensions import (
     generate_calendar,
+    generate_customers,
     generate_products,
     generate_roles,
     generate_stores,
@@ -30,12 +31,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _summary(users, user_store_access, stores, products, promotions, sales_transactions, inventory_snapshot) -> dict:
+def _summary(customers, users, user_store_access, stores, products, promotions, sales_transactions, inventory_snapshot) -> dict:
     full_user_share = float((users["AccessScope"] == "FULL").mean())
     promo_penetration = float(sales_transactions["Promotion"].notna().mean())
     return_rate = float(sales_transactions["ReturnFlag"].mean())
     low_stock_rate = float((inventory_snapshot["OnHandQty"] < inventory_snapshot["ReorderPointQty"]).mean())
     markdown_rate = float(inventory_snapshot["MarkdownPrice"].notna().mean())
+    baskets_per_customer = float(sales_transactions["BasketNumber"].nunique() / max(1, len(customers)))
 
     top_departments = (
         sales_transactions.merge(products[["ProductId", "Department"]], left_on="Product", right_on="ProductId", how="left")
@@ -49,6 +51,7 @@ def _summary(users, user_store_access, stores, products, promotions, sales_trans
 
     return {
         "counts": {
+            "customers": len(customers),
             "users": len(users),
             "user_store_access": len(user_store_access),
             "stores": len(stores),
@@ -63,6 +66,7 @@ def _summary(users, user_store_access, stores, products, promotions, sales_trans
             "return_rate": round(return_rate, 4),
             "low_stock_rate": round(low_stock_rate, 4),
             "markdown_rate": round(markdown_rate, 4),
+            "baskets_per_customer": round(baskets_per_customer, 4),
         },
         "top_departments_by_net_sales": top_departments,
     }
@@ -79,13 +83,14 @@ def main() -> None:
     roles = generate_roles()
     stores = generate_stores(config, make_rng(seed, "stores"))
     products = generate_products(config, calendar, make_rng(seed, "products"))
+    customers = generate_customers(config, stores, make_rng(seed, "customers"))
     users = generate_users(config, roles, stores, make_rng(seed, "users"))
     user_store_access = generate_user_store_access(config, users, stores, make_rng(seed, "user_store_access"))
     supplier_products = generate_supplier_product(config, products, make_rng(seed, "supplier_product"))
     promotions = generate_promotions(config, calendar, stores, products, make_rng(seed, "promotions"))
     purchase_orders = generate_purchase_orders(config, calendar, stores, supplier_products, make_rng(seed, "purchase_orders"))
     stock_transfers = generate_stock_transfers(config, calendar, stores, products, make_rng(seed, "stock_transfers"))
-    sales_transactions = generate_sales_transactions(config, calendar, stores, products, promotions, make_rng(seed, "sales_transactions"))
+    sales_transactions = generate_sales_transactions(config, calendar, stores, products, promotions, customers, make_rng(seed, "sales_transactions"))
     inventory_snapshot = generate_inventory_snapshot(
         config,
         calendar,
@@ -102,6 +107,7 @@ def main() -> None:
     tables = {
         "calendar": calendar,
         "roles": roles,
+        "customers": customers,
         "users": users,
         "user_store_access": user_store_access,
         "stores": stores,
@@ -120,6 +126,7 @@ def main() -> None:
         config,
         calendar,
         roles,
+        customers,
         users,
         user_store_access,
         stores,
@@ -131,7 +138,7 @@ def main() -> None:
         sales_transactions,
         inventory_snapshot,
     )
-    summary = _summary(users, user_store_access, stores, products, promotions, sales_transactions, inventory_snapshot)
+    summary = _summary(customers, users, user_store_access, stores, products, promotions, sales_transactions, inventory_snapshot)
 
     print("Validation checks passed:", len(validation.checks))
     if validation.warnings:

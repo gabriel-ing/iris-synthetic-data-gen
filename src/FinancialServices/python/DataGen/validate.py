@@ -18,16 +18,21 @@ def _assert(condition: bool, message: str, checks: list[str]) -> None:
     checks.append(message)
 
 
-def validate_all(config: dict, customers: pd.DataFrame, cards: pd.DataFrame, merchants: pd.DataFrame, transactions: pd.DataFrame, disputes: pd.DataFrame) -> ValidationResult:
+def validate_all(config: dict, accounts: pd.DataFrame, customers: pd.DataFrame, cards: pd.DataFrame, merchants: pd.DataFrame, transactions: pd.DataFrame, disputes: pd.DataFrame) -> ValidationResult:
     checks: list[str] = []
     warnings: list[str] = []
 
     # FK checks
+    _assert(accounts["Customer"].isin(customers["CustomerId"]).all(), "FK accounts.customer valid", checks)
     _assert(cards["Customer"].isin(customers["CustomerId"]).all(), "FK cards.customer valid", checks)
+    _assert(cards["Account"].isin(accounts["AccountId"]).all(), "FK cards.account valid", checks)
     _assert(transactions["Card"].isin(cards["CardId"]).all(), "FK transactions.card valid", checks)
     _assert(transactions["Merchant"].isin(merchants["MerchantId"]).all(), "FK transactions.merchant valid", checks)
     _assert(disputes["Transactions"].isin(transactions["TransactionId"]).all(), "FK disputes.transactions valid", checks)
     _assert(disputes["Transactions"].is_unique, "One dispute per transaction", checks)
+
+    card_account = cards.merge(accounts[["AccountId", "Customer"]], left_on="Account", right_on="AccountId", how="left", suffixes=("", "_Account"))
+    _assert((card_account["Customer"] == card_account["Customer_Account"]).all(), "Cards stay attached to the owning customer account", checks)
 
     # Temporal checks
     card_times = cards[["CardId", "OpenedAt", "ClosedAt"]].copy()
@@ -52,6 +57,7 @@ def validate_all(config: dict, customers: pd.DataFrame, cards: pd.DataFrame, mer
 
     # Count checks
     resolved = config["resolved_counts"]
+    _assert(len(accounts) == int(resolved["accounts"]), "Account count matches config", checks)
     _assert(len(customers) == int(resolved["customers"]), "Customer count matches config", checks)
     _assert(len(cards) == int(resolved["cards"]), "Card count matches config", checks)
     _assert(len(merchants) == int(resolved["merchants"]), "Merchant count matches config", checks)
@@ -75,5 +81,8 @@ def validate_all(config: dict, customers: pd.DataFrame, cards: pd.DataFrame, mer
     ecom_dispute_rate = (disputes["Transactions"].isin(transactions.loc[transactions["Channel"] == "ECOM", "TransactionId"])).mean()
     if ecom_dispute_rate < 0.5:
         warnings.append("ECOM dispute share lower than expected")
+
+    if float((accounts["AccountType"] == "REVOLVING_CREDIT").mean()) < 0.20:
+        warnings.append("Revolving-credit account share is low; card portfolio mix may feel too debit-heavy")
 
     return ValidationResult(ok=True, checks=checks, warnings=warnings)

@@ -29,6 +29,7 @@ def validate_all(
     guests: pd.DataFrame,
     tickets: pd.DataFrame,
     incidents: pd.DataFrame,
+    queue_snapshot: pd.DataFrame,
     feedback: pd.DataFrame,
 ) -> ValidationResult:
     checks: list[str] = []
@@ -66,6 +67,8 @@ def validate_all(
     _assert(set(tickets["Guest"]).issubset(guest_ids), "tickets reference valid guests", checks)
     _assert(set(tickets["Park"]).issubset(park_ids), "tickets reference valid parks", checks)
     _assert(set(incidents["Park"]).issubset(park_ids), "incidents reference valid parks", checks)
+    _assert(set(queue_snapshot["Park"]).issubset(park_ids), "queue snapshots reference valid parks", checks)
+    _assert(set(queue_snapshot["Ride"]).issubset(ride_ids), "queue snapshots reference valid rides", checks)
     incident_zone = incidents["Zone"]
     _assert(incident_zone[incident_zone.notna()].isin(zones["ZoneId"]).all(), "incidents reference valid zones when present", checks)
     incident_ride = incidents["Ride"]
@@ -109,6 +112,7 @@ def validate_all(
     _assert(tickets["TicketStatus"].isin(["USED", "CANCELLED", "NO_SHOW", "UPGRADED"]).all(), "ticket status values stay within the supported set", checks)
 
     ride_park_map = {ride_id: zone_parks[zone_id] for ride_id, zone_id in ride_zones.items()}
+    _assert((queue_snapshot["Ride"].map(ride_park_map) == queue_snapshot["Park"]).all(), "queue snapshot rides belong to the queue snapshot park", checks)
     incident_with_zone = incidents.loc[incidents["Zone"].notna()].copy()
     if len(incident_with_zone):
         _assert((incident_with_zone["Zone"].map(zone_parks) == incident_with_zone["Park"]).all(), "incident zones belong to the incident park", checks)
@@ -123,8 +127,14 @@ def validate_all(
         _assert((incident_with_employee["ReportedEmployee"].map(employee_parks) == incident_with_employee["Park"]).all(), "incident reporting employees belong to the incident park", checks)
 
     incident_at = pd.to_datetime(incidents["IncidentAt"], utc=True)
+    queue_snapshot_at = pd.to_datetime(queue_snapshot["SnapshotAt"], utc=True)
     _assert((incidents["ImpactMinutes"] > 0).all(), "incident impact minutes are positive", checks)
     _assert((incident_at >= pd.Timestamp(config["time"]["start_date"], tz="UTC") - pd.Timedelta(days=1)).all(), "incident timestamps stay within the configured run horizon", checks)
+    _assert((queue_snapshot["WaitMinutes"] >= 0).all(), "queue wait minutes are non-negative", checks)
+    _assert((queue_snapshot["QueueLength"] >= 0).all(), "queue lengths are non-negative", checks)
+    _assert((queue_snapshot["ThroughputPerHour"] >= 0).all(), "queue throughput is non-negative", checks)
+    _assert((queue_snapshot["DowntimeHours"] >= 0).all(), "queue downtime hours are non-negative", checks)
+    _assert((queue_snapshot_at >= pd.Timestamp(config["time"]["start_date"], tz="UTC")).all(), "queue snapshot timestamps stay within the configured run horizon", checks)
 
     feedback_submitted = pd.to_datetime(feedback["SubmittedAt"], utc=True)
     _assert(feedback["Rating"].between(1, 5).all(), "feedback ratings stay within 1-5", checks)
@@ -143,5 +153,7 @@ def validate_all(
         warnings.append("Negative feedback is sparse; complaint-triage workflows may lack edge cases.")
     if float((shifts["CoverageStatus"] == "SHORT_HANDED").mean()) < 0.04:
         warnings.append("Short-handed shift coverage is limited; staffing-assistant demos may feel thin.")
+    if float(queue_snapshot["WaitMinutes"].mean()) < 8.0:
+        warnings.append("Ride wait times are light; queue-management demos may feel too easy.")
 
     return ValidationResult(ok=True, checks=checks, warnings=warnings)
