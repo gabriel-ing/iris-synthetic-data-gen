@@ -29,6 +29,160 @@ Current generated outputs:
 - `sales_transactions.csv`
 - `inventory_snapshot.csv`
 
+## Quick SQL Starter
+
+The examples below use simplified DDL that mirrors the core tables in this dataset, followed by a few starter queries for sales, promotions, and inventory analysis.
+
+### Representative DDL
+
+```sql
+CREATE TABLE Retail.Calendar (
+	DateKey INTEGER NOT NULL,
+	CalendarDate DATE NOT NULL,
+	Year INTEGER,
+	Quarter INTEGER,
+	Month INTEGER,
+	WeekOfYear INTEGER,
+	DayOfWeek INTEGER,
+	IsWeekend BOOLEAN,
+	Season VARCHAR(20),
+	FiscalPeriod VARCHAR(16),
+	RetailEvent VARCHAR(40),
+	PRIMARY KEY (DateKey)
+);
+
+CREATE TABLE Retail.Stores (
+	StoreCode VARCHAR(40) NOT NULL,
+	StoreName VARCHAR(120),
+	StoreFormat VARCHAR(40),
+	Region VARCHAR(20),
+	District VARCHAR(20),
+	City VARCHAR(40),
+	State VARCHAR(10),
+	OpenDate TIMESTAMP,
+	SquareFeet INTEGER,
+	ActiveFlag BOOLEAN,
+	PRIMARY KEY (StoreCode)
+);
+
+CREATE TABLE Retail.Products (
+	Sku VARCHAR(40) NOT NULL,
+	ProductName VARCHAR(120),
+	Department VARCHAR(40),
+	Category VARCHAR(40),
+	Subcategory VARCHAR(60),
+	Brand VARCHAR(60),
+	PrivateLabelFlag BOOLEAN,
+	Seasonality VARCHAR(30),
+	UnitSize VARCHAR(30),
+	BaseUnitCost NUMERIC(18, 2),
+	BaseRegularPrice NUMERIC(18, 2),
+	LaunchDateKey INTEGER,
+	DiscontinueDateKey INTEGER,
+	PRIMARY KEY (Sku)
+);
+
+CREATE TABLE Retail.Customers (
+	CustomerNumber VARCHAR(40) NOT NULL,
+	Segment VARCHAR(20),
+	LoyaltyTier VARCHAR(20),
+	HomeStoreCode VARCHAR(40),
+	PreferredChannel VARCHAR(30),
+	JoinDate TIMESTAMP,
+	ActiveFlag BOOLEAN,
+	PRIMARY KEY (CustomerNumber)
+);
+
+CREATE TABLE Retail.Promotions (
+	PromotionCode VARCHAR(40) NOT NULL,
+	ProductSku VARCHAR(40),
+	StoreCode VARCHAR(40),
+	StartDateKey INTEGER,
+	EndDateKey INTEGER,
+	PromoType VARCHAR(30),
+	DiscountPct NUMERIC(18, 4),
+	PromoPrice NUMERIC(18, 2),
+	ExpectedLiftPct NUMERIC(18, 4),
+	FundingSource VARCHAR(20),
+	PRIMARY KEY (PromotionCode)
+);
+
+CREATE TABLE Retail.SalesTransactions (
+	TransactionNumber VARCHAR(50) NOT NULL,
+	BasketNumber VARCHAR(40),
+	TransactionDateKey INTEGER,
+	StoreCode VARCHAR(40),
+	CustomerNumber VARCHAR(40),
+	ProductSku VARCHAR(40),
+	Channel VARCHAR(30),
+	PaymentMethod VARCHAR(30),
+	Units INTEGER,
+	GrossSalesAmount NUMERIC(18, 2),
+	DiscountAmount NUMERIC(18, 2),
+	NetSalesAmount NUMERIC(18, 2),
+	CogsAmount NUMERIC(18, 2),
+	PromotionCode VARCHAR(40),
+	FulfillmentType VARCHAR(30),
+	ReturnFlag BOOLEAN,
+	StockoutFlag BOOLEAN,
+	PRIMARY KEY (TransactionNumber)
+);
+
+CREATE TABLE Retail.InventorySnapshot (
+	SnapshotDateKey INTEGER,
+	StoreCode VARCHAR(40),
+	ProductSku VARCHAR(40),
+	OnHandQty NUMERIC(18, 2),
+	ReservedQty NUMERIC(18, 2),
+	AvailableQty NUMERIC(18, 2),
+	InTransitQty NUMERIC(18, 2),
+	OnOrderQty NUMERIC(18, 2),
+	SafetyStockQty NUMERIC(18, 2),
+	ReorderPointQty NUMERIC(18, 2),
+	ReorderTargetQty NUMERIC(18, 2),
+	UnitCost NUMERIC(18, 2),
+	RegularPrice NUMERIC(18, 2),
+	MarkdownPrice NUMERIC(18, 2),
+	DaysOfSupply NUMERIC(18, 2),
+	PRIMARY KEY (SnapshotDateKey, StoreCode, ProductSku)
+);
+```
+
+### Sample Queries
+
+```sql
+SELECT
+	s.StoreFormat,
+	t.Channel,
+	COUNT(*) AS txn_count,
+	ROUND(SUM(t.NetSalesAmount), 2) AS net_sales
+FROM Retail.SalesTransactions t
+JOIN Retail.Stores s ON t.StoreCode = s.StoreCode
+GROUP BY s.StoreFormat, t.Channel
+ORDER BY net_sales DESC;
+
+SELECT
+	p.PromoType,
+	COUNT(*) AS txn_count,
+	ROUND(SUM(t.DiscountAmount), 2) AS discount_given,
+	ROUND(AVG(t.NetSalesAmount), 2) AS avg_net_sales
+FROM Retail.SalesTransactions t
+JOIN Retail.Promotions p ON t.PromotionCode = p.PromotionCode
+GROUP BY p.PromoType
+ORDER BY txn_count DESC;
+
+SELECT
+	s.StoreFormat,
+	p.Department,
+	COUNT(*) AS low_stock_items
+FROM Retail.InventorySnapshot i
+JOIN Retail.Stores s ON i.StoreCode = s.StoreCode
+JOIN Retail.Products p ON i.ProductSku = p.Sku
+WHERE i.AvailableQty <= i.ReorderPointQty
+GROUP BY s.StoreFormat, p.Department
+ORDER BY low_stock_items DESC;
+```
+
 ## What The Tables Represent
 
 | Table | What it represents |

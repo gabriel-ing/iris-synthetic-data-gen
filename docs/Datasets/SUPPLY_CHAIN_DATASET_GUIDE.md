@@ -30,6 +30,179 @@ Current generated outputs:
 - `inventory_snapshot_daily.csv`
 - `stock_count_event.csv`
 
+## Quick SQL Starter
+
+The examples below use simplified DDL that mirrors the core tables in this dataset, followed by a few starter queries for inventory, supplier, and service-level analysis.
+
+### Representative DDL
+
+```sql
+CREATE TABLE SupplyChain.DimDate (
+	DateKey INTEGER NOT NULL,
+	CalendarDate DATE NOT NULL,
+	Year INTEGER,
+	Quarter INTEGER,
+	Month INTEGER,
+	WeekOfYear INTEGER,
+	DayOfWeek INTEGER,
+	IsWeekend BOOLEAN,
+	PRIMARY KEY (DateKey)
+);
+
+CREATE TABLE SupplyChain.DimProduct (
+	Sku VARCHAR(40) NOT NULL,
+	ProductName VARCHAR(120),
+	Brand VARCHAR(60),
+	Category VARCHAR(40),
+	Subcategory VARCHAR(40),
+	Uom VARCHAR(20),
+	UnitsPerCase INTEGER,
+	UnitWeightKg DOUBLE,
+	UnitVolumeM3 DOUBLE,
+	TemperatureZone VARCHAR(20),
+	IsPerishable BOOLEAN,
+	ShelfLifeDays INTEGER,
+	StandardCost NUMERIC(18, 2),
+	ListPrice NUMERIC(18, 2),
+	LaunchDateKey INTEGER,
+	DiscontinueDateKey INTEGER,
+	PRIMARY KEY (Sku)
+);
+
+CREATE TABLE SupplyChain.DimLocation (
+	LocationCode VARCHAR(40) NOT NULL,
+	LocationName VARCHAR(120),
+	LocationType VARCHAR(40),
+	Country VARCHAR(5),
+	Region VARCHAR(40),
+	City VARCHAR(80),
+	Postcode VARCHAR(20),
+	TimeZone VARCHAR(60),
+	IsActive BOOLEAN,
+	PRIMARY KEY (LocationCode)
+);
+
+CREATE TABLE SupplyChain.DimSupplier (
+	SupplierCode VARCHAR(40) NOT NULL,
+	SupplierName VARCHAR(120),
+	SupplierTier INTEGER,
+	Country VARCHAR(5),
+	PreferredFlag BOOLEAN,
+	PaymentTermsDays INTEGER,
+	RiskScore INTEGER,
+	DefaultShipFromLocationCode VARCHAR(40),
+	PRIMARY KEY (SupplierCode)
+);
+
+CREATE TABLE SupplyChain.DimCustomer (
+	CustomerNumber VARCHAR(40) NOT NULL,
+	CustomerName VARCHAR(120),
+	CustomerType VARCHAR(20),
+	Segment VARCHAR(40),
+	Country VARCHAR(5),
+	Region VARCHAR(40),
+	ServiceLevelTargetPct NUMERIC(18, 2),
+	DefaultShipToLocationCode VARCHAR(40),
+	PRIMARY KEY (CustomerNumber)
+);
+
+CREATE TABLE SupplyChain.SalesOrders (
+	SalesOrderId VARCHAR(40) NOT NULL,
+	CustomerNumber VARCHAR(40),
+	ShipFromLocationCode VARCHAR(40),
+	ShipToLocationCode VARCHAR(40),
+	OrderDateKey INTEGER,
+	RequestedShipDateKey INTEGER,
+	PromisedDeliveryDateKey INTEGER,
+	ActualDeliveryDateKey INTEGER,
+	Status VARCHAR(30),
+	Channel VARCHAR(20),
+	OrderLineCount INTEGER,
+	OrderedQtyTotal NUMERIC(18, 2),
+	ShippedQtyTotal NUMERIC(18, 2),
+	BackorderedQtyTotal NUMERIC(18, 2),
+	OrderValue NUMERIC(18, 2),
+	PRIMARY KEY (SalesOrderId)
+);
+
+CREATE TABLE SupplyChain.PurchaseOrders (
+	PurchaseOrderId VARCHAR(40) NOT NULL,
+	SupplierCode VARCHAR(40),
+	ShipFromLocationCode VARCHAR(40),
+	DeliverToLocationCode VARCHAR(40),
+	OrderDateKey INTEGER,
+	ExpectedReceiptDateKey INTEGER,
+	ReceiptDateKey INTEGER,
+	Status VARCHAR(30),
+	OrderLineCount INTEGER,
+	OrderedQtyTotal NUMERIC(18, 2),
+	ReceivedQtyTotal NUMERIC(18, 2),
+	OrderValue NUMERIC(18, 2),
+	LateReceiptFlag BOOLEAN,
+	PRIMARY KEY (PurchaseOrderId)
+);
+
+CREATE TABLE SupplyChain.InventorySnapshotDaily (
+	SnapshotDateKey INTEGER,
+	ProductSku VARCHAR(40),
+	LocationCode VARCHAR(40),
+	OnHandQty NUMERIC(18, 2),
+	AllocatedQty NUMERIC(18, 2),
+	AvailableQty NUMERIC(18, 2),
+	InTransitQty NUMERIC(18, 2),
+	SafetyStockQty NUMERIC(18, 2),
+	OnOrderQty NUMERIC(18, 2),
+	InventoryValue NUMERIC(18, 2),
+	PRIMARY KEY (SnapshotDateKey, ProductSku, LocationCode)
+);
+
+CREATE TABLE SupplyChain.StockCountEvent (
+	LocationCode VARCHAR(40),
+	ProductSku VARCHAR(40),
+	CountDateKey INTEGER,
+	SystemQty NUMERIC(18, 2),
+	CountedQty NUMERIC(18, 2),
+	VarianceQty NUMERIC(18, 2),
+	VarianceReason VARCHAR(80)
+);
+```
+
+### Sample Queries
+
+```sql
+SELECT
+	l.LocationType,
+	p.Category,
+	SUM(i.OnHandQty) AS on_hand_qty,
+	SUM(i.AvailableQty) AS available_qty
+FROM SupplyChain.InventorySnapshotDaily i
+JOIN SupplyChain.DimLocation l ON i.LocationCode = l.LocationCode
+JOIN SupplyChain.DimProduct p ON i.ProductSku = p.Sku
+GROUP BY l.LocationType, p.Category
+ORDER BY on_hand_qty DESC;
+
+SELECT
+	s.SupplierTier,
+	COUNT(*) AS late_receipts,
+	ROUND(AVG(po.OrderValue), 2) AS avg_order_value
+FROM SupplyChain.PurchaseOrders po
+JOIN SupplyChain.DimSupplier s ON po.SupplierCode = s.SupplierCode
+WHERE po.LateReceiptFlag = 1
+GROUP BY s.SupplierTier
+ORDER BY late_receipts DESC;
+
+SELECT
+	l.Region,
+	p.Category,
+	COUNT(*) AS count_events,
+	SUM(ABS(e.VarianceQty)) AS total_variance
+FROM SupplyChain.StockCountEvent e
+JOIN SupplyChain.DimLocation l ON e.LocationCode = l.LocationCode
+JOIN SupplyChain.DimProduct p ON e.ProductSku = p.Sku
+GROUP BY l.Region, p.Category
+ORDER BY total_variance DESC;
+```
+
 ## What The Tables Represent
 
 | Table | What it represents |

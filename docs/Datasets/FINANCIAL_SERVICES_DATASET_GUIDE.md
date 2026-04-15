@@ -22,6 +22,126 @@ Current generated outputs:
 - `transactions.csv`
 - `disputes.csv`
 
+## Quick SQL Starter
+
+The examples below use simplified DDL that mirrors the core tables in this dataset, followed by a few starter queries for fraud, dispute, and portfolio analysis.
+
+### Representative DDL
+
+```sql
+CREATE TABLE Finance.Customers (
+	CustomerId INTEGER NOT NULL,
+	CreatedAt VARCHAR(35),
+	Status VARCHAR(20),
+	Segment VARCHAR(20),
+	RiskScore INTEGER,
+	State VARCHAR(20),
+	SegmentTxnMultiplier DOUBLE,
+	SegmentAmountMultiplier DOUBLE,
+	SegmentEcomMultiplier DOUBLE,
+	SegmentDeclineMultiplier DOUBLE,
+	SegmentDisputeMultiplier DOUBLE,
+	PRIMARY KEY (CustomerId)
+);
+
+CREATE TABLE Finance.Accounts (
+	AccountNumber VARCHAR(40) NOT NULL,
+	CustomerId INTEGER NOT NULL,
+	AccountType VARCHAR(30),
+	Status VARCHAR(20),
+	OpenedAt VARCHAR(35),
+	ClosedAt VARCHAR(35),
+	BillingCycleDay INTEGER,
+	AutopayFlag BOOLEAN,
+	PRIMARY KEY (AccountNumber)
+);
+
+CREATE TABLE Finance.Cards (
+	CardId INTEGER NOT NULL,
+	CustomerId INTEGER,
+	AccountNumber VARCHAR(40),
+	CardType VARCHAR(20),
+	Status VARCHAR(20),
+	OpenedAt VARCHAR(35),
+	ClosedAt VARCHAR(35),
+	CardToken VARCHAR(80),
+	CreditLimit INTEGER,
+	PRIMARY KEY (CardId)
+);
+
+CREATE TABLE Finance.Merchants (
+	MerchantId INTEGER NOT NULL,
+	MerchantName VARCHAR(200),
+	Category VARCHAR(40),
+	RiskTier VARCHAR(20),
+	PopularityWeight DOUBLE,
+	Country VARCHAR(10),
+	PRIMARY KEY (MerchantId)
+);
+
+CREATE TABLE Finance.Transactions (
+	TransactionId BIGINT NOT NULL,
+	CardId INTEGER,
+	MerchantId INTEGER,
+	AuthAt VARCHAR(35),
+	PostedAt VARCHAR(35),
+	Amount NUMERIC(18, 2),
+	Currency VARCHAR(10),
+	Channel VARCHAR(20),
+	EntryMode VARCHAR(20),
+	CardPresent INTEGER,
+	Status VARCHAR(20),
+	DeclineReason VARCHAR(50),
+	IsFraud INTEGER,
+	PRIMARY KEY (TransactionId)
+);
+
+CREATE TABLE Finance.Disputes (
+	DisputeId BIGINT NOT NULL,
+	TransactionId BIGINT,
+	OpenedAt VARCHAR(35),
+	ResolvedAt VARCHAR(35),
+	ReasonCode VARCHAR(50),
+	State VARCHAR(30),
+	Outcome VARCHAR(40),
+	DisputedAmount NUMERIC(18, 2),
+	PRIMARY KEY (DisputeId)
+);
+```
+
+### Sample Queries
+
+```sql
+SELECT
+	Channel,
+	COUNT(*) AS txn_count,
+	ROUND(AVG(CASE WHEN Status = 'APPROVED' THEN 1 ELSE 0 END), 4) AS approval_rate,
+	ROUND(AVG(CASE WHEN IsFraud = 1 THEN 1 ELSE 0 END), 4) AS fraud_rate
+FROM Finance.Transactions
+GROUP BY Channel
+ORDER BY txn_count DESC;
+
+SELECT
+	m.Category,
+	m.RiskTier,
+	COUNT(*) AS dispute_count,
+	ROUND(AVG(d.DisputedAmount), 2) AS avg_disputed_amount
+FROM Finance.Disputes d
+JOIN Finance.Transactions t ON d.TransactionId = t.TransactionId
+JOIN Finance.Merchants m ON t.MerchantId = m.MerchantId
+GROUP BY m.Category, m.RiskTier
+ORDER BY dispute_count DESC;
+
+SELECT
+	c.Segment,
+	COUNT(*) AS blocked_card_count
+FROM Finance.Cards ca
+JOIN Finance.Customers c ON ca.CustomerId = c.CustomerId
+WHERE ca.Status = 'BLOCKED'
+GROUP BY c.Segment
+ORDER BY blocked_card_count DESC;
+```
+
 ## What The Tables Represent
 
 | Table | What it represents |

@@ -13,8 +13,59 @@ Each domain includes:
 - ObjectScript persistent classes
 - direct embedded-Python IRIS loading via `main_iris.py`
 - domain-specific tests
+- Linked relational tables which can be joined using `->` notation  
 
 The root ZPM package installs a shared ObjectScript entrypoint, `SyntheticDataGen.DataLoader`, and copies all domain assets into the IRIS install tree for lazy compilation and load.
+
+*Disclaimer - AI was extensively used for this project. Datasets were designed with advice from an LLM, and much of the code is AI generated. Whilst there has been human oversight, the code has not been carefully reviewed, and the datasets may not be realistic or perfect. These datasets are scaleable and designed for demos where having data is more important than the quality or realism of the data.*
+
+**Feedback or contributions are welcome**
+
+## Quickstart
+
+### Install 
+
+Install with InterSystems Package Manager with: 
+
+```objectscript
+zpm "install iris-synthetic-data-gen"
+```
+
+Or clone the repo to build a local container: 
+
+```
+git clone https://github.com/gabriel-ing/iris-synthetic-data-gen.git
+cd iris-synthetic-data-gen
+docker-compose up --build 
+```
+
+### Generating data
+
+The Synthetic data can be generated directly into IRIS tables, from a single command: 
+
+```objectscript
+do ##class(SyntheticDataGen.DataLoader).Load("FinancialServices")
+do ##class(SyntheticDataGen.DataLoader).Load("SupplyChain")
+do ##class(SyntheticDataGen.DataLoader).Load("ThemePark")
+do ##class(SyntheticDataGen.DataLoader).Load("Retail")
+```
+
+There are additional parameters for: 
+    - Scale of dataset multiplier. 1 is default.
+    - Path to Config file. The datasets are configurable, with the default config being available in `./<dataset>/python/config/sample_config.yaml`. 
+    - Replace existing (boolean). 0 is default.
+
+e.g. to overwrite an existing dataset with a new dataset which is 5 times bigger, you can run: 
+
+```
+do ##class(SyntheticDataGen.DataLoader).Load("Retail", 5, "", 1)
+```
+
+### Remove datasets 
+
+If you want to remove the datasets, this is automated with the same classs: 
+
+
 
 ## Repository Layout
 

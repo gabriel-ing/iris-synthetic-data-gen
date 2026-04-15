@@ -27,6 +27,186 @@ Current generated outputs:
 - `incidents.csv`
 - `feedback.csv`
 
+## Quick SQL Starter
+
+The examples below use simplified DDL that mirrors the core tables in this dataset, followed by a few starter queries for attendance, maintenance, and guest-experience analysis.
+
+### Representative DDL
+
+```sql
+CREATE TABLE ThemePark.Parks (
+	ParkCode VARCHAR(40) NOT NULL,
+	ParkName VARCHAR(120),
+	Region VARCHAR(30),
+	Country VARCHAR(5),
+	ParkType VARCHAR(30),
+	OpeningDate TIMESTAMP,
+	OperatingModel VARCHAR(40),
+	DailyCapacity INTEGER,
+	ActiveFlag BOOLEAN,
+	PRIMARY KEY (ParkCode)
+);
+
+CREATE TABLE ThemePark.Zones (
+	ZoneCode VARCHAR(40) NOT NULL,
+	ParkCode VARCHAR(40),
+	ZoneName VARCHAR(120),
+	Theme VARCHAR(60),
+	Environment VARCHAR(20),
+	FamilyIntensity VARCHAR(20),
+	CapacityClass VARCHAR(20),
+	IndoorFlag BOOLEAN,
+	PRIMARY KEY (ZoneCode)
+);
+
+CREATE TABLE ThemePark.Rides (
+	RideCode VARCHAR(40) NOT NULL,
+	ZoneCode VARCHAR(40),
+	RideName VARCHAR(120),
+	RideType VARCHAR(30),
+	ThrillLevel INTEGER,
+	HeightRequirementCm INTEGER,
+	CapacityPerHour INTEGER,
+	OpeningDate TIMESTAMP,
+	AccessibilitySupport VARCHAR(30),
+	Status VARCHAR(30),
+	PRIMARY KEY (RideCode)
+);
+
+CREATE TABLE ThemePark.RideMaintenance (
+	MaintenanceNumber VARCHAR(50) NOT NULL,
+	RideCode VARCHAR(40),
+	ScheduledStart TIMESTAMP,
+	ActualStart TIMESTAMP,
+	ActualEnd TIMESTAMP,
+	MaintenanceType VARCHAR(40),
+	Status VARCHAR(30),
+	Severity VARCHAR(20),
+	DowntimeHours NUMERIC(18, 2),
+	IssueSummary VARCHAR(240),
+	VendorName VARCHAR(120),
+	PRIMARY KEY (MaintenanceNumber)
+);
+
+CREATE TABLE ThemePark.Employees (
+	EmployeeNumber VARCHAR(40) NOT NULL,
+	ParkCode VARCHAR(40),
+	HomeZoneCode VARCHAR(40),
+	EmployeeName VARCHAR(120),
+	RoleType VARCHAR(40),
+	SkillTier VARCHAR(20),
+	EmploymentType VARCHAR(20),
+	HireDate TIMESTAMP,
+	MascotQualifiedFlag BOOLEAN,
+	ActiveFlag BOOLEAN,
+	PRIMARY KEY (EmployeeNumber)
+);
+
+CREATE TABLE ThemePark.Shifts (
+	ShiftNumber VARCHAR(50) NOT NULL,
+	EmployeeNumber VARCHAR(40),
+	ParkCode VARCHAR(40),
+	ZoneCode VARCHAR(40),
+	RideCode VARCHAR(40),
+	ShiftStart TIMESTAMP,
+	ShiftEnd TIMESTAMP,
+	ShiftType VARCHAR(20),
+	AssignmentType VARCHAR(30),
+	CoverageStatus VARCHAR(30),
+	OvertimeFlag BOOLEAN,
+	PRIMARY KEY (ShiftNumber)
+);
+
+CREATE TABLE ThemePark.Guests (
+	GuestNumber VARCHAR(40) NOT NULL,
+	HomeCountry VARCHAR(5),
+	Segment VARCHAR(30),
+	AgeBand VARCHAR(20),
+	PartySize INTEGER,
+	AccessibilityNeeds VARCHAR(30),
+	LoyaltyTier VARCHAR(30),
+	VisitIntent VARCHAR(30),
+	PRIMARY KEY (GuestNumber)
+);
+
+CREATE TABLE ThemePark.Tickets (
+	TicketCode VARCHAR(50) NOT NULL,
+	GuestNumber VARCHAR(40),
+	ParkCode VARCHAR(40),
+	VisitDate TIMESTAMP,
+	TicketType VARCHAR(30),
+	EntryChannel VARCHAR(30),
+	PricePaid NUMERIC(18, 2),
+	FastAccessFlag BOOLEAN,
+	AddOnBundle VARCHAR(40),
+	TicketStatus VARCHAR(20),
+	PRIMARY KEY (TicketCode)
+);
+
+CREATE TABLE ThemePark.Incidents (
+	IncidentNumber VARCHAR(50) NOT NULL,
+	ParkCode VARCHAR(40),
+	ZoneCode VARCHAR(40),
+	RideCode VARCHAR(40),
+	TicketCode VARCHAR(50),
+	EmployeeNumber VARCHAR(40),
+	IncidentAt TIMESTAMP,
+	IncidentType VARCHAR(40),
+	Severity VARCHAR(20),
+	Status VARCHAR(30),
+	ImpactMinutes INTEGER,
+	Description VARCHAR(240),
+	ResolutionSummary VARCHAR(240),
+	PRIMARY KEY (IncidentNumber)
+);
+
+CREATE TABLE ThemePark.Feedback (
+	FeedbackNumber VARCHAR(50) NOT NULL,
+	TicketCode VARCHAR(50),
+	ParkCode VARCHAR(40),
+	RideCode VARCHAR(40),
+	SubmittedAt TIMESTAMP,
+	Channel VARCHAR(30),
+	Rating INTEGER,
+	Sentiment VARCHAR(20),
+	Topic VARCHAR(40),
+	Summary VARCHAR(240),
+	RequiresFollowUp BOOLEAN,
+	PRIMARY KEY (FeedbackNumber)
+);
+```
+
+### Sample Queries
+
+```sql
+SELECT
+	ParkCode,
+	TicketType,
+	COUNT(*) AS ticket_count,
+	ROUND(SUM(PricePaid), 2) AS revenue
+FROM ThemePark.Tickets
+GROUP BY ParkCode, TicketType
+ORDER BY revenue DESC;
+
+SELECT
+	p.ParkName,
+	i.Severity,
+	COUNT(*) AS incident_count
+FROM ThemePark.Incidents i
+JOIN ThemePark.Parks p ON i.ParkCode = p.ParkCode
+GROUP BY p.ParkName, i.Severity
+ORDER BY incident_count DESC;
+
+SELECT
+	r.RideType,
+	m.Severity,
+	ROUND(SUM(m.DowntimeHours), 2) AS total_downtime_hours
+FROM ThemePark.RideMaintenance m
+JOIN ThemePark.Rides r ON m.RideCode = r.RideCode
+GROUP BY r.RideType, m.Severity
+ORDER BY total_downtime_hours DESC;
+```
+
 ## What The Tables Represent
 
 | Table | What it represents |
