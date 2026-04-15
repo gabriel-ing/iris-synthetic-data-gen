@@ -98,9 +98,18 @@ def _iter_rows(df: pd.DataFrame, columns: list[str]) -> Iterable[tuple]:
         yield tuple(_normalize_value(v) for v in row)
 
 
+def _is_empty_delete(exc: Exception, sql: str) -> bool:
+    return sql.lstrip().upper().startswith("DELETE FROM ") and getattr(exc, "sqlcode", None) == 100
+
+
 def _exec_sql(iris, sql: str) -> None:
-    stmt = iris.sql.prepare(sql)
-    stmt.execute()
+    try:
+        stmt = iris.sql.prepare(sql)
+        stmt.execute()
+    except Exception as exc:
+        if _is_empty_delete(exc, sql):
+            return
+        raise
 
 
 def _insert_df(iris, table_name: str, columns: list[str], df: pd.DataFrame, commit_every: int) -> int:

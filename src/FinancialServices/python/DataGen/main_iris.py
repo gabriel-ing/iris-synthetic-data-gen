@@ -85,11 +85,17 @@ def _iter_rows(df: pd.DataFrame, columns: list[str]) -> Iterable[tuple]:
         yield tuple(_normalize_value(v) for v in row)
 
 
+def _is_empty_delete(exc: Exception, sql: str) -> bool:
+    return sql.lstrip().upper().startswith("DELETE FROM ") and getattr(exc, "sqlcode", None) == 100
+
+
 def _exec_sql(iris, sql: str) -> None:
     try:
         stmt = iris.sql.prepare(sql)
         stmt.execute()
     except Exception as exc:
+        if _is_empty_delete(exc, sql):
+            return
         raise RuntimeError(
             f"IRIS SQL failed executing statement: {sql} | error_type={type(exc).__name__} | error_args={getattr(exc, 'args', None)}"
         ) from exc

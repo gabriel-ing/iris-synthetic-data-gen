@@ -224,9 +224,12 @@ def test_zpm_install_persists_root_and_defers_dataset_compile():
                 f'do ##class(SyntheticDataGen.DataLoader).LoadData("FinancialServices","","{financial_config_path}",1)',
                 'write "INSTALLROOT_AFTER=",$get(^SyntheticDataGen("InstallRoot")),!',
                 'write "FINANCE_EXISTS_AFTER=",$classmethod("%Dictionary.ClassDefinition","%ExistsId","Finance.Customers"),!',
+                'write "FINANCE_ACCOUNTS_COMPILED=",$classmethod("%Dictionary.CompiledClass","%ExistsId","Finance.Accounts"),!',
                 'write "SUPPLY_EXISTS_AFTER=",$classmethod("%Dictionary.ClassDefinition","%ExistsId","SupplyChain.DimCustomer"),!',
                 'write "RETAIL_EXISTS_AFTER=",$classmethod("%Dictionary.ClassDefinition","%ExistsId","Retail.Stores"),!',
                 'write "CUSTOMER_ROWS=",##class(Finance.Customers).%ExtentSize(),!',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=''Finance'' AND TABLE_NAME=''Accounts''")',
+                'if rs.%Next() { write "FINANCE_ACCOUNTS_TABLES=",rs.%Get("Cnt"),! }',
                 'halt',
             ]
         ),
@@ -235,6 +238,8 @@ def test_zpm_install_persists_root_and_defers_dataset_compile():
 
     assert _extract_marker(load_output, "INSTALLROOT_AFTER") == install_root
     assert _extract_marker(load_output, "FINANCE_EXISTS_AFTER") == "1"
+    assert _extract_marker(load_output, "FINANCE_ACCOUNTS_COMPILED") == "1"
+    assert _extract_marker(load_output, "FINANCE_ACCOUNTS_TABLES") == "1"
     assert _extract_marker(load_output, "SUPPLY_EXISTS_AFTER") == "0"
     assert _extract_marker(load_output, "RETAIL_EXISTS_AFTER") == "0"
     assert _extract_marker(load_output, "CUSTOMER_ROWS") == "12"
@@ -274,3 +279,50 @@ def test_zpm_install_persists_root_and_defers_dataset_compile():
 
     assert _extract_marker(themepark_load_output, "THEME_EXISTS_FINAL") == "1"
     assert _extract_marker(themepark_load_output, "PARK_ROWS") == "8"
+
+
+def test_dataloader_smoke_test_command_runs_all_datasets():
+    rebuild = os.environ.get("SYNTHETICDATAGEN_REBUILD_DOCKER", "1") != "0"
+    if rebuild:
+        _docker_compose("down", "-v", "--remove-orphans", timeout=1200)
+        _docker_compose("up", "-d", "--build", timeout=1800)
+    else:
+        _docker_compose("up", "-d", timeout=1200)
+    _wait_for_iris(timeout=300)
+
+    output = _iris_session(
+        "\n".join(
+            [
+                'ZN "USER"',
+                'zpm "load /home/irisowner/dev -v"',
+                'do ##class(SyntheticDataGen.DataLoader).RunSmokeTest(1)',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM Finance.Customers")',
+                'if rs.%Next() { write "FS_CUSTOMERS=",rs.%Get("Cnt"),! }',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM Finance.Transactions")',
+                'if rs.%Next() { write "FS_TRANSACTIONS=",rs.%Get("Cnt"),! }',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM SupplyChain.DimProduct")',
+                'if rs.%Next() { write "SC_PRODUCTS=",rs.%Get("Cnt"),! }',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM SupplyChain.SalesOrderLine")',
+                'if rs.%Next() { write "SC_SALES_LINES=",rs.%Get("Cnt"),! }',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM Retail.Stores")',
+                'if rs.%Next() { write "RT_STORES=",rs.%Get("Cnt"),! }',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM Retail.SalesTransactions")',
+                'if rs.%Next() { write "RT_SALES=",rs.%Get("Cnt"),! }',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM ThemePark.Parks")',
+                'if rs.%Next() { write "TP_PARKS=",rs.%Get("Cnt"),! }',
+                'set rs=##class(%SQL.Statement).%ExecDirect(,"SELECT COUNT(*) AS Cnt FROM ThemePark.QueueSnapshot")',
+                'if rs.%Next() { write "TP_QUEUE=",rs.%Get("Cnt"),! }',
+                'halt',
+            ]
+        ),
+        timeout=3600,
+    )
+
+    assert _extract_marker(output, "FS_CUSTOMERS") == "12"
+    assert _extract_marker(output, "FS_TRANSACTIONS") == "80"
+    assert _extract_marker(output, "SC_PRODUCTS") == "40"
+    assert _extract_marker(output, "SC_SALES_LINES") == "300"
+    assert _extract_marker(output, "RT_STORES") == "6"
+    assert _extract_marker(output, "RT_SALES") == "120"
+    assert _extract_marker(output, "TP_PARKS") == "4"
+    assert _extract_marker(output, "TP_QUEUE") == "720"

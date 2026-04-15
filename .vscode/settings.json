@@ -1,8 +1,10 @@
 {
     "objectscript.conn": {
-        "server": "62773",
         "ns": "USER",
-        "active": true
+        "active": false,
+        "username": "SuperUser",
+        "password": "SYS",
+        "server": "62773"
     },
     "chat.tools.terminal.autoApprove": {
         "docker-compose": true
