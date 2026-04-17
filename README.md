@@ -19,7 +19,7 @@ The root ZPM package installs a shared ObjectScript entrypoint, `SyntheticDataGe
 
 Information on each individual dataset can be found in [./docs/datasets](./docs/Datasets/)
 
-*Disclaimer - AI was extensively used for this project. Datasets were designed with advice from an LLM, and much of the code is AI generated. Whilst there has been human oversight, the code has not been carefully reviewed, and the datasets may not be realistic or perfect. These datasets are scaleable and designed for demos where having data is more important than the quality or realism of the data.*
+*Disclaimer - AI was extensively used for this project. Datasets were designed with advice from an LLM, and much of the code is AI generated. Whilst there has been human oversight, the code has not been carefully reviewed, and the datasets may not be realistic or perfect. These datasets are scaleable and designed for demos where having linked data tables which look realistic, is more important than quality or realism of the data.*
 
 **Feedback or contributions are welcome**
 
