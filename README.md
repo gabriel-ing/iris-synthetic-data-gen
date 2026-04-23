@@ -15,7 +15,9 @@ Each domain includes:
 - domain-specific tests
 - Linked relational tables which can be joined using `->` notation  
 
-The root ZPM package installs a shared ObjectScript entrypoint, `SyntheticDataGen.DataLoader`, and copies all domain assets into the IRIS install tree for lazy compilation and load.
+The root ZPM package installs a shared ObjectScript entrypoint, `SyntheticDataGen.DataLoader`, and copies all domain assets into the IRIS install tree for lazy compilation and load. 
+
+Each dataset is synthetically generated and inserted into IRIS 
 
 Information on each individual dataset can be found in [./docs/datasets](./docs/Datasets/)
 
