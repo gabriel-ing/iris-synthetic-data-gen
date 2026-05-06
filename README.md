@@ -70,7 +70,7 @@ do ##class(SyntheticDataGen.DataLoader).LoadData("Retail", 5, "", 1)
 If you want to remove the datasets, this is automated with the same classs: 
 
 ```objectscript
-do ##class(SyntheticDataGen.DataLoader).DeleteDataset("Retail")
+do ##class(SyntheticDataGen.DataLoader).DeleteData("Retail")
 ```
 
 ## Repository Layout
@@ -264,7 +264,7 @@ Current DataLoader methods:
 - `SetInstallRoot(path)`
 - `GetInstallRoot()`
 - `EnsureDatasetClasses(dataset)`
-- `DeleteDataset(dataset, deleteClasses=1)`
+- `DeleteData(dataset, deleteClasses=1)`
 - `LoadData(dataset, scaleFactor="", configPath="", clearExisting=0)`
 
 Valid dataset names:
@@ -290,12 +290,12 @@ do ##class(SyntheticDataGen.DataLoader).LoadData("Retail",2,"",1)
 do ##class(SyntheticDataGen.DataLoader).LoadData("ThemePark",2)
 do ##class(SyntheticDataGen.DataLoader).LoadData("FinancialServices","","/usr/irissys/lib/SyntheticDataGen/FinancialServices/python/config/sample_config.yaml",1)
 
-do ##class(SyntheticDataGen.DataLoader).DeleteDataset("Retail")
-do ##class(SyntheticDataGen.DataLoader).DeleteDataset("SupplyChain",0)
-do ##class(SyntheticDataGen.DataLoader).DeleteDataset("ThemePark")
+do ##class(SyntheticDataGen.DataLoader).DeleteData("Retail")
+do ##class(SyntheticDataGen.DataLoader).DeleteData("SupplyChain",0)
+do ##class(SyntheticDataGen.DataLoader).DeleteData("ThemePark")
 ```
 
-`DeleteDataset(dataset)` clears rows in child-to-parent order and, by default, removes the compiled dataset package. Pass `0` as the second argument if you want to keep the classes compiled.
+`DeleteDataset(dataset)` deletes the dataset globals and, by default, removes the compiled dataset package. Pass `0` as the second argument if you want to keep the classes compiled.
 
 Useful checks from an IRIS session:
 

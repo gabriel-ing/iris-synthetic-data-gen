@@ -114,7 +114,7 @@ ClassMethod EnsureDatasetClasses(pDataset As %String) As %Status
     quit $$$OK
 }
 
-ClassMethod DeleteDataset(pDataset As %String, pDeleteClasses As %Integer = 1) As %Status
+ClassMethod DeleteData(pDataset As %String, pDeleteClasses As %Integer = 1) As %Status
 {
     set sc = $$$OK
 
@@ -140,21 +140,11 @@ ClassMethod DeleteDataset(pDataset As %String, pDeleteClasses As %Integer = 1) A
 
     if $classmethod("%Dictionary.ClassDefinition", "%ExistsId", sentinelClass) {
         for i = 1:1:$length(deleteOrder, ",") {
-            set table = $piece(deleteOrder, ",", i)
-            set result = ##class(%SQL.Statement).%ExecDirect(, "DELETE FROM "_table)
-            if result.%SQLCODE '= 0, result.%SQLCODE '= 100 {
-                set sc = $$$ERROR($$$GeneralError, "Failed to clear "_table_" SQLCODE="_result.%SQLCODE)
-                quit
-            }
-        }
-
-        if $$$ISERR(sc) {
-            quit sc
-        }
-
-        set result = ##class(%SQL.Statement).%ExecDirect(, "COMMIT")
-        if result.%SQLCODE '= 0 {
-            quit $$$ERROR($$$GeneralError, "Failed to commit cleanup for "_pDataset_" SQLCODE="_result.%SQLCODE)
+            set global = $piece(deleteOrder, ",", i)
+            set dataglobal= "^"_global_"D"
+            set indexglobal = "^"_global_"I"
+            kill @dataglobal
+            kill @indexglobal
         }
     }
 
