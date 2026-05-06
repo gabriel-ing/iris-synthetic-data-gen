@@ -5,9 +5,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - 62972
       - 62773:52773
-      - 63773
-      - 65030:5000
+      - 62772:1972
     volumes:
       - ./:/home/irisowner/dev
