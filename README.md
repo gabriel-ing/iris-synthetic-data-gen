@@ -48,10 +48,10 @@ docker-compose up --build
 The Synthetic data can be generated directly into IRIS tables, from a single command: 
 
 ```objectscript
-do ##class(SyntheticDataGen.DataLoader).Load("FinancialServices")
-do ##class(SyntheticDataGen.DataLoader).Load("SupplyChain")
-do ##class(SyntheticDataGen.DataLoader).Load("ThemePark")
-do ##class(SyntheticDataGen.DataLoader).Load("Retail")
+do ##class(SyntheticDataGen.DataLoader).LoadData("FinancialServices")
+do ##class(SyntheticDataGen.DataLoader).LoadData("SupplyChain")
+do ##class(SyntheticDataGen.DataLoader).LoadData("ThemePark")
+do ##class(SyntheticDataGen.DataLoader).LoadData("Retail")
 ```
 
 There are additional parameters for: 
@@ -62,7 +62,7 @@ There are additional parameters for:
 e.g. to overwrite an existing dataset with a new dataset which is 5 times bigger, you can run: 
 
 ```objectscript
-do ##class(SyntheticDataGen.DataLoader).Load("Retail", 5, "", 1)
+do ##class(SyntheticDataGen.DataLoader).LoadData("Retail", 5, "", 1)
 ```
 
 ### Remove datasets 
